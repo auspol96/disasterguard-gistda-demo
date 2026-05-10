@@ -48,27 +48,64 @@
         </article>
       </section>
 
-      <section class="result-panel">
-        <div class="result-header">
-          <div>
-            <span>Area ID</span>
-            <strong id="areaId">--</strong>
+      <section class="operations-layout">
+        <section class="map-panel" aria-labelledby="map-heading">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Mock regional view</p>
+              <h2 id="map-heading">Northern Thailand / ASEAN priority panel</h2>
+            </div>
+            <span class="map-note">HTML/CSS only</span>
           </div>
-          <div>
-            <span>Incident Type</span>
-            <strong id="incidentType">--</strong>
+
+          <div class="mock-map" id="priorityMap" role="img" aria-label="Mock map showing three incident priority markers">
+            <div class="region-shape region-main"></div>
+            <div class="region-shape region-neighbor"></div>
+            <div class="map-grid-lines"></div>
+
+            <button class="map-marker" data-scenario="wildfire" type="button">
+              <span class="marker-dot"></span>
+              <span class="marker-label">Chiang Mai wildfire/haze</span>
+            </button>
+            <button class="map-marker" data-scenario="flood" type="button">
+              <span class="marker-dot"></span>
+              <span class="marker-label">Chiang Rai rapid flood</span>
+            </button>
+            <button class="map-marker" data-scenario="landslide" type="button">
+              <span class="marker-dot"></span>
+              <span class="marker-label">Mae Hong Son landslide</span>
+            </button>
           </div>
-        </div>
 
-        <div class="summary-block">
-          <h2>Operator Summary</h2>
-          <p id="operatorSummary">Choose a scenario to generate a priority result.</p>
-        </div>
+          <div class="map-legend" aria-label="Severity legend">
+            <span><i class="legend-swatch high"></i>High</span>
+            <span><i class="legend-swatch medium"></i>Medium</span>
+            <span><i class="legend-swatch watch"></i>Watch / Low</span>
+          </div>
+        </section>
 
-        <div class="drivers-block">
-          <h2>Risk Drivers</h2>
-          <ul id="riskDrivers"></ul>
-        </div>
+        <section class="result-panel">
+          <div class="result-header">
+            <div>
+              <span>Area ID</span>
+              <strong id="areaId">--</strong>
+            </div>
+            <div>
+              <span>Incident Type</span>
+              <strong id="incidentType">--</strong>
+            </div>
+          </div>
+
+          <div class="summary-block">
+            <h2>Operator Summary</h2>
+            <p id="operatorSummary">Choose a scenario to generate a priority result.</p>
+          </div>
+
+          <div class="drivers-block">
+            <h2>Risk Drivers</h2>
+            <ul id="riskDrivers"></ul>
+          </div>
+        </section>
       </section>
     </main>
 

@@ -66,7 +66,7 @@ risk_drivers
 operator_summary
 ```
 
-It is intentionally simple: no React, no database, and no map layer yet. It keeps DisasterGuard positioned as a decision-priority layer for operator review and coordination.
+It is intentionally simple: no React, no database, and no real map library or live map layer yet. The dashboard includes an HTML/CSS mock priority panel for demo context while keeping DisasterGuard positioned as a decision-priority layer for operator review and coordination.
 
 ### Health Check
 

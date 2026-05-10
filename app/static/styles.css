@@ -9,7 +9,9 @@
   --accent: #3dd6b3;
   --accent-strong: #72f0cf;
   --warning: #f5c66a;
+  --medium: #ff9f43;
   --danger: #ff7a7a;
+  --low: #8a98a8;
   --shadow: rgba(0, 0, 0, 0.28);
 }
 
@@ -85,6 +87,7 @@ h2 {
 
 .control-panel,
 .result-panel,
+.map-panel,
 .metric-card {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -163,12 +166,189 @@ button:disabled {
 
 #severity[data-level="medium"],
 #severity[data-level="watch"] {
-  color: var(--warning);
+  color: var(--medium);
 }
 
 #severity[data-level="high"],
 #severity[data-level="critical"] {
   color: var(--danger);
+}
+
+.operations-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.95fr) minmax(0, 1.05fr);
+  gap: 16px;
+}
+
+.map-panel {
+  min-height: 520px;
+  padding: 20px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.map-note {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.mock-map {
+  position: relative;
+  min-height: 392px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(39, 56, 74, 0.22) 1px, transparent 1px) 0 0 / 44px 44px,
+    linear-gradient(rgba(39, 56, 74, 0.22) 1px, transparent 1px) 0 0 / 44px 44px,
+    radial-gradient(circle at 70% 26%, rgba(61, 214, 179, 0.12), transparent 28%),
+    #0d151f;
+}
+
+.region-shape {
+  position: absolute;
+  border: 1px solid rgba(158, 176, 189, 0.34);
+  background: rgba(23, 35, 50, 0.76);
+}
+
+.region-main {
+  inset: 44px 110px 34px 58px;
+  border-radius: 44% 38% 48% 36%;
+  transform: rotate(-9deg);
+}
+
+.region-neighbor {
+  right: -44px;
+  bottom: -18px;
+  width: 220px;
+  height: 260px;
+  border-radius: 56% 0 0 40%;
+  opacity: 0.74;
+}
+
+.map-grid-lines {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(145deg, transparent 48%, rgba(61, 214, 179, 0.18) 49%, transparent 52%),
+    linear-gradient(35deg, transparent 58%, rgba(245, 198, 106, 0.12) 59%, transparent 62%);
+  pointer-events: none;
+}
+
+.map-marker {
+  --marker-color: var(--low);
+  position: absolute;
+  display: grid;
+  grid-template-columns: 16px minmax(108px, max-content);
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  max-width: min(240px, calc(100% - 24px));
+  border: 1px solid rgba(237, 244, 248, 0.16);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: rgba(11, 16, 22, 0.82);
+  color: var(--text);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.map-marker[data-scenario="wildfire"] {
+  left: 28%;
+  top: 46%;
+}
+
+.map-marker[data-scenario="flood"] {
+  left: 55%;
+  top: 28%;
+}
+
+.map-marker[data-scenario="landslide"] {
+  left: 15%;
+  top: 62%;
+}
+
+.map-marker[data-severity="high"],
+.map-marker[data-severity="critical"] {
+  --marker-color: var(--danger);
+}
+
+.map-marker[data-severity="medium"] {
+  --marker-color: var(--medium);
+}
+
+.map-marker[data-severity="watch"] {
+  --marker-color: var(--warning);
+}
+
+.map-marker[data-severity="low"] {
+  --marker-color: var(--low);
+}
+
+.map-marker.is-active {
+  border-color: var(--marker-color);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--marker-color) 26%, transparent),
+    0 18px 40px rgba(0, 0, 0, 0.36);
+}
+
+.marker-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--marker-color);
+  box-shadow: 0 0 18px var(--marker-color);
+}
+
+.marker-label {
+  overflow-wrap: anywhere;
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.legend-swatch.high {
+  background: var(--danger);
+}
+
+.legend-swatch.medium {
+  background: var(--medium);
+}
+
+.legend-swatch.watch {
+  background: var(--warning);
 }
 
 .result-panel {
@@ -227,8 +407,21 @@ button:disabled {
   }
 
   .dashboard-grid,
+  .operations-layout,
   .result-header {
     grid-template-columns: 1fr;
+  }
+
+  .map-panel {
+    min-height: auto;
+  }
+
+  .mock-map {
+    min-height: 360px;
+  }
+
+  .map-marker {
+    grid-template-columns: 14px minmax(96px, max-content);
   }
 
   h1 {

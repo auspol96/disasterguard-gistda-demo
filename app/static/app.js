@@ -46,6 +46,18 @@ const scenarios = {
   },
 };
 
+const scenarioLabels = {
+  wildfire: "Chiang Mai wildfire/haze",
+  flood: "Chiang Rai rapid flood",
+  landslide: "Mae Hong Son landslide",
+};
+
+const severityByScenario = {
+  wildfire: "high",
+  flood: "high",
+  landslide: "medium",
+};
+
 const elements = {
   serviceStatus: document.querySelector("#serviceStatus"),
   scenarioSelect: document.querySelector("#scenarioSelect"),
@@ -57,6 +69,7 @@ const elements = {
   incidentType: document.querySelector("#incidentType"),
   operatorSummary: document.querySelector("#operatorSummary"),
   riskDrivers: document.querySelector("#riskDrivers"),
+  mapMarkers: document.querySelectorAll(".map-marker"),
 };
 
 function formatLabel(value) {
@@ -68,7 +81,23 @@ function setLoading(isLoading) {
   elements.scoreButton.textContent = isLoading ? "Scoring..." : "Score selected scenario";
 }
 
+function updateMapMarkers(selectedScenarioKey, selectedSeverity) {
+  elements.mapMarkers.forEach((marker) => {
+    const scenarioKey = marker.dataset.scenario;
+    const severity = scenarioKey === selectedScenarioKey ? selectedSeverity : severityByScenario[scenarioKey];
+
+    marker.classList.toggle("is-active", scenarioKey === selectedScenarioKey);
+    marker.dataset.severity = severity;
+    marker.setAttribute(
+      "aria-label",
+      `${scenarioLabels[scenarioKey]}, ${severity} priority${scenarioKey === selectedScenarioKey ? ", selected" : ""}`,
+    );
+  });
+}
+
 function renderResult(result) {
+  const selectedScenarioKey = elements.scenarioSelect.value;
+
   elements.priorityScore.textContent = result.priority_score.toFixed(2);
   elements.severity.textContent = result.severity;
   elements.severity.dataset.level = result.severity.toLowerCase();
@@ -83,6 +112,8 @@ function renderResult(result) {
     item.textContent = driver;
     elements.riskDrivers.appendChild(item);
   });
+
+  updateMapMarkers(selectedScenarioKey, result.severity.toLowerCase());
 }
 
 async function scoreSelectedScenario() {
@@ -122,6 +153,13 @@ async function checkHealth() {
 
 elements.scoreButton.addEventListener("click", scoreSelectedScenario);
 elements.scenarioSelect.addEventListener("change", scoreSelectedScenario);
+elements.mapMarkers.forEach((marker) => {
+  marker.addEventListener("click", () => {
+    elements.scenarioSelect.value = marker.dataset.scenario;
+    scoreSelectedScenario();
+  });
+});
 
 checkHealth();
+updateMapMarkers(elements.scenarioSelect.value, severityByScenario[elements.scenarioSelect.value]);
 scoreSelectedScenario();

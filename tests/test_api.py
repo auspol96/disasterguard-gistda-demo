@@ -10,6 +10,10 @@ def test_dashboard_root_serves_html():
 
     assert response.status_code == 200
     assert "DisasterGuard: Multi-Hazard Priority Demo" in response.text
+    assert "Northern Thailand / ASEAN priority panel" in response.text
+    assert "Chiang Mai wildfire/haze" in response.text
+    assert "Chiang Rai rapid flood" in response.text
+    assert "Mae Hong Son landslide" in response.text
     assert 'src="/static/app.js"' in response.text
 
 
@@ -19,8 +23,10 @@ def test_dashboard_static_assets_are_served():
 
     assert js_response.status_code == 200
     assert "scenarios" in js_response.text
+    assert "updateMapMarkers" in js_response.text
+    assert "data-severity" in css_response.text
     assert css_response.status_code == 200
-    assert "dark" in css_response.text
+    assert "mock-map" in css_response.text
 
 
 def test_health_endpoint():
