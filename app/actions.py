@@ -1,0 +1,12 @@
+ACTION_BY_SEVERITY = {
+    "LOW": "MONITOR_ONLY",
+    "WATCH": "KEEP_IN_MONITORING_QUEUE",
+    "MEDIUM": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+    "HIGH": "PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE",
+    "CRITICAL": "IMMEDIATE_REVIEW_AND_ESCALATION",
+}
+
+
+def recommended_action_for_severity(severity: str) -> str:
+    return ACTION_BY_SEVERITY[severity]
+

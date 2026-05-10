@@ -1,0 +1,15 @@
+{
+  "area_id": "NTH-MAEHONGSON-008",
+  "incident_type": "landslide",
+  "priority_score": 0.67,
+  "severity": "MEDIUM",
+  "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+  "operator_summary": "NTH-MAEHONGSON-008 should be reviewed in the next operational cycle for landslide because multiple signals indicate meaningful risk. Key drivers: heavy rainfall accumulation, steep slope, soil moisture proxy.",
+  "risk_drivers": [
+    "heavy rainfall accumulation",
+    "steep slope",
+    "soil moisture proxy",
+    "land-cover change",
+    "nearby transport route exposure"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "area_id": "NTH-CHIANGMAI-001",
+  "incident_type": "wildfire_haze",
+  "priority_score": 0.78,
+  "severity": "HIGH",
+  "recommended_action": "PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE",
+  "operator_summary": "NTH-CHIANGMAI-001 should receive priority operator review for wildfire haze because hazard, exposure, urgency, and confidence signals combine into an elevated priority result. Key drivers: recent hotspot cluster, vegetation stress, low humidity.",
+  "risk_drivers": [
+    "recent hotspot cluster",
+    "vegetation stress",
+    "low humidity",
+    "wind spread potential",
+    "nearby community exposure"
+  ]
+}
