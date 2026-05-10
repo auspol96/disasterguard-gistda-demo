@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DisasterGuard: Multi-Hazard Priority Demo</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Decision-Priority Layer</p>
+        <h1>DisasterGuard: Multi-Hazard Priority Demo</h1>
+        <p class="subtitle">Northern Thailand / ASEAN demo for prioritizing wildfire/haze, rapid flood, and landslide review.</p>
+      </div>
+      <div class="status">API online</div>
+    </header>
+
+    <section class="panel scenario-panel">
+      <div>
+        <h2>Scenario</h2>
+        <p>Select a sample incident and send it to the scoring API. DisasterGuard ranks attention priority; it does not make deterministic disaster predictions.</p>
+      </div>
+      <div class="control">
+        <label for="scenario">Sample incident</label>
+        <select id="scenario">
+          <option value="wildfire">Chiang Mai wildfire/haze priority</option>
+          <option value="flood">Chiang Rai rapid flood priority</option>
+          <option value="landslide">Mae Hong Son landslide priority</option>
+        </select>
+        <button id="scoreBtn">Score selected scenario</button>
+      </div>
+    </section>
+
+    <section class="cards">
+      <article class="card"><span>Priority Score</span><strong id="priorityScore">—</strong></article>
+      <article class="card"><span>Severity</span><strong id="severity">—</strong></article>
+      <article class="card"><span>Recommended Action</span><strong id="recommendedAction">—</strong></article>
+    </section>
+
+    <section class="panel result-panel">
+      <div class="meta-grid">
+        <div><span>Area ID</span><strong id="areaId">—</strong></div>
+        <div><span>Incident Type</span><strong id="incidentType">—</strong></div>
+      </div>
+      <h3>Operator Summary</h3>
+      <p id="operatorSummary">Select and score a scenario to view the operator summary.</p>
+      <h3>Risk Drivers</h3>
+      <div id="riskDrivers" class="drivers"></div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
