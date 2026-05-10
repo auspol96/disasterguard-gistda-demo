@@ -75,6 +75,17 @@ sample_inputs/generated_landslide_maehongson.json
 
 These generated files are demo inputs for the existing scoring API. They support decision-priority review and are not deterministic disaster predictions.
 
+## Pilot Package
+
+Milestone 3 adds stakeholder-ready pilot documentation:
+
+- [GISTDA Pilot One-Pager](docs/gistda_pilot_one_pager.md)
+- [Demo Script](docs/demo_script.md)
+- [Technical Architecture](docs/technical_architecture.md)
+- [Pilot Roadmap](docs/pilot_roadmap.md)
+
+These documents position DisasterGuard as a decision-priority layer that complements existing monitoring systems.
+
 ## Important Positioning
 
 DisasterGuard does not claim deterministic disaster prediction.
