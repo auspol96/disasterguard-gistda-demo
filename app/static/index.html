@@ -17,20 +17,56 @@
       <div class="status">API online</div>
     </header>
 
-    <section class="panel scenario-panel">
-      <div>
-        <h2>Scenario</h2>
-        <p>Select a sample incident and send it to the scoring API. DisasterGuard ranks attention priority; it does not make deterministic disaster predictions.</p>
-      </div>
-      <div class="control">
-        <label for="scenario">Sample incident</label>
-        <select id="scenario">
-          <option value="wildfire">Chiang Mai wildfire/haze priority</option>
-          <option value="flood">Chiang Rai rapid flood priority</option>
-          <option value="landslide">Mae Hong Son landslide priority</option>
-        </select>
-        <button id="scoreBtn">Score selected scenario</button>
-      </div>
+    <section class="dashboard-grid">
+      <section class="panel scenario-panel">
+        <div>
+          <h2>Scenario</h2>
+          <p>Select a sample incident and send it to the scoring API. DisasterGuard ranks attention priority; it does not make deterministic disaster predictions.</p>
+        </div>
+        <div class="control">
+          <label for="scenario">Sample incident</label>
+          <select id="scenario">
+            <option value="wildfire">Chiang Mai wildfire/haze priority</option>
+            <option value="flood">Chiang Rai rapid flood priority</option>
+            <option value="landslide">Mae Hong Son landslide priority</option>
+          </select>
+          <button id="scoreBtn">Score selected scenario</button>
+        </div>
+      </section>
+
+      <section class="panel map-panel" aria-label="Northern Thailand mock map priority panel">
+        <div class="map-header">
+          <div>
+            <p class="eyebrow">Mock Map Priority View</p>
+            <h2>Northern Thailand Incident Priority</h2>
+          </div>
+          <span id="activeMapLabel" class="map-label">Awaiting scenario</span>
+        </div>
+        <div class="mock-map">
+          <div class="terrain terrain-1"></div>
+          <div class="terrain terrain-2"></div>
+          <div class="river river-1"></div>
+          <div class="river river-2"></div>
+          <button class="incident-marker marker-high" id="marker-wildfire" data-scenario="wildfire" type="button">
+            <span class="pulse"></span><span class="marker-dot"></span>
+            <span class="marker-label">Chiang Mai<br><strong>Wildfire / Haze</strong></span>
+          </button>
+          <button class="incident-marker marker-high" id="marker-flood" data-scenario="flood" type="button">
+            <span class="pulse"></span><span class="marker-dot"></span>
+            <span class="marker-label">Chiang Rai<br><strong>Rapid Flood</strong></span>
+          </button>
+          <button class="incident-marker marker-medium" id="marker-landslide" data-scenario="landslide" type="button">
+            <span class="pulse"></span><span class="marker-dot"></span>
+            <span class="marker-label">Mae Hong Son<br><strong>Landslide</strong></span>
+          </button>
+          <div class="map-compass">N</div>
+        </div>
+        <div class="map-legend">
+          <span><i class="legend-dot high"></i> HIGH</span>
+          <span><i class="legend-dot medium"></i> MEDIUM</span>
+          <span><i class="legend-dot watch"></i> WATCH / LOW</span>
+        </div>
+      </section>
     </section>
 
     <section class="cards">
