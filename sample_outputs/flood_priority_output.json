@@ -1,0 +1,15 @@
+{
+  "area_id": "NTH-CHIANGRAI-002",
+  "incident_type": "rapid_flood",
+  "priority_score": 0.84,
+  "severity": "HIGH",
+  "recommended_action": "PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE",
+  "operator_summary": "This rapid flood area should be prioritized due to elevated hazard, exposure, and urgency signals, including heavy rainfall accumulation, river proximity, low-lying terrain, surface water expansion signal, and nearby road and community exposure.",
+  "risk_drivers": [
+    "heavy rainfall accumulation",
+    "river proximity",
+    "low-lying terrain",
+    "surface water expansion signal",
+    "nearby road and community exposure"
+  ]
+}

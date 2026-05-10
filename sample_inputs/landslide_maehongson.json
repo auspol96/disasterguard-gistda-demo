@@ -1,0 +1,15 @@
+{
+  "area_id": "NTH-MAEHONGSON-003",
+  "incident_type": "landslide",
+  "hazard_score": 0.68,
+  "exposure_score": 0.72,
+  "urgency_score": 0.61,
+  "confidence": 0.7,
+  "risk_drivers": [
+    "heavy rainfall accumulation",
+    "steep slope",
+    "soil saturation proxy",
+    "forest cover disturbance",
+    "nearby transport route exposure"
+  ]
+}

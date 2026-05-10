@@ -1,0 +1,15 @@
+{
+  "area_id": "NTH-MAEHONGSON-003",
+  "incident_type": "landslide",
+  "priority_score": 0.68,
+  "severity": "MEDIUM",
+  "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+  "operator_summary": "This landslide area should be reviewed in the next operational cycle due to moderate priority signals, including heavy rainfall accumulation, steep slope, soil saturation proxy, forest cover disturbance, and nearby transport route exposure.",
+  "risk_drivers": [
+    "heavy rainfall accumulation",
+    "steep slope",
+    "soil saturation proxy",
+    "forest cover disturbance",
+    "nearby transport route exposure"
+  ]
+}
