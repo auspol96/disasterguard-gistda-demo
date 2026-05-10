@@ -1,0 +1,4 @@
+area_id,province,hotspot_cluster_score,hotspot_age_score,wind_spread_score,risk_driver
+NTH-CHIANGMAI-001,Chiang Mai,0.86,0.80,0.78,recent hotspot cluster
+NTH-CHIANGRAI-002,Chiang Rai,0.28,0.30,0.24,limited hotspot activity
+NTH-MAEHONGSON-003,Mae Hong Son,0.34,0.36,0.31,scattered hotspot activity

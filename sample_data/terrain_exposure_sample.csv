@@ -1,0 +1,4 @@
+area_id,province,slope_score,river_proximity_score,community_exposure_score,road_infrastructure_score,risk_driver
+NTH-CHIANGMAI-001,Chiang Mai,0.45,0.38,0.74,0.70,nearby community exposure
+NTH-CHIANGRAI-002,Chiang Rai,0.42,0.88,0.82,0.80,nearby road and community exposure
+NTH-MAEHONGSON-003,Mae Hong Son,0.82,0.44,0.70,0.76,nearby transport route exposure

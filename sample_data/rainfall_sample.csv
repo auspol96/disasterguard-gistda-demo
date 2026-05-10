@@ -1,0 +1,4 @@
+area_id,province,rainfall_accumulation_score,rainfall_intensity_score,soil_saturation_score,risk_driver
+NTH-CHIANGMAI-001,Chiang Mai,0.36,0.32,0.41,localized rainfall
+NTH-CHIANGRAI-002,Chiang Rai,0.92,0.86,0.81,heavy rainfall accumulation
+NTH-MAEHONGSON-003,Mae Hong Son,0.74,0.68,0.72,heavy rainfall accumulation

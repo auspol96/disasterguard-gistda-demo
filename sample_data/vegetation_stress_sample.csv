@@ -1,0 +1,4 @@
+area_id,province,vegetation_stress_score,dryness_score,humidity_temperature_wind_score,risk_driver
+NTH-CHIANGMAI-001,Chiang Mai,0.79,0.84,0.76,vegetation stress
+NTH-CHIANGRAI-002,Chiang Rai,0.46,0.42,0.38,moderate vegetation stress
+NTH-MAEHONGSON-003,Mae Hong Son,0.58,0.54,0.50,forest cover disturbance

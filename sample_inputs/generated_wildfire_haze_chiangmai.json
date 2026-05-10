@@ -1,0 +1,15 @@
+{
+  "area_id": "NTH-CHIANGMAI-001",
+  "incident_type": "wildfire_haze",
+  "hazard_score": 0.82,
+  "exposure_score": 0.72,
+  "urgency_score": 0.77,
+  "confidence": 0.76,
+  "risk_drivers": [
+    "recent hotspot cluster",
+    "vegetation stress",
+    "dryness signal",
+    "wind spread potential",
+    "nearby community exposure"
+  ]
+}

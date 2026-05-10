@@ -56,6 +56,25 @@ curl -X POST "http://127.0.0.1:8000/api/incident/score" \
   -d @sample_inputs/wildfire_haze_chiangmai.json
 ```
 
+## Build generated sample inputs
+
+Milestone 2 includes small open-data-style CSV samples in `sample_data/`.
+Generate schema-ready incident scoring inputs from those CSV files with:
+
+```bash
+python scripts/build_incident_inputs.py
+```
+
+This writes:
+
+```text
+sample_inputs/generated_wildfire_haze_chiangmai.json
+sample_inputs/generated_rapid_flood_chiangrai.json
+sample_inputs/generated_landslide_maehongson.json
+```
+
+These generated files are demo inputs for the existing scoring API. They support decision-priority review and are not deterministic disaster predictions.
+
 ## Important Positioning
 
 DisasterGuard does not claim deterministic disaster prediction.
