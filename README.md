@@ -46,6 +46,28 @@ It then returns a priority score and recommended action for operator review.
 
 ## API Endpoints
 
+### Browser Dashboard
+
+```text
+GET /
+```
+
+The root path serves a simple dark-mode operations dashboard. It lets an operator select one of three sample scenarios and sends the selected payload to `POST /api/incident/score`.
+
+The dashboard displays:
+
+```text
+area_id
+incident_type
+priority_score
+severity
+recommended_action
+risk_drivers
+operator_summary
+```
+
+It is intentionally simple: no React, no database, and no map layer yet. It keeps DisasterGuard positioned as a decision-priority layer for operator review and coordination.
+
 ### Health Check
 
 ```text
@@ -161,6 +183,12 @@ Run the API:
 uvicorn app.main:app --reload
 ```
 
+Open the dashboard:
+
+```text
+http://127.0.0.1:8000/
+```
+
 Open API docs:
 
 ```text
@@ -182,7 +210,11 @@ disasterguard-gistda-demo/
 │   ├── models.py
 │   ├── scoring.py
 │   ├── actions.py
-│   └── config.py
+│   ├── config.py
+│   └── static/
+│       ├── index.html
+│       ├── app.js
+│       └── styles.css
 │
 ├── sample_inputs/
 ├── sample_outputs/

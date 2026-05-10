@@ -5,6 +5,24 @@ from app.main import app
 client = TestClient(app)
 
 
+def test_dashboard_root_serves_html():
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "DisasterGuard: Multi-Hazard Priority Demo" in response.text
+    assert 'src="/static/app.js"' in response.text
+
+
+def test_dashboard_static_assets_are_served():
+    js_response = client.get("/static/app.js")
+    css_response = client.get("/static/styles.css")
+
+    assert js_response.status_code == 200
+    assert "scenarios" in js_response.text
+    assert css_response.status_code == 200
+    assert "dark" in css_response.text
+
+
 def test_health_endpoint():
     response = client.get("/api/health")
 

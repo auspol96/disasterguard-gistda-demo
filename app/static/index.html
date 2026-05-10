@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DisasterGuard: Multi-Hazard Priority Demo</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Decision-priority layer</p>
+          <h1>DisasterGuard: Multi-Hazard Priority Demo</h1>
+        </div>
+        <div class="service-pill" id="serviceStatus">Checking API</div>
+      </header>
+
+      <section class="control-panel" aria-labelledby="scenario-heading">
+        <div>
+          <h2 id="scenario-heading">Scenario</h2>
+          <p>
+            Select a sample Northern Thailand incident and send it to the scoring API.
+            DisasterGuard ranks attention priority; it does not make deterministic disaster predictions.
+          </p>
+        </div>
+        <label class="select-label" for="scenarioSelect">Sample incident</label>
+        <select id="scenarioSelect">
+          <option value="wildfire">Chiang Mai wildfire/haze priority</option>
+          <option value="flood">Chiang Rai rapid flood priority</option>
+          <option value="landslide">Mae Hong Son landslide priority</option>
+        </select>
+        <button id="scoreButton" type="button">Score selected scenario</button>
+      </section>
+
+      <section class="dashboard-grid" aria-live="polite">
+        <article class="metric-card">
+          <span>Priority Score</span>
+          <strong id="priorityScore">--</strong>
+        </article>
+        <article class="metric-card">
+          <span>Severity</span>
+          <strong id="severity">--</strong>
+        </article>
+        <article class="metric-card wide">
+          <span>Recommended Action</span>
+          <strong id="recommendedAction">--</strong>
+        </article>
+      </section>
+
+      <section class="result-panel">
+        <div class="result-header">
+          <div>
+            <span>Area ID</span>
+            <strong id="areaId">--</strong>
+          </div>
+          <div>
+            <span>Incident Type</span>
+            <strong id="incidentType">--</strong>
+          </div>
+        </div>
+
+        <div class="summary-block">
+          <h2>Operator Summary</h2>
+          <p id="operatorSummary">Choose a scenario to generate a priority result.</p>
+        </div>
+
+        <div class="drivers-block">
+          <h2>Risk Drivers</h2>
+          <ul id="riskDrivers"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
