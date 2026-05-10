@@ -3,42 +3,73 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DisasterGuard: Multi-Hazard Priority Demo</title>
+  <title>DisasterGuard Pilot Demo v1</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <main class="shell">
     <header class="hero">
       <div>
-        <p class="eyebrow">Decision-Priority Layer</p>
-        <h1>DisasterGuard: Multi-Hazard Priority Demo</h1>
-        <p class="subtitle">Northern Thailand / ASEAN demo for prioritizing wildfire/haze, rapid flood, and landslide review.</p>
+        <p class="eyebrow">GISTDA-style stakeholder review</p>
+        <h1>DisasterGuard Pilot Demo v1</h1>
+        <p class="subtitle">A multi-hazard decision-priority layer for Northern Thailand / ASEAN operator review, revisit planning, alerting, and response coordination.</p>
       </div>
-      <div class="status">API online</div>
+      <div class="status-block">
+        <span class="status">API online</span>
+        <span class="status muted">No database · Mock map</span>
+      </div>
     </header>
 
-    <section class="dashboard-grid">
-      <section class="panel scenario-panel">
+    <section class="panel overview-panel" aria-labelledby="overviewHeading">
+      <div class="section-heading">
         <div>
-          <h2>Scenario</h2>
-          <p>Select a sample incident and send it to the scoring API. DisasterGuard ranks attention priority; it does not make deterministic disaster predictions.</p>
+          <p class="eyebrow">Executive Overview</p>
+          <h2 id="overviewHeading">Operational Snapshot</h2>
         </div>
-        <div class="control">
-          <label for="scenario">Sample incident</label>
-          <select id="scenario">
-            <option value="wildfire">Chiang Mai wildfire/haze priority</option>
-            <option value="flood">Chiang Rai rapid flood priority</option>
-            <option value="landslide">Mae Hong Son landslide priority</option>
-          </select>
-          <button id="scoreBtn">Score selected scenario</button>
+        <p>Scores are generated from transparent sample inputs using the existing scoring API. The demo supports prioritization and does not make deterministic disaster predictions.</p>
+      </div>
+      <div class="overview-grid">
+        <article class="summary-card"><span>Total incidents monitored</span><strong id="totalIncidents">—</strong></article>
+        <article class="summary-card"><span>HIGH incidents</span><strong id="highIncidents">—</strong></article>
+        <article class="summary-card"><span>MEDIUM incidents</span><strong id="mediumIncidents">—</strong></article>
+        <article class="summary-card"><span>CRITICAL incidents</span><strong id="criticalIncidents">—</strong></article>
+        <article class="summary-card top-concern"><span>Top concern</span><strong id="topConcern">Building queue…</strong></article>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <section class="panel queue-panel" aria-labelledby="priorityQueueHeading">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Decision-priority support</p>
+            <h2 id="priorityQueueHeading">Priority Queue</h2>
+          </div>
+          <span id="queueStatus" class="queue-status">Scoring incidents</span>
+        </div>
+        <div class="queue-table-wrap">
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Area ID</th>
+                <th>Incident Type</th>
+                <th>Priority Score</th>
+                <th>Severity</th>
+                <th>Recommended Action</th>
+              </tr>
+            </thead>
+            <tbody id="priorityQueue">
+              <tr><td colspan="6">Scoring sample incidents…</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <section class="panel map-panel" aria-label="Northern Thailand mock map priority panel">
-        <div class="map-header">
+      <section class="panel map-panel" aria-label="Northern Thailand ASEAN mock map priority panel">
+        <div class="section-heading compact">
           <div>
             <p class="eyebrow">Mock Map Priority View</p>
-            <h2>Northern Thailand Incident Priority</h2>
+            <h2>Northern Thailand / ASEAN</h2>
           </div>
           <span id="activeMapLabel" class="map-label">Awaiting scenario</span>
         </div>
@@ -47,15 +78,15 @@
           <div class="terrain terrain-2"></div>
           <div class="river river-1"></div>
           <div class="river river-2"></div>
-          <button class="incident-marker marker-high" id="marker-wildfire" data-scenario="wildfire" type="button">
+          <button class="incident-marker" id="marker-wildfire" data-scenario="wildfire" type="button">
             <span class="pulse"></span><span class="marker-dot"></span>
             <span class="marker-label">Chiang Mai<br><strong>Wildfire / Haze</strong></span>
           </button>
-          <button class="incident-marker marker-high" id="marker-flood" data-scenario="flood" type="button">
+          <button class="incident-marker" id="marker-flood" data-scenario="flood" type="button">
             <span class="pulse"></span><span class="marker-dot"></span>
             <span class="marker-label">Chiang Rai<br><strong>Rapid Flood</strong></span>
           </button>
-          <button class="incident-marker marker-medium" id="marker-landslide" data-scenario="landslide" type="button">
+          <button class="incident-marker" id="marker-landslide" data-scenario="landslide" type="button">
             <span class="pulse"></span><span class="marker-dot"></span>
             <span class="marker-label">Mae Hong Son<br><strong>Landslide</strong></span>
           </button>
@@ -64,26 +95,50 @@
         <div class="map-legend">
           <span><i class="legend-dot high"></i> HIGH</span>
           <span><i class="legend-dot medium"></i> MEDIUM</span>
+          <span><i class="legend-dot critical"></i> CRITICAL</span>
           <span><i class="legend-dot watch"></i> WATCH / LOW</span>
         </div>
       </section>
     </section>
 
-    <section class="cards">
-      <article class="card"><span>Priority Score</span><strong id="priorityScore">—</strong></article>
-      <article class="card"><span>Severity</span><strong id="severity">—</strong></article>
-      <article class="card"><span>Recommended Action</span><strong id="recommendedAction">—</strong></article>
-    </section>
+    <section class="detail-grid">
+      <section class="panel detail-panel" aria-labelledby="detailHeading">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Incident Detail Panel</p>
+            <h2 id="detailHeading">Selected Incident</h2>
+          </div>
+          <select id="scenario" aria-label="Select sample incident">
+            <option value="wildfire">Chiang Mai wildfire/haze priority</option>
+            <option value="flood">Chiang Rai rapid flood priority</option>
+            <option value="landslide">Mae Hong Son landslide priority</option>
+          </select>
+        </div>
+        <div class="metric-row">
+          <article class="metric-card"><span>Priority Score</span><strong id="priorityScore">—</strong></article>
+          <article class="metric-card"><span>Severity</span><strong id="severity">—</strong></article>
+          <article class="metric-card"><span>Recommended Action</span><strong id="recommendedAction">—</strong></article>
+        </div>
+        <div class="meta-grid">
+          <div><span>Area ID</span><strong id="areaId">—</strong></div>
+          <div><span>Incident Type</span><strong id="incidentType">—</strong></div>
+        </div>
+        <h3>Operator Summary</h3>
+        <p id="operatorSummary">Building the incident queue…</p>
+        <h3>Risk Drivers</h3>
+        <div id="riskDrivers" class="drivers"></div>
+      </section>
 
-    <section class="panel result-panel">
-      <div class="meta-grid">
-        <div><span>Area ID</span><strong id="areaId">—</strong></div>
-        <div><span>Incident Type</span><strong id="incidentType">—</strong></div>
-      </div>
-      <h3>Operator Summary</h3>
-      <p id="operatorSummary">Select and score a scenario to view the operator summary.</p>
-      <h3>Risk Drivers</h3>
-      <div id="riskDrivers" class="drivers"></div>
+      <section class="panel readiness-panel" aria-labelledby="readinessHeading">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Data-Source Readiness Panel</p>
+            <h2 id="readinessHeading">Selected Incident Layers</h2>
+          </div>
+          <span id="readinessIncident" class="queue-status">Awaiting selection</span>
+        </div>
+        <div id="readinessLayers" class="readiness-list"></div>
+      </section>
     </section>
   </main>
   <script src="/static/app.js"></script>

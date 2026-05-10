@@ -8,7 +8,12 @@ client = TestClient(app)
 def test_dashboard_root_serves_html():
     response = client.get("/")
     assert response.status_code == 200
-    assert "DisasterGuard: Multi-Hazard Priority Demo" in response.text
+    assert "DisasterGuard Pilot Demo v1" in response.text
+    assert "Executive Overview" in response.text
+    assert "Priority Queue" in response.text
+    assert "Mock Map Priority View" in response.text
+    assert "Incident Detail Panel" in response.text
+    assert "Data-Source Readiness Panel" in response.text
 
 
 def test_static_assets_available():
@@ -16,8 +21,11 @@ def test_static_assets_available():
     css_response = client.get("/static/styles.css")
     assert js_response.status_code == 200
     assert css_response.status_code == 200
-    assert "scoreSelectedScenario" in js_response.text
+    assert "buildPilotDemo" in js_response.text
+    assert "readinessByIncidentType" in js_response.text
     assert "color-scheme" in css_response.text
+    assert "queue-table" in css_response.text
+    assert "readiness-list" in css_response.text
 
 
 def test_health_endpoint():
