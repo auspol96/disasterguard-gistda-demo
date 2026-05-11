@@ -86,6 +86,28 @@ Milestone 3 adds stakeholder-ready pilot documentation:
 
 These documents position DisasterGuard as a decision-priority layer that complements existing monitoring systems.
 
+## GISTDA Hotspot API Integration
+
+Milestone 4 adds a first real external data connector for the GISTDA Sphere disaster-hotspot API.
+
+Set the API key in your shell before running the connector:
+
+```bash
+export GISTDA_API_KEY="your_key_here"
+python scripts/fetch_gistda_hotspot_context.py
+```
+
+The API key must not be committed to git. Do not add `.env` files or hardcoded keys to this repository.
+
+The script writes:
+
+```text
+live_context/gistda_hotspot_context.json
+sample_inputs/gistda_wildfire_haze_chiangmai.json
+```
+
+The date returned by the API should be treated as the data-provided observation date, not automatically as the current date. This integration supports decision-priority review and context building; it is not official disaster alerting and does not replace existing GISTDA systems.
+
 ## Important Positioning
 
 DisasterGuard does not claim deterministic disaster prediction.

@@ -9,7 +9,9 @@ from app.models import HealthResponse, IncidentScoreRequest, IncidentScoreRespon
 from app.scoring import score_incident
 
 BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parent
 STATIC_DIR = BASE_DIR / "static"
+LIVE_CONTEXT_DIR = ROOT_DIR / "live_context"
 
 app = FastAPI(
     title="DisasterGuard GISTDA Demo",
@@ -21,6 +23,11 @@ app = FastAPI(
 )
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount(
+    "/live_context",
+    StaticFiles(directory=LIVE_CONTEXT_DIR, check_dir=False),
+    name="live_context",
+)
 
 
 @app.get("/", include_in_schema=False)

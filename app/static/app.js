@@ -75,6 +75,12 @@ const elements = {
   queueStatus: document.getElementById("queueStatus"),
   readinessIncident: document.getElementById("readinessIncident"),
   readinessLayers: document.getElementById("readinessLayers"),
+  gistdaContextStatus: document.getElementById("gistdaContextStatus"),
+  gistdaHotspotCount: document.getElementById("gistdaHotspotCount"),
+  gistdaDates: document.getElementById("gistdaDates"),
+  gistdaNearestDistance: document.getElementById("gistdaNearestDistance"),
+  gistdaProvinces: document.getElementById("gistdaProvinces"),
+  gistdaLanduse: document.getElementById("gistdaLanduse"),
 };
 
 const queueResults = new Map();
@@ -164,6 +170,36 @@ function renderReadinessPanel(data) {
   });
 }
 
+function renderGistdaContext(context) {
+  const summary = context.summary || {};
+  elements.gistdaContextStatus.textContent = context.status || summary.status || "unknown";
+  elements.gistdaContextStatus.dataset.status = context.status || summary.status || "unknown";
+  elements.gistdaHotspotCount.textContent = summary.hotspot_count ?? "—";
+  elements.gistdaDates.textContent = (summary.dates_available || []).join(", ") || "—";
+  elements.gistdaNearestDistance.textContent =
+    summary.nearest_hotspot_distance_km === null || summary.nearest_hotspot_distance_km === undefined
+      ? "—"
+      : `${Number(summary.nearest_hotspot_distance_km).toFixed(2)} km`;
+  elements.gistdaProvinces.textContent = (summary.provinces_detected || []).join(", ") || "—";
+  elements.gistdaLanduse.textContent = (summary.landuse_types || []).join(", ") || "—";
+}
+
+async function loadGistdaContext() {
+  try {
+    const response = await fetch("/live_context/gistda_hotspot_context.json", {cache: "no-store"});
+    if (response.status === 404) {
+      elements.gistdaContextStatus.textContent = "Not loaded yet";
+      elements.gistdaContextStatus.dataset.status = "not_loaded";
+      return;
+    }
+    if (!response.ok) throw new Error(`Context returned ${response.status}`);
+    renderGistdaContext(await response.json());
+  } catch (error) {
+    elements.gistdaContextStatus.textContent = "error";
+    elements.gistdaContextStatus.dataset.status = "error";
+  }
+}
+
 function setActiveQueueRow(scenarioKey) {
   elements.priorityQueue.querySelectorAll("tr").forEach((row) => {
     row.classList.toggle("active", row.dataset.scenario === scenarioKey);
@@ -224,3 +260,4 @@ elements.scenario.addEventListener("change", () => selectScenario(elements.scena
 elements.markers.forEach((marker) => marker.addEventListener("click", () => selectScenario(marker.dataset.scenario)));
 
 buildPilotDemo();
+loadGistdaContext();

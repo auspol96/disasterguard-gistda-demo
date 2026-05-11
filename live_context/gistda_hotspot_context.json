@@ -1,0 +1,14 @@
+{
+  "status": "not_configured",
+  "message": "GISTDA_API_KEY environment variable is not configured.",
+  "summary": {
+    "status": "not_configured",
+    "source_satellites_checked": [],
+    "hotspot_count": 0,
+    "dates_available": [],
+    "nearest_hotspot_distance_km": null,
+    "provinces_detected": [],
+    "landuse_types": [],
+    "raw_limited_sample": []
+  }
+}

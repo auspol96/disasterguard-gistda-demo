@@ -14,6 +14,7 @@ def test_dashboard_root_serves_html():
     assert "Mock Map Priority View" in response.text
     assert "Incident Detail Panel" in response.text
     assert "Data-Source Readiness Panel" in response.text
+    assert "GISTDA Hotspot Context" in response.text
 
 
 def test_static_assets_available():
@@ -23,9 +24,11 @@ def test_static_assets_available():
     assert css_response.status_code == 200
     assert "buildPilotDemo" in js_response.text
     assert "readinessByIncidentType" in js_response.text
+    assert "loadGistdaContext" in js_response.text
     assert "color-scheme" in css_response.text
     assert "queue-table" in css_response.text
     assert "readiness-list" in css_response.text
+    assert "gistda-context-grid" in css_response.text
 
 
 def test_health_endpoint():
