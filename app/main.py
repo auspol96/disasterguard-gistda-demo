@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -43,3 +44,36 @@ def health_check() -> HealthResponse:
 @app.post("/api/incident/score", response_model=IncidentScoreResponse)
 def incident_score(request: IncidentScoreRequest) -> IncidentScoreResponse:
     return score_incident(request)
+
+@app.get("/api/gistda/hotspot-context")
+def gistda_hotspot_context():
+    context_path = BASE_DIR.parent / "live_context" / "gistda_hotspot_context.json"
+
+    if not context_path.exists():
+        return {
+            "status": "not_loaded",
+            "message": "GISTDA hotspot context not loaded yet. Run scripts/fetch_gistda_hotspot_context.py first.",
+            "summary": {
+                "hotspot_count": 0,
+                "dates_available": [],
+                "nearest_hotspot_distance_km": None,
+                "provinces_detected": [],
+                "landuse_types": [],
+            },
+        }
+
+    try:
+        with context_path.open("r", encoding="utf-8") as file:
+            return json.load(file)
+    except Exception as exc:
+        return {
+            "status": "error",
+            "message": str(exc),
+            "summary": {
+                "hotspot_count": 0,
+                "dates_available": [],
+                "nearest_hotspot_distance_km": None,
+                "provinces_detected": [],
+                "landuse_types": [],
+            },
+        }
