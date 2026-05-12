@@ -1,0 +1,151 @@
+{
+  "status": "ok",
+  "message": "Forest priority ranking refreshed.",
+  "generated_at": "2026-05-12T18:29:54.153064+00:00",
+  "areas": [
+    {
+      "area_id": "NTH-CHIANGDAO-MUEANGNA-001",
+      "area_name": "Chiang Dao / Mueang Na forest watch",
+      "province": "Chiang Mai",
+      "district": "Chiang Dao",
+      "lat": 19.57651,
+      "lon": 99.01361,
+      "hotspot_count": 1,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [
+        "ป่าอนุรักษ์"
+      ],
+      "nearest_hotspot_distance_km": 5.82881,
+      "priority_score": 0.64,
+      "severity": "MEDIUM",
+      "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+      "operator_summary": "This wildfire haze area should be reviewed in the next operational cycle due to moderate priority signals, including GISTDA hotspot API context, 1 hotspot record(s) returned, landuse: ป่าอนุรักษ์, and nearest hotspot distance 5.83 km.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "1 hotspot record(s) returned",
+        "landuse: ป่าอนุรักษ์",
+        "nearest hotspot distance 5.83 km"
+      ],
+      "rank": 1
+    },
+    {
+      "area_id": "NTH-MAERIM-001",
+      "area_name": "Mae Rim forest interface",
+      "province": "Chiang Mai",
+      "district": "Mae Rim",
+      "lat": 18.9184,
+      "lon": 98.9397,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "rank": 2
+    },
+    {
+      "area_id": "NTH-MAETAENG-001",
+      "area_name": "Mae Taeng forest corridor",
+      "province": "Chiang Mai",
+      "district": "Mae Taeng",
+      "lat": 19.1173,
+      "lon": 98.9415,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "rank": 3
+    },
+    {
+      "area_id": "NTH-MAEHONGSON-001",
+      "area_name": "Mae Hong Son upland forest",
+      "province": "Mae Hong Son",
+      "district": "Mueang Mae Hong Son",
+      "lat": 19.3012,
+      "lon": 97.9654,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "rank": 4
+    },
+    {
+      "area_id": "NTH-NAN-FOREST-001",
+      "area_name": "Nan forest zone",
+      "province": "Nan",
+      "district": "Mueang Nan",
+      "lat": 18.7831,
+      "lon": 100.7789,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "rank": 5
+    }
+  ]
+}

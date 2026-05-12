@@ -1,14 +1,81 @@
 {
-  "status": "not_configured",
-  "message": "GISTDA_API_KEY environment variable is not configured.",
+  "status": "ok",
+  "request": {
+    "lon": 99.01361,
+    "lat": 19.57651,
+    "radius": 1000.5
+  },
   "summary": {
-    "status": "not_configured",
-    "source_satellites_checked": [],
-    "hotspot_count": 0,
-    "dates_available": [],
-    "nearest_hotspot_distance_km": null,
-    "provinces_detected": [],
-    "landuse_types": [],
-    "raw_limited_sample": []
+    "status": "ok",
+    "source_satellites_checked": [
+      "terra",
+      "aqua",
+      "suomi-npp"
+    ],
+    "hotspot_count": 1,
+    "dates_available": [
+      "2022-03-28"
+    ],
+    "nearest_hotspot_distance_km": 5.82881,
+    "provinces_detected": [
+      "เชียงใหม่"
+    ],
+    "landuse_types": [
+      "ป่าอนุรักษ์"
+    ],
+    "raw_limited_sample": [
+      {
+        "satellite": "suomi-npp",
+        "date": "2022-03-28",
+        "landuse": "ป่าอนุรักษ์",
+        "frequency": 1,
+        "lat": "19.5765100000",
+        "lon": "99.0136100000",
+        "province": "เชียงใหม่",
+        "district": "เชียงดาว",
+        "subdistrict": "เมืองนะ",
+        "village": "บ้านน้ำรู",
+        "distance": 5.82881,
+        "direction": "S"
+      }
+    ]
+  },
+  "raw_response": {
+    "terra": [
+      {
+        "date": "2022-03-28",
+        "data": []
+      }
+    ],
+    "aqua": [
+      {
+        "date": "2022-03-28",
+        "data": []
+      }
+    ],
+    "suomi-npp": [
+      {
+        "date": "2022-03-28",
+        "data": [
+          {
+            "code": 1,
+            "landuse": "ป่าอนุรักษ์",
+            "frequency": 1,
+            "data": [
+              {
+                "lat": "19.5765100000",
+                "lon": "99.0136100000",
+                "pv_tn": "เชียงใหม่",
+                "ap_tn": "เชียงดาว",
+                "tb_tn": "เมืองนะ",
+                "village": "บ้านน้ำรู",
+                "distance": 5.82881,
+                "direction": "S"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

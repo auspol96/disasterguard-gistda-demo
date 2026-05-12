@@ -17,7 +17,10 @@ def clamp(value: float) -> float:
     return max(0.0, min(1.0, round(value, 2)))
 
 
-def build_wildfire_input_from_context(connector_output: dict) -> dict:
+def build_wildfire_input_from_context(
+    connector_output: dict,
+    area_id: str = "NTH-CHIANGMAI-GISTDA-001",
+) -> dict:
     summary = connector_output.get("summary", {})
     hotspot_count = int(summary.get("hotspot_count") or 0)
     nearest_distance = summary.get("nearest_hotspot_distance_km")
@@ -33,8 +36,19 @@ def build_wildfire_input_from_context(connector_output: dict) -> dict:
     if isinstance(nearest_distance, (int, float)):
         distance_signal = clamp(1 - min(float(nearest_distance), 25) / 25)
     landuse_signal = 0.2 if landuse_types else 0.0
+    confirmed_clear_radius = (
+        connector_output.get("status") == "ok"
+        and hotspot_count == 0
+        and not landuse_types
+        and nearest_distance is None
+    )
 
-    if connector_output.get("status") == "ok":
+    if confirmed_clear_radius:
+        hazard_score = 0.10
+        exposure_score = 0.20
+        urgency_score = 0.10
+        confidence = 0.25
+    elif connector_output.get("status") == "ok":
         hazard_score = clamp(0.45 + hotspot_signal * 0.3 + frequency_signal * 0.15)
         exposure_score = clamp(0.55 + landuse_signal)
         urgency_score = clamp(0.45 + distance_signal * 0.35 + hotspot_signal * 0.1)
@@ -46,7 +60,9 @@ def build_wildfire_input_from_context(connector_output: dict) -> dict:
         confidence = 0.25
 
     risk_drivers = ["GISTDA hotspot API context"]
-    if hotspot_count:
+    if confirmed_clear_radius:
+        risk_drivers.append("GISTDA checked, no hotspot detected in monitored radius")
+    elif hotspot_count:
         risk_drivers.append(f"{hotspot_count} hotspot record(s) returned")
     if landuse_types:
         risk_drivers.append(f"landuse: {', '.join(landuse_types[:3])}")
@@ -56,7 +72,7 @@ def build_wildfire_input_from_context(connector_output: dict) -> dict:
         risk_drivers.append("live hotspot context not configured")
 
     return {
-        "area_id": "NTH-CHIANGMAI-GISTDA-001",
+        "area_id": area_id,
         "incident_type": "wildfire_haze",
         "hazard_score": hazard_score,
         "exposure_score": exposure_score,
@@ -71,16 +87,38 @@ def write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def main() -> dict:
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def refresh_hotspot_context() -> dict:
     connector_output = fetch_hotspot_near_point(**CHIANG_MAI_POINT)
     write_json(LIVE_CONTEXT_PATH, connector_output)
     generated_input = build_wildfire_input_from_context(connector_output)
     write_json(GENERATED_INPUT_PATH, generated_input)
+    status = connector_output.get("status") or "error"
+
+    if status == "ok":
+        message = "GISTDA hotspot context refreshed."
+    elif status == "not_configured":
+        message = "GISTDA_API_KEY environment variable is not configured."
+    else:
+        message = connector_output.get("message") or "GISTDA hotspot refresh failed."
+
     return {
-        "context_path": str(LIVE_CONTEXT_PATH.relative_to(ROOT)),
-        "generated_input_path": str(GENERATED_INPUT_PATH.relative_to(ROOT)),
-        "status": connector_output.get("status"),
+        "status": status,
+        "message": message,
+        "context_path": _display_path(LIVE_CONTEXT_PATH),
+        "generated_input_path": _display_path(GENERATED_INPUT_PATH),
+        "summary": connector_output.get("summary", {}),
     }
+
+
+def main() -> dict:
+    return refresh_hotspot_context()
 
 
 if __name__ == "__main__":
