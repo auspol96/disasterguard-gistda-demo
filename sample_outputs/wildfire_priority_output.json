@@ -11,5 +11,6 @@
     "low humidity",
     "wind spread potential",
     "nearby community exposure"
-  ]
+  ],
+  "matched_patterns": []
 }

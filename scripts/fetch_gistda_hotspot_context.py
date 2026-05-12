@@ -79,6 +79,9 @@ def build_wildfire_input_from_context(
         "urgency_score": urgency_score,
         "confidence": confidence,
         "risk_drivers": risk_drivers,
+        "hotspot_count": hotspot_count,
+        "landuse_types": landuse_types,
+        "nearest_hotspot_distance_km": nearest_distance,
     }
 
 

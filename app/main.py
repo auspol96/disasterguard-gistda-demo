@@ -162,7 +162,10 @@ def forest_priority_ranking() -> JSONResponse:
 
     try:
         with FOREST_PRIORITY_RANKING_PATH.open("r", encoding="utf-8") as file:
-            return JSONResponse(content=json.load(file))
+            payload = json.load(file)
+        for area in payload.get("areas", []):
+            area.setdefault("matched_patterns", [])
+        return JSONResponse(content=payload)
     except Exception:
         return JSONResponse(
             status_code=500,

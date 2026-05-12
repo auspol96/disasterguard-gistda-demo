@@ -1,7 +1,7 @@
 {
   "status": "ok",
   "message": "Forest priority ranking refreshed.",
-  "generated_at": "2026-05-12T18:29:54.153064+00:00",
+  "generated_at": "2026-05-12T18:49:43.524339+00:00",
   "areas": [
     {
       "area_id": "NTH-CHIANGDAO-MUEANGNA-001",
@@ -33,6 +33,22 @@
         "landuse: ป่าอนุรักษ์",
         "nearest hotspot distance 5.83 km"
       ],
+      "matched_patterns": [
+        {
+          "pattern_code": "FOREST_CONSERVATION_PRIORITY",
+          "pattern_name": "Conservation forest hotspot priority",
+          "severity_hint": "MEDIUM",
+          "explanation": "A hotspot was detected in a conservation forest area.",
+          "recommended_operational_focus": "Review with forest protection or local response team."
+        },
+        {
+          "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
+          "pattern_name": "Hotspot near monitored area",
+          "severity_hint": "MEDIUM",
+          "explanation": "The nearest hotspot is within 10 km of the monitored location.",
+          "recommended_operational_focus": "Check whether local verification is required."
+        }
+      ],
       "rank": 1
     },
     {
@@ -60,6 +76,15 @@
       "risk_drivers": [
         "GISTDA hotspot API context",
         "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
       ],
       "rank": 2
     },
@@ -89,6 +114,15 @@
         "GISTDA hotspot API context",
         "GISTDA checked, no hotspot detected in monitored radius"
       ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
       "rank": 3
     },
     {
@@ -117,6 +151,15 @@
         "GISTDA hotspot API context",
         "GISTDA checked, no hotspot detected in monitored radius"
       ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
       "rank": 4
     },
     {
@@ -144,6 +187,15 @@
       "risk_drivers": [
         "GISTDA hotspot API context",
         "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
       ],
       "rank": 5
     }

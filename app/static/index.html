@@ -105,12 +105,24 @@
               <th>Score</th>
               <th>Severity</th>
               <th>Action</th>
+              <th>Patterns</th>
             </tr>
           </thead>
           <tbody id="rankingTableBody">
-            <tr><td colspan="9">No ranking loaded.</td></tr>
+            <tr><td colspan="10">No ranking loaded.</td></tr>
           </tbody>
         </table>
+      </div>
+      <div class="pattern-detail-panel">
+        <div>
+          <p class="eyebrow">Selected / Top-Ranked Area Pattern</p>
+          <h3 id="patternAreaName">No ranked area selected</h3>
+        </div>
+        <div class="pattern-detail-grid">
+          <article><span>Pattern codes</span><strong id="patternCodes">--</strong></article>
+          <article><span>Explanation</span><strong id="patternExplanation">Refresh the ranking to load pattern guidance.</strong></article>
+          <article><span>Operational focus</span><strong id="patternFocus">--</strong></article>
+        </div>
       </div>
     </section>
   </main>

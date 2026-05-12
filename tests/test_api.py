@@ -45,6 +45,7 @@ def test_static_assets_available():
     assert ".hotspot-popup" in css_response.text
     assert ".refresh-message" in css_response.text
     assert ".ranking-table" in css_response.text
+    assert ".pattern-detail-panel" in css_response.text
 
 
 def test_health_endpoint():
@@ -108,6 +109,15 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                     "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
                     "operator_summary": "Review the area.",
                     "risk_drivers": ["GISTDA hotspot API context"],
+                    "matched_patterns": [
+                        {
+                            "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
+                            "pattern_name": "Hotspot near monitored area",
+                            "severity_hint": "MEDIUM",
+                            "explanation": "The nearest hotspot is within 10 km of the monitored location.",
+                            "recommended_operational_focus": "Check whether local verification is required.",
+                        }
+                    ],
                 }
             ],
         },
@@ -120,6 +130,7 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     assert payload["status"] == "ok"
     assert payload["areas"][0]["rank"] == 1
     assert payload["areas"][0]["priority_score"] == 0.64
+    assert payload["areas"][0]["matched_patterns"][0]["pattern_code"] == "HOTSPOT_NEAR_MONITORED_AREA"
 
 
 def test_refresh_hotspot_context_requires_api_key(monkeypatch):
@@ -216,6 +227,28 @@ def test_incident_score_endpoint_wildfire():
     assert data["severity"] == "HIGH"
     assert data["recommended_action"] == "PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE"
     assert data["risk_drivers"] == payload["risk_drivers"]
+    assert data["matched_patterns"] == []
+
+
+def test_incident_score_endpoint_returns_matched_patterns_for_contextual_payload():
+    payload = {
+        "area_id": "NTH-CHIANGMAI-GISTDA-001",
+        "incident_type": "wildfire_haze",
+        "hazard_score": 0.51,
+        "exposure_score": 0.75,
+        "urgency_score": 0.73,
+        "confidence": 0.62,
+        "risk_drivers": ["GISTDA hotspot API context"],
+        "hotspot_count": 1,
+        "landuse_types": ["ป่าอนุรักษ์"],
+        "nearest_hotspot_distance_km": 5.82881,
+    }
+
+    response = client.post("/api/incident/score", json=payload)
+
+    assert response.status_code == 200
+    codes = [pattern["pattern_code"] for pattern in response.json()["matched_patterns"]]
+    assert codes == ["FOREST_CONSERVATION_PRIORITY", "HOTSPOT_NEAR_MONITORED_AREA"]
 
 
 def test_invalid_score_rejected():

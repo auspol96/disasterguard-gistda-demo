@@ -31,3 +31,4 @@ def test_zero_hotspot_ranked_area_uses_low_operational_calibration():
     assert ranked["recommended_action"] == "CONTINUE_ROUTINE_MONITORING"
     assert "No hotspot was detected in the monitored radius" in ranked["operator_summary"]
     assert "GISTDA checked, no hotspot detected in monitored radius" in ranked["risk_drivers"]
+    assert ranked["matched_patterns"][0]["pattern_code"] == "NO_HOTSPOT_ROUTINE_MONITORING"

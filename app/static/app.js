@@ -34,6 +34,10 @@ const elements = {
   rankingRefreshButton: document.getElementById("rankingRefreshButton"),
   rankingMessage: document.getElementById("rankingMessage"),
   rankingTableBody: document.getElementById("rankingTableBody"),
+  patternAreaName: document.getElementById("patternAreaName"),
+  patternCodes: document.getElementById("patternCodes"),
+  patternExplanation: document.getElementById("patternExplanation"),
+  patternFocus: document.getElementById("patternFocus"),
 };
 
 let map;
@@ -183,6 +187,9 @@ function buildScorePayloadFromContext(context) {
         "GISTDA hotspot API context",
         "GISTDA checked, no hotspot detected in monitored radius",
       ],
+      hotspot_count: hotspotCount,
+      landuse_types: landuseTypes,
+      nearest_hotspot_distance_km: null,
     };
   }
 
@@ -206,6 +213,9 @@ function buildScorePayloadFromContext(context) {
     urgency_score: clampScore(0.45 + distanceSignal * 0.35 + hotspotSignal * 0.1),
     confidence: clampScore(0.55 + Math.min(hotspotCount, 3) * 0.07),
     risk_drivers: riskDrivers,
+    hotspot_count: hotspotCount,
+    landuse_types: landuseTypes,
+    nearest_hotspot_distance_km: hasNearestDistance ? nearestDistance : null,
   };
 }
 
@@ -311,11 +321,13 @@ function renderRanking(ranking) {
   elements.rankingTableBody.innerHTML = "";
 
   if (!areas.length) {
-    elements.rankingTableBody.innerHTML = '<tr><td colspan="9">No ranked areas available.</td></tr>';
+    elements.rankingTableBody.innerHTML = '<tr><td colspan="10">No ranked areas available.</td></tr>';
+    renderPatternDetail(null);
     return;
   }
 
   areas.forEach((area) => {
+    const patternCodes = (area.matched_patterns || []).map((pattern) => pattern.pattern_code);
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${escapeHtml(area.rank)}</td>
@@ -327,9 +339,30 @@ function renderRanking(ranking) {
       <td>${escapeHtml(Number(area.priority_score).toFixed(2))}</td>
       <td><span class="table-severity" data-severity="${severityClass(area.severity)}">${escapeHtml(area.severity)}</span></td>
       <td>${escapeHtml(formatAction(area.recommended_action))}</td>
+      <td>${escapeHtml(patternCodes.join(", ") || "--")}</td>
     `;
+    row.addEventListener("click", () => renderPatternDetail(area));
     elements.rankingTableBody.appendChild(row);
   });
+
+  renderPatternDetail(areas[0]);
+}
+
+function renderPatternDetail(area) {
+  if (!area) {
+    elements.patternAreaName.textContent = "No ranked area selected";
+    elements.patternCodes.textContent = "--";
+    elements.patternExplanation.textContent = "Refresh the ranking to load pattern guidance.";
+    elements.patternFocus.textContent = "--";
+    return;
+  }
+
+  const patterns = area.matched_patterns || [];
+  const primaryPattern = patterns[0];
+  elements.patternAreaName.textContent = `${area.area_name} · ${area.province}`;
+  elements.patternCodes.textContent = patterns.map((pattern) => pattern.pattern_code).join(", ") || "--";
+  elements.patternExplanation.textContent = primaryPattern?.explanation || "No incident pattern matched this area.";
+  elements.patternFocus.textContent = primaryPattern?.recommended_operational_focus || "--";
 }
 
 async function fetchRanking() {

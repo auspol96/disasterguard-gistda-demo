@@ -41,6 +41,7 @@ def build_ranked_area_result(area: dict, connector_output: dict) -> dict:
         "recommended_action": scored.recommended_action,
         "operator_summary": scored.operator_summary,
         "risk_drivers": scored.risk_drivers,
+        "matched_patterns": [pattern.model_dump() for pattern in scored.matched_patterns],
     }
 
 

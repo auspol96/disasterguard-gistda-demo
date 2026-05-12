@@ -11,5 +11,6 @@
     "soil saturation proxy",
     "forest cover disturbance",
     "nearby transport route exposure"
-  ]
+  ],
+  "matched_patterns": []
 }

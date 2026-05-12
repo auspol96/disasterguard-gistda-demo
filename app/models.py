@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 IncidentType = Literal["wildfire_haze", "rapid_flood", "landslide"]
 class IncidentScoreRequest(BaseModel):
@@ -9,6 +9,17 @@ class IncidentScoreRequest(BaseModel):
     urgency_score: float = Field(..., ge=0.0, le=1.0)
     confidence: float = Field(..., ge=0.0, le=1.0)
     risk_drivers: List[str] = Field(default_factory=list)
+    hotspot_count: Optional[int] = Field(default=None, ge=0)
+    landuse_types: List[str] = Field(default_factory=list)
+    nearest_hotspot_distance_km: Optional[float] = Field(default=None, ge=0.0)
+
+class IncidentPatternMatch(BaseModel):
+    pattern_code: str
+    pattern_name: str
+    severity_hint: str
+    explanation: str
+    recommended_operational_focus: str
+
 class IncidentScoreResponse(BaseModel):
     area_id: str
     incident_type: IncidentType
@@ -17,6 +28,7 @@ class IncidentScoreResponse(BaseModel):
     recommended_action: str
     operator_summary: str
     risk_drivers: List[str]
+    matched_patterns: List[IncidentPatternMatch] = Field(default_factory=list)
 class HealthResponse(BaseModel):
     status: str
     service: str
