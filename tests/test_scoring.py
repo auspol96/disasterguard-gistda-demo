@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from app.actions import classify_severity, recommended_action_for_severity
+from app.actions import build_operator_summary, classify_severity, recommended_action_for_severity
 from app.models import IncidentScoreRequest
 from app.scoring import calculate_priority_score, score_incident
 
@@ -21,6 +21,19 @@ def test_recommended_actions():
     assert recommended_action_for_severity('MEDIUM')=='REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE'
     assert recommended_action_for_severity('HIGH')=='PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE'
     assert recommended_action_for_severity('CRITICAL')=='IMMEDIATE_REVIEW_AND_ESCALATION'
+
+def test_low_summary_for_confirmed_clear_radius_mentions_no_hotspot():
+    summary = build_operator_summary(
+        'LOW',
+        'wildfire_haze',
+        [
+            'GISTDA hotspot API context',
+            'GISTDA checked, no hotspot detected in monitored radius',
+        ],
+    )
+
+    assert 'No hotspot was detected in the monitored radius' in summary
+    assert 'Continue routine monitoring' in summary
 
 def test_sample_outputs_match_scoring_engine():
     pairs=[('sample_inputs/wildfire_haze_chiangmai.json','sample_outputs/wildfire_priority_output.json'),('sample_inputs/rapid_flood_chiangrai.json','sample_outputs/flood_priority_output.json'),('sample_inputs/landslide_maehongson.json','sample_outputs/landslide_priority_output.json')]

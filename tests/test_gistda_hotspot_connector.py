@@ -91,6 +91,7 @@ def test_build_wildfire_input_for_confirmed_clear_radius_scores_low():
     assert scored.priority_score == 0.15
     assert scored.severity == "LOW"
     assert scored.recommended_action == "CONTINUE_ROUTINE_MONITORING"
+    assert "No hotspot was detected in the monitored radius" in scored.operator_summary
 
 
 def test_fetch_script_without_key_writes_context_and_schema_valid_input(monkeypatch, tmp_path):

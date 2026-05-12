@@ -1,7 +1,7 @@
 {
   "status": "ok",
   "message": "Forest priority ranking refreshed.",
-  "generated_at": "2026-05-12T18:16:34.230289+00:00",
+  "generated_at": "2026-05-12T18:29:54.153064+00:00",
   "areas": [
     {
       "area_id": "NTH-CHIANGDAO-MUEANGNA-001",
@@ -53,12 +53,13 @@
       ],
       "landuse_types": [],
       "nearest_hotspot_distance_km": null,
-      "priority_score": 0.49,
-      "severity": "WATCH",
-      "recommended_action": "KEEP_IN_MONITORING_QUEUE",
-      "operator_summary": "This wildfire haze area should remain in the monitoring queue. Current drivers include GISTDA hotspot API context.",
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
       "risk_drivers": [
-        "GISTDA hotspot API context"
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
       ],
       "rank": 2
     },
@@ -80,12 +81,13 @@
       ],
       "landuse_types": [],
       "nearest_hotspot_distance_km": null,
-      "priority_score": 0.49,
-      "severity": "WATCH",
-      "recommended_action": "KEEP_IN_MONITORING_QUEUE",
-      "operator_summary": "This wildfire haze area should remain in the monitoring queue. Current drivers include GISTDA hotspot API context.",
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
       "risk_drivers": [
-        "GISTDA hotspot API context"
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
       ],
       "rank": 3
     },
@@ -107,12 +109,13 @@
       ],
       "landuse_types": [],
       "nearest_hotspot_distance_km": null,
-      "priority_score": 0.49,
-      "severity": "WATCH",
-      "recommended_action": "KEEP_IN_MONITORING_QUEUE",
-      "operator_summary": "This wildfire haze area should remain in the monitoring queue. Current drivers include GISTDA hotspot API context.",
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
       "risk_drivers": [
-        "GISTDA hotspot API context"
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
       ],
       "rank": 4
     },
@@ -134,12 +137,13 @@
       ],
       "landuse_types": [],
       "nearest_hotspot_distance_km": null,
-      "priority_score": 0.49,
-      "severity": "WATCH",
-      "recommended_action": "KEEP_IN_MONITORING_QUEUE",
-      "operator_summary": "This wildfire haze area should remain in the monitoring queue. Current drivers include GISTDA hotspot API context.",
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
       "risk_drivers": [
-        "GISTDA hotspot API context"
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
       ],
       "rank": 5
     }
