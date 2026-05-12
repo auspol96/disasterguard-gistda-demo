@@ -1,0 +1,54 @@
+{
+  "areas": [
+    {
+      "area_id": "NTH-CHIANGDAO-MUEANGNA-001",
+      "area_name": "Chiang Dao / Mueang Na forest watch",
+      "province": "Chiang Mai",
+      "district": "Chiang Dao",
+      "subdistrict": "Mueang Na",
+      "lat": 19.57651,
+      "lon": 99.01361,
+      "radius": 1000.5
+    },
+    {
+      "area_id": "NTH-MAERIM-001",
+      "area_name": "Mae Rim forest interface",
+      "province": "Chiang Mai",
+      "district": "Mae Rim",
+      "subdistrict": "Configurable forest zone",
+      "lat": 18.9184,
+      "lon": 98.9397,
+      "radius": 1000.5
+    },
+    {
+      "area_id": "NTH-MAETAENG-001",
+      "area_name": "Mae Taeng forest corridor",
+      "province": "Chiang Mai",
+      "district": "Mae Taeng",
+      "subdistrict": "Configurable forest zone",
+      "lat": 19.1173,
+      "lon": 98.9415,
+      "radius": 1000.5
+    },
+    {
+      "area_id": "NTH-MAEHONGSON-001",
+      "area_name": "Mae Hong Son upland forest",
+      "province": "Mae Hong Son",
+      "district": "Mueang Mae Hong Son",
+      "subdistrict": "Configurable forest zone",
+      "lat": 19.3012,
+      "lon": 97.9654,
+      "radius": 1000.5
+    },
+    {
+      "area_id": "NTH-NAN-FOREST-001",
+      "area_name": "Nan forest zone",
+      "province": "Nan",
+      "district": "Mueang Nan",
+      "subdistrict": "Configurable forest zone",
+      "lat": 18.7831,
+      "lon": 100.7789,
+      "radius": 1000.5
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-
+import app.main as main_module
 from app.main import app
 
 client = TestClient(app)
@@ -8,13 +8,15 @@ client = TestClient(app)
 def test_dashboard_root_serves_html():
     response = client.get("/")
     assert response.status_code == 200
-    assert "DisasterGuard Pilot Demo v1" in response.text
-    assert "Executive Overview" in response.text
-    assert "Priority Queue" in response.text
-    assert "Mock Map Priority View" in response.text
-    assert "Incident Detail Panel" in response.text
-    assert "Data-Source Readiness Panel" in response.text
-    assert "GISTDA Hotspot Context" in response.text
+    assert "ForestGuard North Thailand" in response.text
+    assert "Forest Priority Intelligence for Wildfire, Haze, and Community Protection" in response.text
+    assert "Real Connector v1" in response.text
+    assert "Refresh Live GISTDA Data" in response.text
+    assert "Leaflet map centered on the GISTDA hotspot" in response.text
+    assert "Current Hotspot Evidence" in response.text
+    assert "Recommended action" in response.text
+    assert "Top Forest Priority Areas" in response.text
+    assert "Refresh Multi-area Ranking" in response.text
 
 
 def test_static_assets_available():
@@ -22,19 +24,177 @@ def test_static_assets_available():
     css_response = client.get("/static/styles.css")
     assert js_response.status_code == 200
     assert css_response.status_code == 200
-    assert "buildPilotDemo" in js_response.text
-    assert "readinessByIncidentType" in js_response.text
-    assert "loadGistdaContext" in js_response.text
+    assert "fetch(\"/api/gistda/hotspot-context\"" in js_response.text
+    assert "fetch(\"/api/gistda/refresh-hotspot-context\"" in js_response.text
+    assert "fetch(\"/api/incident/score\"" in js_response.text
+    assert "refreshDashboard" in js_response.text
+    assert "loadDashboard" in js_response.text
+    assert "buildScorePayloadFromContext" in js_response.text
+    assert "Refreshing..." in js_response.text
+    assert "Live GISTDA data refreshed successfully" in js_response.text
+    assert "fetch(\"/api/forest-priority/ranking\"" in js_response.text
+    assert "fetch(\"/api/forest-priority/refresh-ranking\"" in js_response.text
+    assert "refreshRanking" in js_response.text
+    assert "renderRanking" in js_response.text
+    assert "buildHotspotPopup" in js_response.text
+    assert "connectorBadge.hidden = resolvedStatus !== \"ok\"" in js_response.text
     assert "color-scheme" in css_response.text
-    assert "queue-table" in css_response.text
-    assert "readiness-list" in css_response.text
-    assert "gistda-context-grid" in css_response.text
+    assert ".map" in css_response.text
+    assert ".metrics-grid" in css_response.text
+    assert ".risk-drivers" in css_response.text
+    assert ".hotspot-popup" in css_response.text
+    assert ".refresh-message" in css_response.text
+    assert ".ranking-table" in css_response.text
 
 
 def test_health_endpoint():
     response = client.get("/api/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok", "service": "DisasterGuard GISTDA Demo"}
+
+
+def test_forest_priority_areas_endpoint():
+    response = client.get("/api/forest-priority/areas")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert len(payload["areas"]) == 5
+    assert payload["areas"][0]["area_id"] == "NTH-CHIANGDAO-MUEANGNA-001"
+    assert payload["areas"][0]["lat"] == 19.57651
+    assert payload["areas"][0]["lon"] == 99.01361
+
+
+def test_forest_priority_ranking_missing(monkeypatch, tmp_path):
+    missing_path = tmp_path / "forest_priority_ranking.json"
+    monkeypatch.setattr(main_module, "FOREST_PRIORITY_RANKING_PATH", missing_path)
+
+    response = client.get("/api/forest-priority/ranking")
+
+    assert response.status_code == 404
+    assert response.json()["status"] == "not_loaded"
+    assert "refresh-ranking" in response.json()["message"]
+
+
+def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
+    monkeypatch.setenv("GISTDA_API_KEY", "configured-for-test")
+    monitored_path = tmp_path / "monitored_forest_areas.json"
+    monitored_path.write_text('{"areas": []}', encoding="utf-8")
+    ranking_path = tmp_path / "forest_priority_ranking.json"
+    monkeypatch.setattr(main_module, "MONITORED_FOREST_AREAS_PATH", monitored_path)
+    monkeypatch.setattr(main_module, "FOREST_PRIORITY_RANKING_PATH", ranking_path)
+    monkeypatch.setattr(
+        main_module,
+        "refresh_forest_priority_ranking",
+        lambda config_path, output_path: {
+            "status": "ok",
+            "message": "Forest priority ranking refreshed.",
+            "generated_at": "2026-05-12T00:00:00+00:00",
+            "areas": [
+                {
+                    "rank": 1,
+                    "area_id": "AREA-001",
+                    "area_name": "Test forest zone",
+                    "province": "Chiang Mai",
+                    "district": "Chiang Dao",
+                    "lat": 19.57651,
+                    "lon": 99.01361,
+                    "hotspot_count": 1,
+                    "dates_available": ["2022-03-28"],
+                    "source_satellites_checked": ["suomi-npp"],
+                    "landuse_types": ["forest"],
+                    "nearest_hotspot_distance_km": 5.82881,
+                    "priority_score": 0.64,
+                    "severity": "MEDIUM",
+                    "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+                    "operator_summary": "Review the area.",
+                    "risk_drivers": ["GISTDA hotspot API context"],
+                }
+            ],
+        },
+    )
+
+    response = client.post("/api/forest-priority/refresh-ranking")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "ok"
+    assert payload["areas"][0]["rank"] == 1
+    assert payload["areas"][0]["priority_score"] == 0.64
+
+
+def test_refresh_hotspot_context_requires_api_key(monkeypatch):
+    monkeypatch.delenv("GISTDA_API_KEY", raising=False)
+
+    response = client.post("/api/gistda/refresh-hotspot-context")
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "status": "not_configured",
+        "message": "GISTDA_API_KEY environment variable is not configured.",
+        "context_path": None,
+        "generated_input_path": None,
+        "summary": {
+            "status": "not_configured",
+            "source_satellites_checked": [],
+            "hotspot_count": 0,
+            "dates_available": [],
+            "nearest_hotspot_distance_km": None,
+            "provinces_detected": [],
+            "landuse_types": [],
+            "raw_limited_sample": [],
+        },
+    }
+
+
+def test_refresh_hotspot_context_returns_refresh_result(monkeypatch):
+    monkeypatch.setenv("GISTDA_API_KEY", "configured-for-test")
+    monkeypatch.setattr(
+        main_module,
+        "refresh_hotspot_context",
+        lambda: {
+            "status": "ok",
+            "message": "GISTDA hotspot context refreshed.",
+            "context_path": "live_context/gistda_hotspot_context.json",
+            "generated_input_path": "sample_inputs/gistda_wildfire_haze_chiangmai.json",
+            "summary": {
+                "status": "ok",
+                "hotspot_count": 1,
+                "dates_available": ["2022-03-28"],
+            },
+        },
+    )
+
+    response = client.post("/api/gistda/refresh-hotspot-context")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
+    assert response.json()["context_path"] == "live_context/gistda_hotspot_context.json"
+    assert response.json()["generated_input_path"] == "sample_inputs/gistda_wildfire_haze_chiangmai.json"
+    assert response.json()["summary"]["hotspot_count"] == 1
+
+
+def test_refresh_hotspot_context_surfaces_connector_error(monkeypatch):
+    monkeypatch.setenv("GISTDA_API_KEY", "configured-for-test")
+    monkeypatch.setattr(
+        main_module,
+        "refresh_hotspot_context",
+        lambda: {
+            "status": "error",
+            "message": "Upstream GISTDA request failed.",
+            "context_path": "live_context/gistda_hotspot_context.json",
+            "generated_input_path": "sample_inputs/gistda_wildfire_haze_chiangmai.json",
+            "summary": {
+                "status": "error",
+                "hotspot_count": 0,
+            },
+        },
+    )
+
+    response = client.post("/api/gistda/refresh-hotspot-context")
+
+    assert response.status_code == 502
+    assert response.json()["status"] == "error"
+    assert response.json()["message"] == "Upstream GISTDA request failed."
 
 
 def test_incident_score_endpoint_wildfire():

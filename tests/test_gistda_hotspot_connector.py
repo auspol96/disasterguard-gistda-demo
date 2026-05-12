@@ -6,6 +6,7 @@ from app.connectors.gistda_hotspot_api import (
     summarize_hotspot_response,
 )
 from app.models import IncidentScoreRequest
+from app.scoring import score_incident
 from scripts import fetch_gistda_hotspot_context
 
 
@@ -62,16 +63,49 @@ def test_summarize_hotspot_response_extracts_example_fields():
     assert summary["raw_limited_sample"][0]["direction"] == "S"
 
 
-def test_fetch_script_without_key_writes_context_and_schema_valid_input(monkeypatch):
+def test_build_wildfire_input_for_confirmed_clear_radius_scores_low():
+    connector_output = {
+        "status": "ok",
+        "summary": {
+            "status": "ok",
+            "hotspot_count": 0,
+            "dates_available": [],
+            "nearest_hotspot_distance_km": None,
+            "provinces_detected": [],
+            "landuse_types": [],
+            "raw_limited_sample": [],
+        },
+    }
+
+    generated = fetch_gistda_hotspot_context.build_wildfire_input_from_context(connector_output)
+    scored = score_incident(IncidentScoreRequest(**generated))
+
+    assert generated["hazard_score"] == 0.10
+    assert generated["exposure_score"] == 0.20
+    assert generated["urgency_score"] == 0.10
+    assert generated["confidence"] == 0.25
+    assert generated["risk_drivers"] == [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius",
+    ]
+    assert scored.priority_score == 0.15
+    assert scored.severity == "LOW"
+    assert scored.recommended_action == "CONTINUE_ROUTINE_MONITORING"
+
+
+def test_fetch_script_without_key_writes_context_and_schema_valid_input(monkeypatch, tmp_path):
     monkeypatch.delenv("GISTDA_API_KEY", raising=False)
+    context_path = tmp_path / "gistda_hotspot_context.json"
+    generated_input_path = tmp_path / "gistda_wildfire_haze_chiangmai.json"
+    monkeypatch.setattr(fetch_gistda_hotspot_context, "ROOT", tmp_path)
+    monkeypatch.setattr(fetch_gistda_hotspot_context, "LIVE_CONTEXT_PATH", context_path)
+    monkeypatch.setattr(fetch_gistda_hotspot_context, "GENERATED_INPUT_PATH", generated_input_path)
 
     result = fetch_gistda_hotspot_context.main()
 
     assert result["status"] == "not_configured"
-    context = json.loads(Path("live_context/gistda_hotspot_context.json").read_text())
+    context = json.loads(context_path.read_text())
     assert context["status"] == "not_configured"
 
-    generated = json.loads(
-        Path("sample_inputs/gistda_wildfire_haze_chiangmai.json").read_text()
-    )
+    generated = json.loads(generated_input_path.read_text())
     IncidentScoreRequest(**generated)

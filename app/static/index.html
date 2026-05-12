@@ -3,161 +3,119 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DisasterGuard Pilot Demo v1</title>
+  <title>ForestGuard North Thailand</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <main class="shell">
-    <header class="hero">
+    <header class="topbar">
       <div>
-        <p class="eyebrow">GISTDA-style stakeholder review</p>
-        <h1>DisasterGuard Pilot Demo v1</h1>
-        <p class="subtitle">A multi-hazard decision-priority layer for Northern Thailand / ASEAN operator review, revisit planning, alerting, and response coordination.</p>
+        <p class="eyebrow">Forest Protection Decision Layer</p>
+        <h1>ForestGuard North Thailand</h1>
+        <p class="subtitle">Forest Priority Intelligence for Wildfire, Haze, and Community Protection</p>
       </div>
-      <div class="status-block">
-        <span class="status">API online</span>
-        <span class="status muted">No database · Mock map</span>
+      <div class="topbar-actions">
+        <span id="connectorBadge" class="connector-badge" hidden>Real Connector v1</span>
+        <button id="refreshButton" class="refresh-button" type="button">Refresh Live GISTDA Data</button>
       </div>
     </header>
+    <p id="refreshMessage" class="refresh-message" role="status">Cached connector context loaded on page open.</p>
 
-    <section class="panel overview-panel" aria-labelledby="overviewHeading">
-      <div class="section-heading">
+    <section class="lead-grid" aria-label="Live hotspot overview">
+      <section class="panel map-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Map-First Review</p>
+            <h2>Forest Hotspot Context</h2>
+          </div>
+          <span id="connectorStatus" class="status-pill">Loading</span>
+        </div>
+        <div id="hotspotMap" class="map" aria-label="Leaflet map centered on the GISTDA hotspot"></div>
+        <div class="map-foot">
+          <span id="mapCoordinate">Awaiting hotspot coordinates</span>
+          <span id="lastUpdated">Refresh pending</span>
+        </div>
+      </section>
+
+      <section class="panel priority-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Priority Triage</p>
+            <h2>Forest Fire and Haze Review</h2>
+          </div>
+          <span id="severityBadge" class="severity-badge">--</span>
+        </div>
+        <div class="priority-score">
+          <span>Priority score</span>
+          <strong id="priorityScore">--</strong>
+        </div>
+        <div class="priority-copy">
+          <span>Recommended action</span>
+          <strong id="recommendedAction">Loading</strong>
+        </div>
+        <div class="priority-copy summary-copy">
+          <span>Operator summary</span>
+          <p id="operatorSummary">Scoring the confirmed GISTDA context payload.</p>
+        </div>
         <div>
-          <p class="eyebrow">Executive Overview</p>
-          <h2 id="overviewHeading">Operational Snapshot</h2>
-        </div>
-        <p>Scores are generated from transparent sample inputs using the existing scoring API. The demo supports prioritization and does not make deterministic disaster predictions.</p>
-      </div>
-      <div class="overview-grid">
-        <article class="summary-card"><span>Total incidents monitored</span><strong id="totalIncidents">—</strong></article>
-        <article class="summary-card"><span>HIGH incidents</span><strong id="highIncidents">—</strong></article>
-        <article class="summary-card"><span>MEDIUM incidents</span><strong id="mediumIncidents">—</strong></article>
-        <article class="summary-card"><span>CRITICAL incidents</span><strong id="criticalIncidents">—</strong></article>
-        <article class="summary-card top-concern"><span>Top concern</span><strong id="topConcern">Building queue…</strong></article>
-      </div>
-    </section>
-
-    <section class="dashboard-grid">
-      <section class="panel queue-panel" aria-labelledby="priorityQueueHeading">
-        <div class="section-heading compact">
-          <div>
-            <p class="eyebrow">Decision-priority support</p>
-            <h2 id="priorityQueueHeading">Priority Queue</h2>
-          </div>
-          <span id="queueStatus" class="queue-status">Scoring incidents</span>
-        </div>
-        <div class="queue-table-wrap">
-          <table class="queue-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Area ID</th>
-                <th>Incident Type</th>
-                <th>Priority Score</th>
-                <th>Severity</th>
-                <th>Recommended Action</th>
-              </tr>
-            </thead>
-            <tbody id="priorityQueue">
-              <tr><td colspan="6">Scoring sample incidents…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="panel map-panel" aria-label="Northern Thailand ASEAN mock map priority panel">
-        <div class="section-heading compact">
-          <div>
-            <p class="eyebrow">Mock Map Priority View</p>
-            <h2>Northern Thailand / ASEAN</h2>
-          </div>
-          <span id="activeMapLabel" class="map-label">Awaiting scenario</span>
-        </div>
-        <div class="mock-map">
-          <div class="terrain terrain-1"></div>
-          <div class="terrain terrain-2"></div>
-          <div class="river river-1"></div>
-          <div class="river river-2"></div>
-          <button class="incident-marker" id="marker-wildfire" data-scenario="wildfire" type="button">
-            <span class="pulse"></span><span class="marker-dot"></span>
-            <span class="marker-label">Chiang Mai<br><strong>Wildfire / Haze</strong></span>
-          </button>
-          <button class="incident-marker" id="marker-flood" data-scenario="flood" type="button">
-            <span class="pulse"></span><span class="marker-dot"></span>
-            <span class="marker-label">Chiang Rai<br><strong>Rapid Flood</strong></span>
-          </button>
-          <button class="incident-marker" id="marker-landslide" data-scenario="landslide" type="button">
-            <span class="pulse"></span><span class="marker-dot"></span>
-            <span class="marker-label">Mae Hong Son<br><strong>Landslide</strong></span>
-          </button>
-          <div class="map-compass">N</div>
-        </div>
-        <div class="map-legend">
-          <span><i class="legend-dot high"></i> HIGH</span>
-          <span><i class="legend-dot medium"></i> MEDIUM</span>
-          <span><i class="legend-dot critical"></i> CRITICAL</span>
-          <span><i class="legend-dot watch"></i> WATCH / LOW</span>
+          <span class="block-label">Risk drivers</span>
+          <div id="riskDrivers" class="risk-drivers"></div>
         </div>
       </section>
     </section>
 
-    <section class="detail-grid">
-      <section class="panel detail-panel" aria-labelledby="detailHeading">
-        <div class="section-heading compact">
-          <div>
-            <p class="eyebrow">Incident Detail Panel</p>
-            <h2 id="detailHeading">Selected Incident</h2>
-          </div>
-          <select id="scenario" aria-label="Select sample incident">
-            <option value="wildfire">Chiang Mai wildfire/haze priority</option>
-            <option value="flood">Chiang Rai rapid flood priority</option>
-            <option value="landslide">Mae Hong Son landslide priority</option>
-          </select>
-        </div>
-        <div class="metric-row">
-          <article class="metric-card"><span>Priority Score</span><strong id="priorityScore">—</strong></article>
-          <article class="metric-card"><span>Severity</span><strong id="severity">—</strong></article>
-          <article class="metric-card"><span>Recommended Action</span><strong id="recommendedAction">—</strong></article>
-        </div>
-        <div class="meta-grid">
-          <div><span>Area ID</span><strong id="areaId">—</strong></div>
-          <div><span>Incident Type</span><strong id="incidentType">—</strong></div>
-        </div>
-        <h3>Operator Summary</h3>
-        <p id="operatorSummary">Building the incident queue…</p>
-        <h3>Risk Drivers</h3>
-        <div id="riskDrivers" class="drivers"></div>
-      </section>
-
-      <section class="panel readiness-panel" aria-labelledby="readinessHeading">
-        <div class="section-heading compact">
-          <div>
-            <p class="eyebrow">Data-Source Readiness Panel</p>
-            <h2 id="readinessHeading">Selected Incident Layers</h2>
-          </div>
-          <span id="readinessIncident" class="queue-status">Awaiting selection</span>
-        </div>
-        <div id="readinessLayers" class="readiness-list"></div>
-      </section>
-    </section>
-
-    <section class="panel gistda-context-panel" aria-labelledby="gistdaContextHeading">
-      <div class="section-heading compact">
+    <section class="panel metrics-panel" aria-labelledby="contextHeading">
+      <div class="panel-heading">
         <div>
-          <p class="eyebrow">Real Connector v1</p>
-          <h2 id="gistdaContextHeading">GISTDA Hotspot Context</h2>
+          <p class="eyebrow">Forest Protection Evidence</p>
+          <h2 id="contextHeading">Current Hotspot Evidence</h2>
         </div>
-        <span id="gistdaContextStatus" class="queue-status">Not loaded yet</span>
       </div>
-      <div class="gistda-context-grid">
-        <article><span>Hotspot count</span><strong id="gistdaHotspotCount">—</strong></article>
-        <article><span>Date(s)</span><strong id="gistdaDates">—</strong></article>
-        <article><span>Nearest hotspot distance</span><strong id="gistdaNearestDistance">—</strong></article>
-        <article><span>Province(s)</span><strong id="gistdaProvinces">—</strong></article>
-        <article><span>Landuse type(s)</span><strong id="gistdaLanduse">—</strong></article>
+      <div class="metrics-grid">
+        <article class="metric-card"><span>Hotspot count</span><strong id="hotspotCount">--</strong></article>
+        <article class="metric-card locality-card"><span>Province / district / subdistrict / village</span><strong id="locality">--</strong></article>
+        <article class="metric-card"><span>Landuse</span><strong id="landuse">--</strong></article>
+        <article class="metric-card"><span>Nearest hotspot distance</span><strong id="nearestDistance">--</strong></article>
+        <article class="metric-card"><span>Satellites checked</span><strong id="satellitesChecked">--</strong></article>
+        <article class="metric-card"><span>Date available</span><strong id="datesAvailable">--</strong></article>
+      </div>
+    </section>
+
+    <section class="panel ranking-panel" aria-labelledby="rankingHeading">
+      <div class="panel-heading ranking-heading">
+        <div>
+          <p class="eyebrow">Northern Thailand Ranking</p>
+          <h2 id="rankingHeading">Top Forest Priority Areas</h2>
+        </div>
+        <button id="rankingRefreshButton" class="refresh-button ranking-button" type="button">Refresh Multi-area Ranking</button>
+      </div>
+      <p id="rankingMessage" class="refresh-message ranking-message" role="status">Load or refresh the multi-area ranking to compare monitored forest zones.</p>
+      <div class="ranking-table-wrap">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Province</th>
+              <th>District</th>
+              <th>Hotspots</th>
+              <th>Landuse</th>
+              <th>Distance</th>
+              <th>Score</th>
+              <th>Severity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="rankingTableBody">
+            <tr><td colspan="9">No ranking loaded.</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>

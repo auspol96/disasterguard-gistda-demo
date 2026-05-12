@@ -1,12 +1,14 @@
 {
   "area_id": "NTH-CHIANGMAI-GISTDA-001",
   "incident_type": "wildfire_haze",
-  "hazard_score": 0.35,
-  "exposure_score": 0.5,
-  "urgency_score": 0.35,
-  "confidence": 0.25,
+  "hazard_score": 0.51,
+  "exposure_score": 0.75,
+  "urgency_score": 0.73,
+  "confidence": 0.62,
   "risk_drivers": [
     "GISTDA hotspot API context",
-    "live hotspot context not configured"
+    "1 hotspot record(s) returned",
+    "landuse: ป่าอนุรักษ์",
+    "nearest hotspot distance 5.83 km"
   ]
 }

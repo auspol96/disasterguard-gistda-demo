@@ -16,7 +16,7 @@ def test_severity_thresholds():
     assert classify_severity(0.90)=='CRITICAL'
 
 def test_recommended_actions():
-    assert recommended_action_for_severity('LOW')=='MONITOR_ONLY'
+    assert recommended_action_for_severity('LOW')=='CONTINUE_ROUTINE_MONITORING'
     assert recommended_action_for_severity('WATCH')=='KEEP_IN_MONITORING_QUEUE'
     assert recommended_action_for_severity('MEDIUM')=='REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE'
     assert recommended_action_for_severity('HIGH')=='PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE'

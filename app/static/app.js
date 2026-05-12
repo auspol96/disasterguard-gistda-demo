@@ -1,263 +1,379 @@
-const scenarios = {
-  wildfire: {
-    label: "Chiang Mai wildfire/haze",
-    area_id: "NTH-CHIANGMAI-001",
-    incident_type: "wildfire_haze",
-    hazard_score: 0.82,
-    exposure_score: 0.74,
-    urgency_score: 0.79,
-    confidence: 0.76,
-    risk_drivers: ["recent hotspot cluster", "vegetation stress", "low humidity", "wind spread potential", "nearby community exposure"],
-  },
-  flood: {
-    label: "Chiang Rai rapid flood",
-    area_id: "NTH-CHIANGRAI-002",
-    incident_type: "rapid_flood",
-    hazard_score: 0.88,
-    exposure_score: 0.81,
-    urgency_score: 0.86,
-    confidence: 0.73,
-    risk_drivers: ["heavy rainfall accumulation", "river proximity", "low-lying terrain", "surface water expansion signal", "nearby road and community exposure"],
-  },
-  landslide: {
-    label: "Mae Hong Son landslide",
-    area_id: "NTH-MAEHONGSON-003",
-    incident_type: "landslide",
-    hazard_score: 0.68,
-    exposure_score: 0.72,
-    urgency_score: 0.61,
-    confidence: 0.70,
-    risk_drivers: ["heavy rainfall accumulation", "steep slope", "soil saturation proxy", "forest cover disturbance", "nearby transport route exposure"],
-  },
-};
-
-const readinessByIncidentType = {
-  wildfire_haze: [
-    ["Fire Hotspot", "Available now"],
-    ["Crop Drought / vegetation stress", "Partner integration"],
-    ["Humidity / Temperature / Wind", "Partner integration"],
-    ["Community Exposure", "Future calibration"],
-    ["Road / Infrastructure Exposure", "Future calibration"],
-  ],
-  rapid_flood: [
-    ["Rainfall", "Partner integration"],
-    ["SAR surface water", "Partner integration"],
-    ["Terrain / Slope", "Available now"],
-    ["Community Exposure", "Future calibration"],
-    ["Road / Infrastructure Exposure", "Future calibration"],
-  ],
-  landslide: [
-    ["Rainfall", "Partner integration"],
-    ["Terrain / Slope", "Available now"],
-    ["Crop Drought / vegetation stress", "Future calibration"],
-    ["Community Exposure", "Future calibration"],
-    ["Road / Infrastructure Exposure", "Future calibration"],
+const fallbackScorePayload = {
+  area_id: "NTH-CHIANGMAI-GISTDA-001",
+  incident_type: "wildfire_haze",
+  hazard_score: 0.51,
+  exposure_score: 0.75,
+  urgency_score: 0.73,
+  confidence: 0.62,
+  risk_drivers: [
+    "GISTDA hotspot API context",
+    "1 hotspot record(s) returned",
+    "landuse: ป่าอนุรักษ์",
+    "nearest hotspot distance 5.83 km",
   ],
 };
 
 const elements = {
-  scenario: document.getElementById("scenario"),
+  refreshButton: document.getElementById("refreshButton"),
+  refreshMessage: document.getElementById("refreshMessage"),
+  connectorBadge: document.getElementById("connectorBadge"),
+  connectorStatus: document.getElementById("connectorStatus"),
+  mapCoordinate: document.getElementById("mapCoordinate"),
+  lastUpdated: document.getElementById("lastUpdated"),
+  hotspotCount: document.getElementById("hotspotCount"),
+  locality: document.getElementById("locality"),
+  landuse: document.getElementById("landuse"),
+  nearestDistance: document.getElementById("nearestDistance"),
+  satellitesChecked: document.getElementById("satellitesChecked"),
+  datesAvailable: document.getElementById("datesAvailable"),
+  severityBadge: document.getElementById("severityBadge"),
   priorityScore: document.getElementById("priorityScore"),
-  severity: document.getElementById("severity"),
   recommendedAction: document.getElementById("recommendedAction"),
-  areaId: document.getElementById("areaId"),
-  incidentType: document.getElementById("incidentType"),
   operatorSummary: document.getElementById("operatorSummary"),
   riskDrivers: document.getElementById("riskDrivers"),
-  activeMapLabel: document.getElementById("activeMapLabel"),
-  markers: document.querySelectorAll(".incident-marker"),
-  totalIncidents: document.getElementById("totalIncidents"),
-  highIncidents: document.getElementById("highIncidents"),
-  mediumIncidents: document.getElementById("mediumIncidents"),
-  criticalIncidents: document.getElementById("criticalIncidents"),
-  topConcern: document.getElementById("topConcern"),
-  priorityQueue: document.getElementById("priorityQueue"),
-  queueStatus: document.getElementById("queueStatus"),
-  readinessIncident: document.getElementById("readinessIncident"),
-  readinessLayers: document.getElementById("readinessLayers"),
-  gistdaContextStatus: document.getElementById("gistdaContextStatus"),
-  gistdaHotspotCount: document.getElementById("gistdaHotspotCount"),
-  gistdaDates: document.getElementById("gistdaDates"),
-  gistdaNearestDistance: document.getElementById("gistdaNearestDistance"),
-  gistdaProvinces: document.getElementById("gistdaProvinces"),
-  gistdaLanduse: document.getElementById("gistdaLanduse"),
+  rankingRefreshButton: document.getElementById("rankingRefreshButton"),
+  rankingMessage: document.getElementById("rankingMessage"),
+  rankingTableBody: document.getElementById("rankingTableBody"),
 };
 
-const queueResults = new Map();
+let map;
+let hotspotMarker;
 
-function apiPayload(scenario) {
-  const {label, ...payload} = scenario;
-  return payload;
+function formatJoined(values) {
+  return Array.isArray(values) && values.length ? values.join(", ") : "--";
 }
 
-function formatLabel(value) {
-  return value.replaceAll("_", " ");
+function formatDistance(distance) {
+  return distance === null || distance === undefined ? "--" : `${Number(distance).toFixed(5)} km`;
 }
 
-function severityClass(severity) {
-  return severity.toLowerCase();
+function formatAction(value) {
+  return value ? value.replaceAll("_", " ") : "--";
 }
 
-async function scoreScenario(scenarioKey) {
-  const response = await fetch("/api/incident/score", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(apiPayload(scenarios[scenarioKey])),
-  });
-  if (!response.ok) throw new Error(`API returned ${response.status}`);
-  return response.json();
+function clampScore(value) {
+  return Math.max(0, Math.min(1, Number(value.toFixed(2))));
 }
 
-function updateActiveMarker(scenarioKey, severity) {
-  const level = severityClass(severity);
-  elements.markers.forEach((marker) => {
-    const isActive = marker.dataset.scenario === scenarioKey;
-    marker.classList.toggle("active", isActive);
-    marker.dataset.severity = marker.dataset.scenario === scenarioKey ? level : marker.dataset.severity || "watch";
-    marker.setAttribute("aria-pressed", String(isActive));
-  });
-  elements.activeMapLabel.textContent = `${scenarios[scenarioKey].label} · ${severity}`;
-  elements.activeMapLabel.dataset.severity = level;
+function severityClass(value) {
+  return value ? value.toLowerCase() : "unknown";
 }
 
-function renderOverview(results) {
-  const highCount = results.filter((item) => item.severity === "HIGH").length;
-  const mediumCount = results.filter((item) => item.severity === "MEDIUM").length;
-  const criticalCount = results.filter((item) => item.severity === "CRITICAL").length;
-  const top = results[0];
-
-  elements.totalIncidents.textContent = results.length;
-  elements.highIncidents.textContent = highCount;
-  elements.mediumIncidents.textContent = mediumCount;
-  elements.criticalIncidents.textContent = criticalCount;
-  elements.topConcern.textContent = `${top.area_id} · ${formatLabel(top.incident_type)} · ${top.priority_score.toFixed(2)}`;
+function setConnectorStatus(status) {
+  const resolvedStatus = status || "unknown";
+  elements.connectorStatus.textContent = resolvedStatus.replaceAll("_", " ");
+  elements.connectorStatus.dataset.status = resolvedStatus;
+  elements.connectorBadge.hidden = resolvedStatus !== "ok";
 }
 
-function renderPriorityQueue(results) {
-  elements.priorityQueue.innerHTML = "";
-  results.forEach((item, index) => {
-    const row = document.createElement("tr");
-    row.dataset.scenario = item.scenarioKey;
-    row.tabIndex = 0;
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${item.area_id}</td>
-      <td>${formatLabel(item.incident_type)}</td>
-      <td>${item.priority_score.toFixed(2)}</td>
-      <td><span class="severity-pill" data-severity="${severityClass(item.severity)}">${item.severity}</span></td>
-      <td>${formatLabel(item.recommended_action)}</td>
-    `;
-    row.addEventListener("click", () => selectScenario(item.scenarioKey));
-    row.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        selectScenario(item.scenarioKey);
-      }
-    });
-    elements.priorityQueue.appendChild(row);
-  });
+function sampleRecordFromContext(context) {
+  return context?.summary?.raw_limited_sample?.[0] || {};
 }
 
-function renderReadinessPanel(data) {
-  const layers = readinessByIncidentType[data.incident_type] || [];
-  elements.readinessIncident.textContent = formatLabel(data.incident_type);
-  elements.readinessLayers.innerHTML = "";
-  layers.forEach(([name, status]) => {
-    const layer = document.createElement("article");
-    layer.className = "readiness-item";
-    layer.innerHTML = `<span>${name}</span><strong>${status}</strong>`;
-    elements.readinessLayers.appendChild(layer);
-  });
+function positionFromContext(context) {
+  const sample = sampleRecordFromContext(context);
+  const latitude = Number(sample.lat ?? context?.request?.lat);
+  const longitude = Number(sample.lon ?? context?.request?.lon);
+  return Number.isFinite(latitude) && Number.isFinite(longitude)
+    ? { latitude, longitude }
+    : null;
 }
 
-function renderGistdaContext(context) {
-  const summary = context.summary || {};
-  elements.gistdaContextStatus.textContent = context.status || summary.status || "unknown";
-  elements.gistdaContextStatus.dataset.status = context.status || summary.status || "unknown";
-  elements.gistdaHotspotCount.textContent = summary.hotspot_count ?? "—";
-  elements.gistdaDates.textContent = (summary.dates_available || []).join(", ") || "—";
-  elements.gistdaNearestDistance.textContent =
-    summary.nearest_hotspot_distance_km === null || summary.nearest_hotspot_distance_km === undefined
-      ? "—"
-      : `${Number(summary.nearest_hotspot_distance_km).toFixed(2)} km`;
-  elements.gistdaProvinces.textContent = (summary.provinces_detected || []).join(", ") || "—";
-  elements.gistdaLanduse.textContent = (summary.landuse_types || []).join(", ") || "—";
+function formatPopupValue(value) {
+  return value === null || value === undefined || value === "" ? "--" : value;
 }
 
-async function loadGistdaContext() {
-  try {
-    const response = await fetch("/live_context/gistda_hotspot_context.json", {cache: "no-store"});
-    if (response.status === 404) {
-      elements.gistdaContextStatus.textContent = "Not loaded yet";
-      elements.gistdaContextStatus.dataset.status = "not_loaded";
-      return;
-    }
-    if (!response.ok) throw new Error(`Context returned ${response.status}`);
-    renderGistdaContext(await response.json());
-  } catch (error) {
-    elements.gistdaContextStatus.textContent = "error";
-    elements.gistdaContextStatus.dataset.status = "error";
+function escapeHtml(value) {
+  return String(formatPopupValue(value))
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function buildHotspotPopup(sample, summary) {
+  const detailRows = [
+    ["Province", sample.province],
+    ["District", sample.district],
+    ["Subdistrict", sample.subdistrict],
+    ["Village", sample.village],
+    ["Landuse", sample.landuse || summary.landuse_types?.[0]],
+    ["Date", sample.date || summary.dates_available?.[0]],
+    ["Satellite", sample.satellite],
+    ["Distance", sample.distance === undefined ? null : `${Number(sample.distance).toFixed(5)} km`],
+  ];
+
+  return `
+    <div class="hotspot-popup">
+      <strong>Forest hotspot context</strong>
+      ${detailRows.map(([label, value]) => `<span><b>${escapeHtml(label)}</b>${escapeHtml(value)}</span>`).join("")}
+    </div>
+  `;
+}
+
+function ensureMap(position, sample, summary) {
+  if (!position || typeof L === "undefined") return;
+
+  if (!map) {
+    map = L.map("hotspotMap", {
+      zoomControl: true,
+      scrollWheelZoom: false,
+    }).setView([position.latitude, position.longitude], 11);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+  } else {
+    map.setView([position.latitude, position.longitude], 11);
   }
+
+  if (hotspotMarker) {
+    hotspotMarker.remove();
+  }
+
+  hotspotMarker = L.marker([position.latitude, position.longitude])
+    .addTo(map)
+    .bindPopup(buildHotspotPopup(sample, summary))
+    .openPopup();
+
+  elements.mapCoordinate.textContent = `${position.latitude.toFixed(5)}, ${position.longitude.toFixed(5)}`;
 }
 
-function setActiveQueueRow(scenarioKey) {
-  elements.priorityQueue.querySelectorAll("tr").forEach((row) => {
-    row.classList.toggle("active", row.dataset.scenario === scenarioKey);
-  });
+function renderContext(context) {
+  const summary = context.summary || {};
+  const sample = sampleRecordFromContext(context);
+  const localityParts = [sample.province, sample.district, sample.subdistrict, sample.village].filter(Boolean);
+
+  setConnectorStatus(context.status || summary.status);
+  elements.hotspotCount.textContent = summary.hotspot_count ?? "--";
+  elements.locality.textContent = localityParts.length ? localityParts.join(" / ") : "--";
+  elements.landuse.textContent = formatJoined(summary.landuse_types);
+  elements.nearestDistance.textContent = formatDistance(summary.nearest_hotspot_distance_km);
+  elements.satellitesChecked.textContent = formatJoined(summary.source_satellites_checked);
+  elements.datesAvailable.textContent = formatJoined(summary.dates_available);
+  ensureMap(positionFromContext(context), sample, summary);
 }
 
-function renderDetail(data, scenarioKey) {
-  elements.priorityScore.textContent = data.priority_score.toFixed(2);
-  elements.severity.textContent = data.severity;
-  elements.severity.dataset.level = severityClass(data.severity);
-  elements.recommendedAction.textContent = formatLabel(data.recommended_action);
-  elements.areaId.textContent = data.area_id;
-  elements.incidentType.textContent = formatLabel(data.incident_type);
-  elements.operatorSummary.textContent = data.operator_summary;
+function buildScorePayloadFromContext(context) {
+  const summary = context.summary || {};
+  const hotspotCount = Number(summary.hotspot_count || 0);
+  const rawNearestDistance = summary.nearest_hotspot_distance_km;
+  const hasNearestDistance = rawNearestDistance !== null && rawNearestDistance !== undefined;
+  const nearestDistance = hasNearestDistance ? Number(rawNearestDistance) : null;
+  const landuseTypes = summary.landuse_types || [];
+  const rawSample = summary.raw_limited_sample || [];
+  const maxFrequency = Math.max(0, ...rawSample.map((item) => Number(item.frequency || 0)));
+
+  if ((context.status || summary.status) !== "ok") {
+    return fallbackScorePayload;
+  }
+
+  const confirmedClearRadius = hotspotCount === 0 && !landuseTypes.length && !hasNearestDistance;
+  if (confirmedClearRadius) {
+    return {
+      area_id: "NTH-CHIANGMAI-GISTDA-001",
+      incident_type: "wildfire_haze",
+      hazard_score: 0.10,
+      exposure_score: 0.20,
+      urgency_score: 0.10,
+      confidence: 0.25,
+      risk_drivers: [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius",
+      ],
+    };
+  }
+
+  const hotspotSignal = clampScore(Math.min(hotspotCount, 10) / 10);
+  const frequencySignal = clampScore(Math.min(maxFrequency, 5) / 5);
+  const distanceSignal = hasNearestDistance && Number.isFinite(nearestDistance)
+    ? clampScore(1 - Math.min(nearestDistance, 25) / 25)
+    : 0;
+  const landuseSignal = landuseTypes.length ? 0.2 : 0;
+
+  const riskDrivers = ["GISTDA hotspot API context"];
+  if (hotspotCount) riskDrivers.push(`${hotspotCount} hotspot record(s) returned`);
+  if (landuseTypes.length) riskDrivers.push(`landuse: ${landuseTypes.slice(0, 3).join(", ")}`);
+  if (hasNearestDistance && Number.isFinite(nearestDistance)) riskDrivers.push(`nearest hotspot distance ${nearestDistance.toFixed(2)} km`);
+
+  return {
+    area_id: "NTH-CHIANGMAI-GISTDA-001",
+    incident_type: "wildfire_haze",
+    hazard_score: clampScore(0.45 + hotspotSignal * 0.3 + frequencySignal * 0.15),
+    exposure_score: clampScore(0.55 + landuseSignal),
+    urgency_score: clampScore(0.45 + distanceSignal * 0.35 + hotspotSignal * 0.1),
+    confidence: clampScore(0.55 + Math.min(hotspotCount, 3) * 0.07),
+    risk_drivers: riskDrivers,
+  };
+}
+
+function renderScore(score) {
+  elements.severityBadge.textContent = score.severity || "--";
+  elements.severityBadge.dataset.severity = severityClass(score.severity);
+  elements.priorityScore.textContent = Number(score.priority_score).toFixed(2);
+  elements.recommendedAction.textContent = formatAction(score.recommended_action);
+  elements.operatorSummary.textContent = score.operator_summary || "--";
   elements.riskDrivers.innerHTML = "";
-  data.risk_drivers.forEach((driver) => {
+
+  (score.risk_drivers || []).forEach((driver) => {
     const chip = document.createElement("span");
-    chip.className = "driver-chip";
+    chip.className = "risk-chip";
     chip.textContent = driver;
     elements.riskDrivers.appendChild(chip);
   });
-  renderReadinessPanel(data);
-  updateActiveMarker(scenarioKey, data.severity);
-  setActiveQueueRow(scenarioKey);
 }
 
-function selectScenario(scenarioKey) {
-  const data = queueResults.get(scenarioKey);
-  if (!data) return;
-  elements.scenario.value = scenarioKey;
-  renderDetail(data, scenarioKey);
+async function fetchHotspotContext() {
+  const response = await fetch("/api/gistda/hotspot-context", { cache: "no-store" });
+  if (!response.ok) throw new Error(`Hotspot context returned ${response.status}`);
+  return response.json();
 }
 
-async function buildPilotDemo() {
+async function refreshLiveHotspotContext() {
+  const response = await fetch("/api/gistda/refresh-hotspot-context", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.message || `Refresh returned ${response.status}`);
+  return payload;
+}
+
+async function fetchPriorityScore(payload) {
+  const response = await fetch("/api/incident/score", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error(`Priority score returned ${response.status}`);
+  return response.json();
+}
+
+function formatRefreshTimestamp() {
+  return new Date().toLocaleString();
+}
+
+function showRefreshMessage(message, status = "neutral") {
+  elements.refreshMessage.textContent = message;
+  elements.refreshMessage.dataset.status = status;
+}
+
+function showRankingMessage(message, status = "neutral") {
+  elements.rankingMessage.textContent = message;
+  elements.rankingMessage.dataset.status = status;
+}
+
+function renderRefreshTimestamp(timestamp = formatRefreshTimestamp()) {
+  elements.lastUpdated.textContent = `Refreshed ${timestamp}`;
+}
+
+async function refreshDashboard() {
+  elements.refreshButton.disabled = true;
+  elements.refreshButton.textContent = "Refreshing...";
+  showRefreshMessage("Refreshing live GISTDA hotspot context...", "working");
+
   try {
-    const results = await Promise.all(Object.keys(scenarios).map(async (scenarioKey) => {
-      const data = await scoreScenario(scenarioKey);
-      return {...data, scenarioKey};
-    }));
-    results.sort((a, b) => b.priority_score - a.priority_score);
-    results.forEach((item) => {
-      queueResults.set(item.scenarioKey, item);
-      const marker = document.querySelector(`[data-scenario="${item.scenarioKey}"]`);
-      if (marker) marker.dataset.severity = severityClass(item.severity);
-    });
-    renderOverview(results);
-    renderPriorityQueue(results);
-    elements.queueStatus.textContent = `${results.length} incidents ranked`;
-    selectScenario(results[0].scenarioKey);
+    await refreshLiveHotspotContext();
+    const context = await fetchHotspotContext();
+    const score = await fetchPriorityScore(buildScorePayloadFromContext(context));
+    renderContext(context);
+    renderScore(score);
+    const refreshedAt = formatRefreshTimestamp();
+    renderRefreshTimestamp(refreshedAt);
+    showRefreshMessage(`Live GISTDA data refreshed successfully at ${refreshedAt}.`, "success");
   } catch (error) {
-    elements.queueStatus.textContent = "Queue unavailable";
-    elements.operatorSummary.textContent = `Unable to build Pilot Demo v1 queue: ${error.message}`;
-    elements.priorityQueue.innerHTML = `<tr><td colspan="6">Unable to build queue: ${error.message}</td></tr>`;
+    setConnectorStatus("error");
+    elements.operatorSummary.textContent = error.message;
+    showRefreshMessage(`Live refresh failed: ${error.message}`, "error");
+  } finally {
+    elements.refreshButton.disabled = false;
+    elements.refreshButton.textContent = "Refresh Live GISTDA Data";
   }
 }
 
-elements.scenario.addEventListener("change", () => selectScenario(elements.scenario.value));
-elements.markers.forEach((marker) => marker.addEventListener("click", () => selectScenario(marker.dataset.scenario)));
+async function loadDashboard() {
+  try {
+    const context = await fetchHotspotContext();
+    const score = await fetchPriorityScore(buildScorePayloadFromContext(context));
+    renderContext(context);
+    renderScore(score);
+    renderRefreshTimestamp();
+  } catch (error) {
+    setConnectorStatus("error");
+    elements.operatorSummary.textContent = error.message;
+  }
+}
 
-buildPilotDemo();
-loadGistdaContext();
+function renderRanking(ranking) {
+  const areas = ranking.areas || [];
+  elements.rankingTableBody.innerHTML = "";
+
+  if (!areas.length) {
+    elements.rankingTableBody.innerHTML = '<tr><td colspan="9">No ranked areas available.</td></tr>';
+    return;
+  }
+
+  areas.forEach((area) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${escapeHtml(area.rank)}</td>
+      <td>${escapeHtml(area.province)}</td>
+      <td>${escapeHtml(area.district)}</td>
+      <td>${escapeHtml(area.hotspot_count)}</td>
+      <td>${escapeHtml(formatJoined(area.landuse_types))}</td>
+      <td>${escapeHtml(formatDistance(area.nearest_hotspot_distance_km))}</td>
+      <td>${escapeHtml(Number(area.priority_score).toFixed(2))}</td>
+      <td><span class="table-severity" data-severity="${severityClass(area.severity)}">${escapeHtml(area.severity)}</span></td>
+      <td>${escapeHtml(formatAction(area.recommended_action))}</td>
+    `;
+    elements.rankingTableBody.appendChild(row);
+  });
+}
+
+async function fetchRanking() {
+  const response = await fetch("/api/forest-priority/ranking", { cache: "no-store" });
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.message || `Ranking returned ${response.status}`);
+  return payload;
+}
+
+async function refreshRanking() {
+  elements.rankingRefreshButton.disabled = true;
+  elements.rankingRefreshButton.textContent = "Refreshing...";
+  showRankingMessage("Refreshing multi-area forest priority ranking...", "working");
+
+  try {
+    const refreshResponse = await fetch("/api/forest-priority/refresh-ranking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    const refreshPayload = await refreshResponse.json();
+    if (!refreshResponse.ok) throw new Error(refreshPayload.message || `Ranking refresh returned ${refreshResponse.status}`);
+
+    const ranking = await fetchRanking();
+    renderRanking(ranking);
+    showRankingMessage(`Multi-area ranking refreshed successfully at ${formatRefreshTimestamp()}.`, "success");
+  } catch (error) {
+    showRankingMessage(`Ranking refresh failed: ${error.message}`, "error");
+  } finally {
+    elements.rankingRefreshButton.disabled = false;
+    elements.rankingRefreshButton.textContent = "Refresh Multi-area Ranking";
+  }
+}
+
+async function loadRanking() {
+  try {
+    const ranking = await fetchRanking();
+    renderRanking(ranking);
+    showRankingMessage("Loaded the latest saved multi-area ranking.", "success");
+  } catch (error) {
+    showRankingMessage(error.message, "neutral");
+  }
+}
+
+elements.refreshButton.addEventListener("click", refreshDashboard);
+elements.rankingRefreshButton.addEventListener("click", refreshRanking);
+loadDashboard();
+loadRanking();
