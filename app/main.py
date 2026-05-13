@@ -21,6 +21,7 @@ STATIC_DIR = BASE_DIR / "static"
 LIVE_CONTEXT_DIR = ROOT_DIR / "live_context"
 MONITORED_FOREST_AREAS_PATH = ROOT_DIR / "config" / "monitored_forest_areas.json"
 FOREST_PRIORITY_RANKING_PATH = LIVE_CONTEXT_DIR / "forest_priority_ranking.json"
+ENVIRONMENTAL_CONTEXT_SAMPLES_PATH = ROOT_DIR / "config" / "environmental_context_samples.json"
 
 app = FastAPI(
     title="DisasterGuard GISTDA Demo",
@@ -165,6 +166,7 @@ def forest_priority_ranking() -> JSONResponse:
             payload = json.load(file)
         for area in payload.get("areas", []):
             area.setdefault("matched_patterns", [])
+            area.setdefault("environmental_context", {})
         return JSONResponse(content=payload)
     except Exception:
         return JSONResponse(
@@ -193,6 +195,7 @@ def forest_priority_refresh_ranking() -> JSONResponse:
         payload = refresh_forest_priority_ranking(
             MONITORED_FOREST_AREAS_PATH,
             FOREST_PRIORITY_RANKING_PATH,
+            ENVIRONMENTAL_CONTEXT_SAMPLES_PATH,
         )
     except Exception:
         return JSONResponse(

@@ -38,6 +38,12 @@ const elements = {
   patternCodes: document.getElementById("patternCodes"),
   patternExplanation: document.getElementById("patternExplanation"),
   patternFocus: document.getElementById("patternFocus"),
+  envSource: document.getElementById("envSource"),
+  envTemperature: document.getElementById("envTemperature"),
+  envHumidity: document.getElementById("envHumidity"),
+  envWind: document.getElementById("envWind"),
+  envRain: document.getElementById("envRain"),
+  envPm25: document.getElementById("envPm25"),
 };
 
 let map;
@@ -354,6 +360,7 @@ function renderPatternDetail(area) {
     elements.patternCodes.textContent = "--";
     elements.patternExplanation.textContent = "Refresh the ranking to load pattern guidance.";
     elements.patternFocus.textContent = "--";
+    renderEnvironmentalContext({});
     return;
   }
 
@@ -363,6 +370,20 @@ function renderPatternDetail(area) {
   elements.patternCodes.textContent = patterns.map((pattern) => pattern.pattern_code).join(", ") || "--";
   elements.patternExplanation.textContent = primaryPattern?.explanation || "No incident pattern matched this area.";
   elements.patternFocus.textContent = primaryPattern?.recommended_operational_focus || "--";
+  renderEnvironmentalContext(area.environmental_context || {});
+}
+
+function renderEnvironmentalContext(context) {
+  elements.envSource.textContent = context.source === "open-meteo"
+    ? "Live Open-Meteo"
+    : context.source === "sample"
+      ? "Sample fallback"
+      : "--";
+  elements.envTemperature.textContent = context.temperature_c === undefined ? "--" : `${context.temperature_c} C`;
+  elements.envHumidity.textContent = context.humidity_percent === undefined ? "--" : `${context.humidity_percent}%`;
+  elements.envWind.textContent = context.wind_speed_kph === undefined ? "--" : `${context.wind_speed_kph} kph ${context.wind_direction || ""}`.trim();
+  elements.envRain.textContent = context.rain_probability_percent === undefined ? "--" : `${context.rain_probability_percent}%`;
+  elements.envPm25.textContent = context.pm25_ugm3 === undefined ? "--" : `${context.pm25_ugm3} ug/m3`;
 }
 
 async function fetchRanking() {

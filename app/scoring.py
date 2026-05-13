@@ -14,5 +14,6 @@ def score_incident(request: IncidentScoreRequest) -> IncidentScoreResponse:
             request.hotspot_count,
             request.landuse_types,
             request.nearest_hotspot_distance_km,
+            request.environmental_context,
         )
     return IncidentScoreResponse(area_id=request.area_id, incident_type=request.incident_type, priority_score=priority_score, severity=severity, recommended_action=recommended_action_for_severity(severity), operator_summary=build_operator_summary(severity, request.incident_type, request.risk_drivers), risk_drivers=request.risk_drivers, matched_patterns=matched_patterns)

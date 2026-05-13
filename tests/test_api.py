@@ -46,6 +46,8 @@ def test_static_assets_available():
     assert ".refresh-message" in css_response.text
     assert ".ranking-table" in css_response.text
     assert ".pattern-detail-panel" in css_response.text
+    assert ".environment-grid" in css_response.text
+    assert "Live Open-Meteo" in js_response.text
 
 
 def test_health_endpoint():
@@ -86,7 +88,7 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     monkeypatch.setattr(
         main_module,
         "refresh_forest_priority_ranking",
-        lambda config_path, output_path: {
+        lambda config_path, output_path, environmental_context_path=None: {
             "status": "ok",
             "message": "Forest priority ranking refreshed.",
             "generated_at": "2026-05-12T00:00:00+00:00",
@@ -109,6 +111,14 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                     "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
                     "operator_summary": "Review the area.",
                     "risk_drivers": ["GISTDA hotspot API context"],
+                    "environmental_context": {
+                        "temperature_c": 34,
+                        "humidity_percent": 35,
+                        "wind_speed_kph": 12,
+                        "wind_direction": "SW",
+                        "rain_probability_percent": 10,
+                        "pm25_ugm3": 42.5,
+                    },
                     "matched_patterns": [
                         {
                             "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
@@ -130,6 +140,7 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     assert payload["status"] == "ok"
     assert payload["areas"][0]["rank"] == 1
     assert payload["areas"][0]["priority_score"] == 0.64
+    assert payload["areas"][0]["environmental_context"]["temperature_c"] == 34
     assert payload["areas"][0]["matched_patterns"][0]["pattern_code"] == "HOTSPOT_NEAR_MONITORED_AREA"
 
 

@@ -10,5 +10,10 @@
     "1 hotspot record(s) returned",
     "landuse: ป่าอนุรักษ์",
     "nearest hotspot distance 5.83 km"
-  ]
+  ],
+  "hotspot_count": 1,
+  "landuse_types": [
+    "ป่าอนุรักษ์"
+  ],
+  "nearest_hotspot_distance_km": 5.82881
 }
