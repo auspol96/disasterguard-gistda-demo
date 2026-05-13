@@ -33,6 +33,7 @@ const elements = {
   riskDrivers: document.getElementById("riskDrivers"),
   rankingRefreshButton: document.getElementById("rankingRefreshButton"),
   rankingMessage: document.getElementById("rankingMessage"),
+  provinceFilter: document.getElementById("provinceFilter"),
   rankingTableBody: document.getElementById("rankingTableBody"),
   patternAreaName: document.getElementById("patternAreaName"),
   patternCodes: document.getElementById("patternCodes"),
@@ -51,7 +52,10 @@ const elements = {
 };
 
 let map;
-let hotspotMarker;
+let forestAreaLayer;
+const forestAreaMarkers = new Map();
+let selectedAreaId = null;
+let allRankedAreas = [];
 
 function formatJoined(values) {
   return Array.isArray(values) && values.length ? values.join(", ") : "--";
@@ -106,53 +110,176 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function buildHotspotPopup(sample, summary) {
-  const detailRows = [
-    ["Province", sample.province],
-    ["District", sample.district],
-    ["Subdistrict", sample.subdistrict],
-    ["Village", sample.village],
-    ["Landuse", sample.landuse || summary.landuse_types?.[0]],
-    ["Date", sample.date || summary.dates_available?.[0]],
-    ["Satellite", sample.satellite],
-    ["Distance", sample.distance === undefined ? null : `${Number(sample.distance).toFixed(5)} km`],
-  ];
-
-  return `
-    <div class="hotspot-popup">
-      <strong>Forest hotspot context</strong>
-      ${detailRows.map(([label, value]) => `<span><b>${escapeHtml(label)}</b>${escapeHtml(value)}</span>`).join("")}
-    </div>
-  `;
-}
-
-function ensureMap(position, sample, summary) {
-  if (!position || typeof L === "undefined") return;
+function ensureBaseMap(position, zoom = 9) {
+  if (!position || typeof L === "undefined") return null;
 
   if (!map) {
     map = L.map("hotspotMap", {
       zoomControl: true,
       scrollWheelZoom: false,
-    }).setView([position.latitude, position.longitude], 11);
+    }).setView([position.latitude, position.longitude], zoom);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 18,
     }).addTo(map);
   } else {
+    map.setView([position.latitude, position.longitude], zoom);
+  }
+
+  return map;
+}
+
+function ensureMap(position, sample, summary) {
+  if (!position || typeof L === "undefined") return;
+
+  if (!map) {
+    ensureBaseMap(position, 11);
+  } else if (!forestAreaMarkers.size) {
     map.setView([position.latitude, position.longitude], 11);
   }
-
-  if (hotspotMarker) {
-    hotspotMarker.remove();
-  }
-
-  hotspotMarker = L.marker([position.latitude, position.longitude])
-    .addTo(map)
-    .bindPopup(buildHotspotPopup(sample, summary))
-    .openPopup();
+  if (!map) return;
 
   elements.mapCoordinate.textContent = `${position.latitude.toFixed(5)}, ${position.longitude.toFixed(5)}`;
+}
+
+function severityColor(severity) {
+  const normalized = severityClass(severity);
+  if (normalized === "low" || normalized === "monitor") return "#2fbf71";
+  if (normalized === "medium" || normalized === "watch") return "#f2b45f";
+  if (normalized === "high") return "#ef4444";
+  if (normalized === "critical") return "#7f1d1d";
+  return "#7cc7ff";
+}
+
+function markerRadius(area) {
+  const score = Number(area.priority_score);
+  const baseRadius = Number.isFinite(score) ? 15 + Math.max(0, Math.min(1, score)) * 11 : 16;
+  return Number(area.rank) === 1 ? baseRadius + 4 : baseRadius;
+}
+
+function markerTextColor(severity) {
+  const normalized = severityClass(severity);
+  return normalized === "medium" || normalized === "watch" ? "#081117" : "#ffffff";
+}
+
+function rankedAreaPosition(area) {
+  const latitude = Number(area.lat);
+  const longitude = Number(area.lon);
+  return Number.isFinite(latitude) && Number.isFinite(longitude)
+    ? { latitude, longitude }
+    : null;
+}
+
+function buildForestAreaPopup(area) {
+  const detailRows = [
+    ["ลำดับ", area.rank],
+    ["ชื่อพื้นที่", area.area_name],
+    ["จังหวัด", area.province],
+    ["อำเภอ", area.district],
+    ["จำนวนจุดความร้อน", area.hotspot_count],
+    ["คะแนนความเสี่ยง", area.priority_score === undefined ? null : Number(area.priority_score).toFixed(2)],
+    ["ระดับความรุนแรง", area.severity],
+    ["ข้อเสนอแนะ", formatAction(area.recommended_action)],
+  ];
+
+  return `
+    <div class="hotspot-popup forest-area-popup">
+      <strong>พื้นที่เฝ้าระวังป่า</strong>
+      ${detailRows.map(([label, value]) => `<span><b>${escapeHtml(label)}</b>${escapeHtml(value)}</span>`).join("")}
+    </div>
+  `;
+}
+
+function buildRankMarkerIcon(area, isSelected = false) {
+  const radius = markerRadius(area);
+  const size = Math.round(radius * 2);
+  const isTopRank = Number(area.rank) === 1;
+  const classes = [
+    "forest-rank-marker",
+    isTopRank ? "is-top-rank" : "",
+    isSelected ? "is-selected" : "",
+  ].filter(Boolean).join(" ");
+
+  return L.divIcon({
+    className: "forest-rank-marker-icon",
+    html: `
+      <div
+        class="${classes}"
+        style="
+          --marker-size:${size}px;
+          --marker-bg:${severityColor(area.severity)};
+          --marker-text:${markerTextColor(area.severity)};
+        "
+      >${escapeHtml(area.rank)}</div>
+    `,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2],
+  });
+}
+
+function updateSelectedMarkerStyles() {
+  forestAreaMarkers.forEach((marker, areaId) => {
+    marker.setIcon(buildRankMarkerIcon(marker.options.area, areaId === selectedAreaId));
+  });
+}
+
+function openForestAreaMarker(area) {
+  const marker = forestAreaMarkers.get(area.area_id);
+  if (!marker || !map) return;
+
+  const position = rankedAreaPosition(area);
+  if (position) {
+    map.setView([position.latitude, position.longitude], Math.max(map.getZoom(), 10));
+  }
+  marker.openPopup();
+}
+
+function selectRankedArea(area, focusMarker = false) {
+  selectedAreaId = area?.area_id || null;
+  renderPatternDetail(area);
+  updateSelectedMarkerStyles();
+  if (focusMarker) {
+    openForestAreaMarker(area);
+  }
+}
+
+function renderForestPriorityMarkers(areas) {
+  if (typeof L === "undefined") return;
+
+  if (!forestAreaLayer) {
+    forestAreaLayer = L.layerGroup();
+  }
+  forestAreaLayer.clearLayers();
+  forestAreaMarkers.clear();
+
+  const bounds = [];
+  areas.forEach((area) => {
+    const position = rankedAreaPosition(area);
+    if (!position) return;
+
+    ensureBaseMap(position, 8);
+    const marker = L.marker([position.latitude, position.longitude], {
+      area,
+      icon: buildRankMarkerIcon(area, area.area_id === selectedAreaId),
+    })
+      .bindPopup(buildForestAreaPopup(area))
+      .on("click", () => selectRankedArea(area));
+
+    marker.addTo(forestAreaLayer);
+    forestAreaMarkers.set(area.area_id, marker);
+    bounds.push([position.latitude, position.longitude]);
+  });
+
+  if (map && !map.hasLayer(forestAreaLayer)) {
+    forestAreaLayer.addTo(map);
+  }
+
+  if (map && bounds.length) {
+    map.fitBounds(bounds, { padding: [42, 42], maxZoom: 10 });
+    elements.mapCoordinate.textContent = `แสดงพื้นที่จัดอันดับ ${bounds.length} จุด`;
+  }
 }
 
 function renderContext(context) {
@@ -326,15 +453,42 @@ async function loadDashboard() {
   }
 }
 
-function renderRanking(ranking) {
-  const areas = ranking.areas || [];
+function populateProvinceFilter(areas) {
+  if (!elements.provinceFilter) return;
+
+  const selectedProvince = elements.provinceFilter.value;
+  const provinces = [...new Set(areas.map((area) => area.province).filter(Boolean))].sort();
+  elements.provinceFilter.innerHTML = '<option value="">All provinces</option>';
+  provinces.forEach((province) => {
+    const option = document.createElement("option");
+    option.value = province;
+    option.textContent = province;
+    elements.provinceFilter.appendChild(option);
+  });
+
+  if (provinces.includes(selectedProvince)) {
+    elements.provinceFilter.value = selectedProvince;
+  }
+}
+
+function filteredRankedAreas() {
+  const selectedProvince = elements.provinceFilter?.value || "";
+  return selectedProvince
+    ? allRankedAreas.filter((area) => area.province === selectedProvince)
+    : allRankedAreas;
+}
+
+function renderRankingAreas(areas) {
   elements.rankingTableBody.innerHTML = "";
 
   if (!areas.length) {
     elements.rankingTableBody.innerHTML = '<tr><td colspan="10">No ranked areas available.</td></tr>';
+    renderForestPriorityMarkers([]);
     renderPatternDetail(null);
     return;
   }
+
+  renderForestPriorityMarkers(areas);
 
   areas.forEach((area) => {
     const patternCodes = (area.matched_patterns || []).map((pattern) => pattern.pattern_code);
@@ -351,11 +505,17 @@ function renderRanking(ranking) {
       <td>${escapeHtml(formatAction(area.recommended_action))}</td>
       <td>${escapeHtml(patternCodes.join(", ") || "--")}</td>
     `;
-    row.addEventListener("click", () => renderPatternDetail(area));
+    row.addEventListener("click", () => selectRankedArea(area, true));
     elements.rankingTableBody.appendChild(row);
   });
 
-  renderPatternDetail(areas[0]);
+  selectRankedArea(areas[0]);
+}
+
+function renderRanking(ranking) {
+  allRankedAreas = ranking.areas || [];
+  populateProvinceFilter(allRankedAreas);
+  renderRankingAreas(filteredRankedAreas());
 }
 
 function renderPatternDetail(area) {
@@ -446,5 +606,6 @@ async function loadRanking() {
 
 elements.refreshButton.addEventListener("click", refreshDashboard);
 elements.rankingRefreshButton.addEventListener("click", refreshRanking);
+elements.provinceFilter?.addEventListener("change", () => renderRankingAreas(filteredRankedAreas()));
 loadDashboard();
 loadRanking();

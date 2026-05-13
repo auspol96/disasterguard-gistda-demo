@@ -28,11 +28,19 @@
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Map-First Review</p>
-            <h2>Forest Hotspot Context</h2>
+            <h2>แผนที่ลำดับความเสี่ยงพื้นที่ป่าภาคเหนือ</h2>
           </div>
           <span id="connectorStatus" class="status-pill">Loading</span>
         </div>
-        <div id="hotspotMap" class="map" aria-label="Leaflet map centered on the GISTDA hotspot"></div>
+        <div id="hotspotMap" class="map" aria-label="Leaflet map showing ranked Northern Thailand forest priority areas"></div>
+        <div class="map-legend" aria-label="Forest priority map severity legend">
+          <span><i class="legend-dot legend-low"></i>สีเขียว = ต่ำ</span>
+          <span><i class="legend-dot legend-medium"></i>สีส้ม = ปานกลาง</span>
+          <span><i class="legend-dot legend-high"></i>สีแดง = สูง</span>
+          <span><i class="legend-dot legend-critical"></i>สีแดงเข้ม = วิกฤต</span>
+          <span class="legend-rank-note">ตัวเลขในวงกลม = ลำดับความเสี่ยง</span>
+        </div>
+        <p class="map-demo-note">หมายเหตุ: ตำแหน่งพื้นที่เฝ้าระวังเป็นพิกัดตัวอย่างสำหรับต้นแบบ และควรตรวจสอบกับข้อมูล GIS ทางการก่อนใช้งานจริง</p>
         <div class="map-foot">
           <span id="mapCoordinate">Awaiting hotspot coordinates</span>
           <span id="lastUpdated">Refresh pending</span>
@@ -92,6 +100,12 @@
         <button id="rankingRefreshButton" class="refresh-button ranking-button" type="button">Refresh Multi-area Ranking</button>
       </div>
       <p id="rankingMessage" class="refresh-message ranking-message" role="status">Load or refresh the multi-area ranking to compare monitored forest zones.</p>
+      <div class="ranking-controls" aria-label="Forest priority ranking controls">
+        <label for="provinceFilter">Province</label>
+        <select id="provinceFilter">
+          <option value="">All provinces</option>
+        </select>
+      </div>
       <div class="ranking-table-wrap">
         <table class="ranking-table">
           <thead>

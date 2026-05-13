@@ -12,7 +12,14 @@ def test_dashboard_root_serves_html():
     assert "Forest Priority Intelligence for Wildfire, Haze, and Community Protection" in response.text
     assert "Real Connector v1" in response.text
     assert "Refresh Live GISTDA Data" in response.text
-    assert "Leaflet map centered on the GISTDA hotspot" in response.text
+    assert "แผนที่ลำดับความเสี่ยงพื้นที่ป่าภาคเหนือ" in response.text
+    assert "สีเขียว = ต่ำ" in response.text
+    assert "สีส้ม = ปานกลาง" in response.text
+    assert "สีแดง = สูง" in response.text
+    assert "สีแดงเข้ม = วิกฤต" in response.text
+    assert "ตัวเลขในวงกลม = ลำดับความเสี่ยง" in response.text
+    assert "ตำแหน่งพื้นที่เฝ้าระวังเป็นพิกัดตัวอย่างสำหรับต้นแบบ" in response.text
+    assert "provinceFilter" in response.text
     assert "Current Hotspot Evidence" in response.text
     assert "Recommended action" in response.text
     assert "Top Forest Priority Areas" in response.text
@@ -36,7 +43,17 @@ def test_static_assets_available():
     assert "fetch(\"/api/forest-priority/refresh-ranking\"" in js_response.text
     assert "refreshRanking" in js_response.text
     assert "renderRanking" in js_response.text
-    assert "buildHotspotPopup" in js_response.text
+    assert "renderForestPriorityMarkers" in js_response.text
+    assert "L.divIcon" in js_response.text
+    assert "forest-rank-marker" in js_response.text
+    assert "is-selected" in js_response.text
+    assert "fitBounds" in js_response.text
+    assert "buildForestAreaPopup" in js_response.text
+    assert "selectRankedArea" in js_response.text
+    assert "populateProvinceFilter" in js_response.text
+    assert "filteredRankedAreas" in js_response.text
+    assert "ลำดับ" in js_response.text
+    assert "ข้อเสนอแนะ" in js_response.text
     assert "connectorBadge.hidden = resolvedStatus !== \"ok\"" in js_response.text
     assert "color-scheme" in css_response.text
     assert ".map" in css_response.text
@@ -48,8 +65,16 @@ def test_static_assets_available():
     assert ".pattern-detail-panel" in css_response.text
     assert ".environment-grid" in css_response.text
     assert ".environment-risk-grid" in css_response.text
+    assert ".map-legend" in css_response.text
+    assert ".map-demo-note" in css_response.text
+    assert ".ranking-controls" in css_response.text
+    assert ".legend-critical" in css_response.text
+    assert ".forest-rank-marker" in css_response.text
+    assert ".forest-rank-marker.is-top-rank" in css_response.text
+    assert ".forest-rank-marker.is-selected" in css_response.text
     assert "Live Open-Meteo" in js_response.text
     assert "renderEnvironmentalRiskSummary" in js_response.text
+    assert "L.circleMarker" not in js_response.text
 
 
 def test_health_endpoint():
@@ -63,10 +88,34 @@ def test_forest_priority_areas_endpoint():
 
     assert response.status_code == 200
     payload = response.json()
-    assert len(payload["areas"]) == 5
+    assert len(payload["areas"]) >= 30
     assert payload["areas"][0]["area_id"] == "NTH-CHIANGDAO-MUEANGNA-001"
     assert payload["areas"][0]["lat"] == 19.57651
     assert payload["areas"][0]["lon"] == 99.01361
+    assert payload["areas"][0]["coordinate_status"] == "approximate_demo_coordinate"
+    assert all(area["coordinate_status"] == "approximate_demo_coordinate" for area in payload["areas"])
+    assert all(3000 <= area["radius"] <= 10000 for area in payload["areas"])
+    assert {area["province"] for area in payload["areas"]} == {
+        "Chiang Mai",
+        "Chiang Rai",
+        "Mae Hong Son",
+        "Nan",
+        "Lampang",
+        "Lamphun",
+        "Phayao",
+        "Phrae",
+        "Tak",
+    }
+    configured_districts = {area["district"] for area in payload["areas"]}
+    assert {
+        "Samoeng",
+        "Mae Suai",
+        "Pang Mapha",
+        "Mae Charim",
+        "Santisuk",
+        "Dok Khamtai",
+        "Den Chai",
+    }.issubset(configured_districts)
 
 
 def test_forest_priority_ranking_missing(monkeypatch, tmp_path):

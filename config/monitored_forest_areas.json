@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "description": "Expanded Northern Thailand forest-risk monitoring zones for ForestGuard MVP demo.",
+    "coordinate_note": "Coordinates are approximate district or forest-watch monitoring points for MVP demonstration only, not official forest polygons."
+  },
   "areas": [
     {
       "area_id": "NTH-CHIANGDAO-MUEANGNA-001",
@@ -8,47 +12,437 @@
       "subdistrict": "Mueang Na",
       "lat": 19.57651,
       "lon": 99.01361,
-      "radius": 1000.5
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
     },
     {
       "area_id": "NTH-MAERIM-001",
       "area_name": "Mae Rim forest interface",
       "province": "Chiang Mai",
       "district": "Mae Rim",
-      "subdistrict": "Configurable forest zone",
+      "subdistrict": "Mae Raem",
       "lat": 18.9184,
       "lon": 98.9397,
-      "radius": 1000.5
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
     },
     {
       "area_id": "NTH-MAETAENG-001",
       "area_name": "Mae Taeng forest corridor",
       "province": "Chiang Mai",
       "district": "Mae Taeng",
-      "subdistrict": "Configurable forest zone",
+      "subdistrict": "Mae Taeng",
       "lat": 19.1173,
       "lon": 98.9415,
-      "radius": 1000.5
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-DOISAKET-001",
+      "area_name": "Doi Saket forest interface",
+      "province": "Chiang Mai",
+      "district": "Doi Saket",
+      "subdistrict": "Choeng Doi",
+      "lat": 18.8715,
+      "lon": 99.1367,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-HOD-OBLUANG-001",
+      "area_name": "Hot / Ob Luang forest watch",
+      "province": "Chiang Mai",
+      "district": "Hot",
+      "subdistrict": "Hang Dong",
+      "lat": 18.1463,
+      "lon": 98.4676,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-OMKOI-001",
+      "area_name": "Omkoi upland forest watch",
+      "province": "Chiang Mai",
+      "district": "Omkoi",
+      "subdistrict": "Omkoi",
+      "lat": 17.8016,
+      "lon": 98.3593,
+      "radius": 8000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAECHAEM-001",
+      "area_name": "Mae Chaem watershed forest watch",
+      "province": "Chiang Mai",
+      "district": "Mae Chaem",
+      "subdistrict": "Chang Khoeng",
+      "lat": 18.4991,
+      "lon": 98.3613,
+      "radius": 8000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-SAMOENG-001",
+      "area_name": "Samoeng upland forest watch",
+      "province": "Chiang Mai",
+      "district": "Samoeng",
+      "subdistrict": "Samoeng Tai",
+      "lat": 18.8488,
+      "lon": 98.7328,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAEFAHLUANG-001",
+      "area_name": "Mae Fah Luang highland forest watch",
+      "province": "Chiang Rai",
+      "district": "Mae Fah Luang",
+      "subdistrict": "Mae Salong Nok",
+      "lat": 20.1636,
+      "lon": 99.6228,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAESUAI-001",
+      "area_name": "Mae Suai forest corridor",
+      "province": "Chiang Rai",
+      "district": "Mae Suai",
+      "subdistrict": "Mae Suai",
+      "lat": 19.6552,
+      "lon": 99.5437,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-WIANGPAO-001",
+      "area_name": "Wiang Pa Pao forest corridor",
+      "province": "Chiang Rai",
+      "district": "Wiang Pa Pao",
+      "subdistrict": "Wiang",
+      "lat": 19.3498,
+      "lon": 99.5067,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-CHIANGKHONG-001",
+      "area_name": "Chiang Khong Mekong forest watch",
+      "province": "Chiang Rai",
+      "district": "Chiang Khong",
+      "subdistrict": "Wiang",
+      "lat": 20.2613,
+      "lon": 100.4069,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAESAI-001",
+      "area_name": "Mae Sai border forest watch",
+      "province": "Chiang Rai",
+      "district": "Mae Sai",
+      "subdistrict": "Pong Ngam",
+      "lat": 20.3659,
+      "lon": 99.8659,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
     },
     {
       "area_id": "NTH-MAEHONGSON-001",
-      "area_name": "Mae Hong Son upland forest",
+      "area_name": "Mueang Mae Hong Son upland forest",
       "province": "Mae Hong Son",
       "district": "Mueang Mae Hong Son",
-      "subdistrict": "Configurable forest zone",
+      "subdistrict": "Pang Mu",
       "lat": 19.3012,
       "lon": 97.9654,
-      "radius": 1000.5
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-PAI-001",
+      "area_name": "Pai valley forest watch",
+      "province": "Mae Hong Son",
+      "district": "Pai",
+      "subdistrict": "Wiang Tai",
+      "lat": 19.3587,
+      "lon": 98.4374,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-PANGMAPHA-001",
+      "area_name": "Pang Mapha karst forest watch",
+      "province": "Mae Hong Son",
+      "district": "Pang Mapha",
+      "subdistrict": "Sop Pong",
+      "lat": 19.5203,
+      "lon": 98.2441,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-KHUNYUAM-001",
+      "area_name": "Khun Yuam upland forest watch",
+      "province": "Mae Hong Son",
+      "district": "Khun Yuam",
+      "subdistrict": "Khun Yuam",
+      "lat": 18.8298,
+      "lon": 97.9338,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAESARIANG-001",
+      "area_name": "Mae Sariang forest watch",
+      "province": "Mae Hong Son",
+      "district": "Mae Sariang",
+      "subdistrict": "Ban Kat",
+      "lat": 18.1598,
+      "lon": 97.9347,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
     },
     {
       "area_id": "NTH-NAN-FOREST-001",
-      "area_name": "Nan forest zone",
+      "area_name": "Mueang Nan forest zone",
       "province": "Nan",
       "district": "Mueang Nan",
-      "subdistrict": "Configurable forest zone",
+      "subdistrict": "Pha Sing",
       "lat": 18.7831,
       "lon": 100.7789,
-      "radius": 1000.5
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-PUA-001",
+      "area_name": "Pua forest-agriculture interface",
+      "province": "Nan",
+      "district": "Pua",
+      "subdistrict": "Pua",
+      "lat": 19.1751,
+      "lon": 100.9168,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-BO-KLUEA-001",
+      "area_name": "Bo Kluea mountain forest watch",
+      "province": "Nan",
+      "district": "Bo Kluea",
+      "subdistrict": "Bo Kluea Nuea",
+      "lat": 19.1504,
+      "lon": 101.1551,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAECHARIM-001",
+      "area_name": "Mae Charim forest watch",
+      "province": "Nan",
+      "district": "Mae Charim",
+      "subdistrict": "Nong Daeng",
+      "lat": 18.7068,
+      "lon": 101.0067,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-SANTISUK-001",
+      "area_name": "Santisuk forest watch",
+      "province": "Nan",
+      "district": "Santisuk",
+      "subdistrict": "Du Phong",
+      "lat": 18.9131,
+      "lon": 100.9416,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-NGAO-001",
+      "area_name": "Ngao forest corridor",
+      "province": "Lampang",
+      "district": "Ngao",
+      "subdistrict": "Luang Nuea",
+      "lat": 18.7573,
+      "lon": 99.9789,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-CHAEHOM-001",
+      "area_name": "Chae Hom mountain forest watch",
+      "province": "Lampang",
+      "district": "Chae Hom",
+      "subdistrict": "Chae Hom",
+      "lat": 18.7209,
+      "lon": 99.5597,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAE-MO-001",
+      "area_name": "Mae Mo forest and haze watch",
+      "province": "Lampang",
+      "district": "Mae Mo",
+      "subdistrict": "Mae Mo",
+      "lat": 18.2868,
+      "lon": 99.6504,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-WANGNUEA-001",
+      "area_name": "Wang Nuea forest watch",
+      "province": "Lampang",
+      "district": "Wang Nuea",
+      "subdistrict": "Wang Nuea",
+      "lat": 19.1465,
+      "lon": 99.6194,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAETHA-LAMPHUN-001",
+      "area_name": "Mae Tha forest interface",
+      "province": "Lamphun",
+      "district": "Mae Tha",
+      "subdistrict": "Tha Pla Duk",
+      "lat": 18.4646,
+      "lon": 99.1373,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-LI-001",
+      "area_name": "Li dry forest watch",
+      "province": "Lamphun",
+      "district": "Li",
+      "subdistrict": "Li",
+      "lat": 17.8012,
+      "lon": 98.9501,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-BANHONG-001",
+      "area_name": "Ban Hong forest watch",
+      "province": "Lamphun",
+      "district": "Ban Hong",
+      "subdistrict": "Ban Hong",
+      "lat": 18.3302,
+      "lon": 98.8199,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-CHIANGKHAM-001",
+      "area_name": "Chiang Kham upland forest watch",
+      "province": "Phayao",
+      "district": "Chiang Kham",
+      "subdistrict": "Yuan",
+      "lat": 19.5234,
+      "lon": 100.3035,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-PONG-001",
+      "area_name": "Pong mountain forest watch",
+      "province": "Phayao",
+      "district": "Pong",
+      "subdistrict": "Pong",
+      "lat": 19.1511,
+      "lon": 100.2759,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-DOKKHAMTAI-001",
+      "area_name": "Dok Khamtai forest watch",
+      "province": "Phayao",
+      "district": "Dok Khamtai",
+      "subdistrict": "Dok Khamtai",
+      "lat": 19.1624,
+      "lon": 99.9934,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-SONG-001",
+      "area_name": "Song forest corridor",
+      "province": "Phrae",
+      "district": "Song",
+      "subdistrict": "Ban Nun",
+      "lat": 18.4722,
+      "lon": 100.1827,
+      "radius": 6000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-LONG-001",
+      "area_name": "Long dry forest watch",
+      "province": "Phrae",
+      "district": "Long",
+      "subdistrict": "Huai O",
+      "lat": 18.0747,
+      "lon": 99.8315,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-DENCHAI-001",
+      "area_name": "Den Chai forest interface",
+      "province": "Phrae",
+      "district": "Den Chai",
+      "subdistrict": "Den Chai",
+      "lat": 17.9831,
+      "lon": 100.0529,
+      "radius": 5000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-MAE-RAMAT-001",
+      "area_name": "Mae Ramat border forest watch",
+      "province": "Tak",
+      "district": "Mae Ramat",
+      "subdistrict": "Mae Ramat",
+      "lat": 16.9841,
+      "lon": 98.5167,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-THASONGYANG-001",
+      "area_name": "Tha Song Yang border forest watch",
+      "province": "Tak",
+      "district": "Tha Song Yang",
+      "subdistrict": "Mae Tan",
+      "lat": 17.2277,
+      "lon": 98.2258,
+      "radius": 8000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-UMPHANG-001",
+      "area_name": "Umphang western forest complex watch",
+      "province": "Tak",
+      "district": "Umphang",
+      "subdistrict": "Umphang",
+      "lat": 16.0163,
+      "lon": 98.8627,
+      "radius": 10000,
+      "coordinate_status": "approximate_demo_coordinate"
+    },
+    {
+      "area_id": "NTH-PHOPPHRA-001",
+      "area_name": "Phop Phra forest-agriculture interface",
+      "province": "Tak",
+      "district": "Phop Phra",
+      "subdistrict": "Phop Phra",
+      "lat": 16.3828,
+      "lon": 98.6908,
+      "radius": 7000,
+      "coordinate_status": "approximate_demo_coordinate"
     }
   ]
 }

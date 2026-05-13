@@ -183,6 +183,79 @@ h2 {
   overflow: hidden;
 }
 
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.legend-low { background: #2fbf71; }
+.legend-medium { background: #f2b45f; }
+.legend-high { background: #ef4444; }
+.legend-critical { background: #7f1d1d; }
+
+.legend-rank-note {
+  color: #d9ebf8;
+}
+
+.map-demo-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.forest-rank-marker-icon {
+  background: transparent;
+  border: 0;
+}
+
+.forest-rank-marker {
+  width: var(--marker-size);
+  height: var(--marker-size);
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.76);
+  border-radius: 999px;
+  background: var(--marker-bg);
+  color: var(--marker-text);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.forest-rank-marker.is-top-rank {
+  border-width: 4px;
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.22),
+    0 12px 28px rgba(0, 0, 0, 0.46);
+}
+
+.forest-rank-marker.is-selected {
+  border-color: #ffffff;
+  box-shadow:
+    0 0 0 5px rgba(124, 199, 255, 0.36),
+    0 12px 28px rgba(0, 0, 0, 0.46);
+}
+
 .map-foot {
   align-items: center;
   margin-top: 14px;
@@ -284,6 +357,30 @@ h2 {
   margin-top: 18px;
 }
 
+.ranking-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.ranking-controls label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ranking-controls select {
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(21, 37, 49, 0.86);
+  color: var(--text);
+  padding: 8px 12px;
+  font: inherit;
+}
+
 .ranking-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);
@@ -314,6 +411,14 @@ h2 {
 
 .ranking-table td {
   font-size: 14px;
+}
+
+.ranking-table tbody tr {
+  cursor: pointer;
+}
+
+.ranking-table tbody tr:hover {
+  background: rgba(57, 211, 179, 0.08);
 }
 
 .table-severity {

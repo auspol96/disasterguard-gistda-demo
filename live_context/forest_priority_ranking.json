@@ -1,8 +1,221 @@
 {
   "status": "ok",
   "message": "Forest priority ranking refreshed.",
-  "generated_at": "2026-05-13T13:18:42.751350+00:00",
+  "generated_at": "2026-05-13T14:07:00.909573+00:00",
   "areas": [
+    {
+      "area_id": "NTH-SAMOENG-001",
+      "area_name": "Samoeng upland forest watch",
+      "province": "Chiang Mai",
+      "district": "Samoeng",
+      "lat": 18.8488,
+      "lon": 98.7328,
+      "hotspot_count": 6,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [
+        "ป่าอนุรักษ์"
+      ],
+      "nearest_hotspot_distance_km": 0.850928,
+      "priority_score": 0.78,
+      "severity": "HIGH",
+      "recommended_action": "PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE",
+      "operator_summary": "This wildfire haze area should be prioritized due to elevated hazard, exposure, and urgency signals, including GISTDA hotspot API context, 6 hotspot record(s) returned, landuse: ป่าอนุรักษ์, and nearest hotspot distance 0.85 km.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "6 hotspot record(s) returned",
+        "landuse: ป่าอนุรักษ์",
+        "nearest hotspot distance 0.85 km"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "FOREST_CONSERVATION_PRIORITY",
+          "pattern_name": "Conservation forest hotspot priority",
+          "severity_hint": "MEDIUM",
+          "explanation": "A hotspot was detected in a conservation forest area.",
+          "recommended_operational_focus": "Review with forest protection or local response team."
+        },
+        {
+          "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
+          "pattern_name": "Hotspot near monitored area",
+          "severity_hint": "MEDIUM",
+          "explanation": "The nearest hotspot is within 10 km of the monitored location.",
+          "recommended_operational_focus": "Check whether local verification is required."
+        },
+        {
+          "pattern_code": "MULTI_HOTSPOT_CLUSTER",
+          "pattern_name": "Multiple hotspot cluster",
+          "severity_hint": "HIGH",
+          "explanation": "Multiple hotspots were detected in the monitored area.",
+          "recommended_operational_focus": "Escalate for coordinated review."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 23.5,
+        "humidity_percent": 100,
+        "wind_speed_kph": 4.3,
+        "wind_direction": "SE",
+        "wind_direction_degrees": 135,
+        "rain_probability_percent": 85,
+        "pm25_ugm3": 10.0,
+        "fetched_at": "2026-05-13T14:05:58.259105+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 1
+    },
+    {
+      "area_id": "NTH-KHUNYUAM-001",
+      "area_name": "Khun Yuam upland forest watch",
+      "province": "Mae Hong Son",
+      "district": "Khun Yuam",
+      "lat": 18.8298,
+      "lon": 97.9338,
+      "hotspot_count": 5,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [
+        "ป่าสงวนแห่งชาติ"
+      ],
+      "nearest_hotspot_distance_km": 0.492908,
+      "priority_score": 0.78,
+      "severity": "HIGH",
+      "recommended_action": "PRIORITY_REVIEW_AND_COORDINATE_LOCAL_RESPONSE",
+      "operator_summary": "This wildfire haze area should be prioritized due to elevated hazard, exposure, and urgency signals, including GISTDA hotspot API context, 5 hotspot record(s) returned, landuse: ป่าสงวนแห่งชาติ, nearest hotspot distance 0.49 km, and wind spread watch.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "5 hotspot record(s) returned",
+        "landuse: ป่าสงวนแห่งชาติ",
+        "nearest hotspot distance 0.49 km",
+        "wind spread watch"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
+          "pattern_name": "Hotspot near monitored area",
+          "severity_hint": "MEDIUM",
+          "explanation": "The nearest hotspot is within 10 km of the monitored location.",
+          "recommended_operational_focus": "Check whether local verification is required."
+        },
+        {
+          "pattern_code": "MULTI_HOTSPOT_CLUSTER",
+          "pattern_name": "Multiple hotspot cluster",
+          "severity_hint": "HIGH",
+          "explanation": "Multiple hotspots were detected in the monitored area.",
+          "recommended_operational_focus": "Escalate for coordinated review."
+        },
+        {
+          "pattern_code": "WIND_SPREAD_WATCH",
+          "pattern_name": "Wind spread watch",
+          "severity_hint": "MEDIUM",
+          "explanation": "Wind speed is high enough to support smoke or fire spread.",
+          "recommended_operational_focus": "Review wind direction and nearby exposure before field coordination."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 22.0,
+        "humidity_percent": 97,
+        "wind_speed_kph": 11.1,
+        "wind_direction": "S",
+        "wind_direction_degrees": 158,
+        "rain_probability_percent": 82,
+        "pm25_ugm3": 2.8,
+        "fetched_at": "2026-05-13T14:06:15.588878+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 2
+    },
+    {
+      "area_id": "NTH-PANGMAPHA-001",
+      "area_name": "Pang Mapha karst forest watch",
+      "province": "Mae Hong Son",
+      "district": "Pang Mapha",
+      "lat": 19.5203,
+      "lon": 98.2441,
+      "hotspot_count": 2,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [
+        "ป่าอนุรักษ์"
+      ],
+      "nearest_hotspot_distance_km": 1.9225,
+      "priority_score": 0.68,
+      "severity": "MEDIUM",
+      "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+      "operator_summary": "This wildfire haze area should be reviewed in the next operational cycle due to moderate priority signals, including GISTDA hotspot API context, 2 hotspot record(s) returned, landuse: ป่าอนุรักษ์, and nearest hotspot distance 1.92 km.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "2 hotspot record(s) returned",
+        "landuse: ป่าอนุรักษ์",
+        "nearest hotspot distance 1.92 km"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "FOREST_CONSERVATION_PRIORITY",
+          "pattern_name": "Conservation forest hotspot priority",
+          "severity_hint": "MEDIUM",
+          "explanation": "A hotspot was detected in a conservation forest area.",
+          "recommended_operational_focus": "Review with forest protection or local response team."
+        },
+        {
+          "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
+          "pattern_name": "Hotspot near monitored area",
+          "severity_hint": "MEDIUM",
+          "explanation": "The nearest hotspot is within 10 km of the monitored location.",
+          "recommended_operational_focus": "Check whether local verification is required."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 23.8,
+        "humidity_percent": 94,
+        "wind_speed_kph": 2.3,
+        "wind_direction": "S",
+        "wind_direction_degrees": 198,
+        "rain_probability_percent": 50,
+        "pm25_ugm3": 2.9,
+        "fetched_at": "2026-05-13T14:06:13.791886+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 3
+    },
     {
       "area_id": "NTH-CHIANGDAO-MUEANGNA-001",
       "area_name": "Chiang Dao / Mueang Na forest watch",
@@ -51,14 +264,14 @@
       ],
       "environmental_context": {
         "source": "open-meteo",
-        "temperature_c": 22.4,
-        "humidity_percent": 93,
-        "wind_speed_kph": 4.4,
+        "temperature_c": 22.0,
+        "humidity_percent": 95,
+        "wind_speed_kph": 5.1,
         "wind_direction": "SE",
         "wind_direction_degrees": 148,
-        "rain_probability_percent": 60,
-        "pm25_ugm3": 9.5,
-        "fetched_at": "2026-05-13T13:18:33.030041+00:00",
+        "rain_probability_percent": 37,
+        "pm25_ugm3": 9.7,
+        "fetched_at": "2026-05-13T14:05:45.880544+00:00",
         "status": "ok"
       },
       "environmental_risk_summary": {
@@ -67,7 +280,7 @@
         "weather_supports_escalation": false,
         "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
       },
-      "rank": 1
+      "rank": 4
     },
     {
       "area_id": "NTH-MAERIM-001",
@@ -106,14 +319,14 @@
       ],
       "environmental_context": {
         "source": "open-meteo",
-        "temperature_c": 25.8,
-        "humidity_percent": 97,
-        "wind_speed_kph": 5.0,
+        "temperature_c": 25.4,
+        "humidity_percent": 98,
+        "wind_speed_kph": 6.9,
         "wind_direction": "SE",
-        "wind_direction_degrees": 150,
-        "rain_probability_percent": 81,
-        "pm25_ugm3": 10.4,
-        "fetched_at": "2026-05-13T13:18:35.060552+00:00",
+        "wind_direction_degrees": 147,
+        "rain_probability_percent": 66,
+        "pm25_ugm3": 10.0,
+        "fetched_at": "2026-05-13T14:05:47.846231+00:00",
         "status": "ok"
       },
       "environmental_risk_summary": {
@@ -122,7 +335,7 @@
         "weather_supports_escalation": false,
         "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
       },
-      "rank": 2
+      "rank": 5
     },
     {
       "area_id": "NTH-MAETAENG-001",
@@ -161,14 +374,14 @@
       ],
       "environmental_context": {
         "source": "open-meteo",
-        "temperature_c": 25.3,
-        "humidity_percent": 97,
-        "wind_speed_kph": 4.0,
-        "wind_direction": "SE",
-        "wind_direction_degrees": 150,
-        "rain_probability_percent": 81,
-        "pm25_ugm3": 5.2,
-        "fetched_at": "2026-05-13T13:18:38.934231+00:00",
+        "temperature_c": 25.0,
+        "humidity_percent": 96,
+        "wind_speed_kph": 5.4,
+        "wind_direction": "E",
+        "wind_direction_degrees": 111,
+        "rain_probability_percent": 66,
+        "pm25_ugm3": 5.1,
+        "fetched_at": "2026-05-13T14:05:49.651330+00:00",
         "status": "ok"
       },
       "environmental_risk_summary": {
@@ -177,11 +390,506 @@
         "weather_supports_escalation": false,
         "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
       },
-      "rank": 3
+      "rank": 6
+    },
+    {
+      "area_id": "NTH-DOISAKET-001",
+      "area_name": "Doi Saket forest interface",
+      "province": "Chiang Mai",
+      "district": "Doi Saket",
+      "lat": 18.8715,
+      "lon": 99.1367,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.5,
+        "humidity_percent": 97,
+        "wind_speed_kph": 5.9,
+        "wind_direction": "S",
+        "wind_direction_degrees": 166,
+        "rain_probability_percent": 83,
+        "pm25_ugm3": 12.3,
+        "fetched_at": "2026-05-13T14:05:51.535264+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 7
+    },
+    {
+      "area_id": "NTH-HOD-OBLUANG-001",
+      "area_name": "Hot / Ob Luang forest watch",
+      "province": "Chiang Mai",
+      "district": "Hot",
+      "lat": 18.1463,
+      "lon": 98.4676,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 22.7,
+        "humidity_percent": 98,
+        "wind_speed_kph": 5.6,
+        "wind_direction": "W",
+        "wind_direction_degrees": 276,
+        "rain_probability_percent": 67,
+        "pm25_ugm3": 1.2,
+        "fetched_at": "2026-05-13T14:05:53.412416+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 8
+    },
+    {
+      "area_id": "NTH-OMKOI-001",
+      "area_name": "Omkoi upland forest watch",
+      "province": "Chiang Mai",
+      "district": "Omkoi",
+      "lat": 17.8016,
+      "lon": 98.3593,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 22.4,
+        "humidity_percent": 98,
+        "wind_speed_kph": 3.8,
+        "wind_direction": "SW",
+        "wind_direction_degrees": 229,
+        "rain_probability_percent": 79,
+        "pm25_ugm3": 1.2,
+        "fetched_at": "2026-05-13T14:05:54.938945+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 9
+    },
+    {
+      "area_id": "NTH-MAECHAEM-001",
+      "area_name": "Mae Chaem watershed forest watch",
+      "province": "Chiang Mai",
+      "district": "Mae Chaem",
+      "lat": 18.4991,
+      "lon": 98.3613,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.0,
+        "humidity_percent": 99,
+        "wind_speed_kph": 3.3,
+        "wind_direction": "SE",
+        "wind_direction_degrees": 119,
+        "rain_probability_percent": 87,
+        "pm25_ugm3": 1.5,
+        "fetched_at": "2026-05-13T14:05:56.488399+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 10
+    },
+    {
+      "area_id": "NTH-MAEFAHLUANG-001",
+      "area_name": "Mae Fah Luang highland forest watch",
+      "province": "Chiang Rai",
+      "district": "Mae Fah Luang",
+      "lat": 20.1636,
+      "lon": 99.6228,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 20.8,
+        "humidity_percent": 87,
+        "wind_speed_kph": 7.9,
+        "wind_direction": "W",
+        "wind_direction_degrees": 253,
+        "rain_probability_percent": 2,
+        "pm25_ugm3": 19.0,
+        "fetched_at": "2026-05-13T14:05:59.853005+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 11
+    },
+    {
+      "area_id": "NTH-MAESUAI-001",
+      "area_name": "Mae Suai forest corridor",
+      "province": "Chiang Rai",
+      "district": "Mae Suai",
+      "lat": 19.6552,
+      "lon": 99.5437,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.0,
+        "humidity_percent": 90,
+        "wind_speed_kph": 6.3,
+        "wind_direction": "SW",
+        "wind_direction_degrees": 231,
+        "rain_probability_percent": 15,
+        "pm25_ugm3": 12.2,
+        "fetched_at": "2026-05-13T14:06:01.434341+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 12
+    },
+    {
+      "area_id": "NTH-WIANGPAO-001",
+      "area_name": "Wiang Pa Pao forest corridor",
+      "province": "Chiang Rai",
+      "district": "Wiang Pa Pao",
+      "lat": 19.3498,
+      "lon": 99.5067,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 23.5,
+        "humidity_percent": 100,
+        "wind_speed_kph": 3.3,
+        "wind_direction": "SE",
+        "wind_direction_degrees": 139,
+        "rain_probability_percent": 51,
+        "pm25_ugm3": 8.4,
+        "fetched_at": "2026-05-13T14:06:03.377720+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 13
+    },
+    {
+      "area_id": "NTH-CHIANGKHONG-001",
+      "area_name": "Chiang Khong Mekong forest watch",
+      "province": "Chiang Rai",
+      "district": "Chiang Khong",
+      "lat": 20.2613,
+      "lon": 100.4069,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 26.2,
+        "humidity_percent": 81,
+        "wind_speed_kph": 7.1,
+        "wind_direction": "SW",
+        "wind_direction_degrees": 225,
+        "rain_probability_percent": 5,
+        "pm25_ugm3": 9.9,
+        "fetched_at": "2026-05-13T14:06:06.778745+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 14
+    },
+    {
+      "area_id": "NTH-MAESAI-001",
+      "area_name": "Mae Sai border forest watch",
+      "province": "Chiang Rai",
+      "district": "Mae Sai",
+      "lat": 20.3659,
+      "lon": 99.8659,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 23.6,
+        "humidity_percent": 91,
+        "wind_speed_kph": 3.9,
+        "wind_direction": "SW",
+        "wind_direction_degrees": 246,
+        "rain_probability_percent": 5,
+        "pm25_ugm3": 14.6,
+        "fetched_at": "2026-05-13T14:06:08.555586+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 15
     },
     {
       "area_id": "NTH-MAEHONGSON-001",
-      "area_name": "Mae Hong Son upland forest",
+      "area_name": "Mueang Mae Hong Son upland forest",
       "province": "Mae Hong Son",
       "district": "Mueang Mae Hong Son",
       "lat": 19.3012,
@@ -216,14 +924,14 @@
       ],
       "environmental_context": {
         "source": "open-meteo",
-        "temperature_c": 26.3,
-        "humidity_percent": 97,
-        "wind_speed_kph": 3.2,
+        "temperature_c": 26.0,
+        "humidity_percent": 94,
+        "wind_speed_kph": 3.5,
         "wind_direction": "S",
-        "wind_direction_degrees": 180,
-        "rain_probability_percent": 80,
-        "pm25_ugm3": 3.6,
-        "fetched_at": "2026-05-13T13:18:40.832057+00:00",
+        "wind_direction_degrees": 189,
+        "rain_probability_percent": 66,
+        "pm25_ugm3": 3.1,
+        "fetched_at": "2026-05-13T14:06:10.028375+00:00",
         "status": "ok"
       },
       "environmental_risk_summary": {
@@ -232,11 +940,121 @@
         "weather_supports_escalation": false,
         "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
       },
-      "rank": 4
+      "rank": 16
+    },
+    {
+      "area_id": "NTH-PAI-001",
+      "area_name": "Pai valley forest watch",
+      "province": "Mae Hong Son",
+      "district": "Pai",
+      "lat": 19.3587,
+      "lon": 98.4374,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 23.5,
+        "humidity_percent": 95,
+        "wind_speed_kph": 3.5,
+        "wind_direction": "S",
+        "wind_direction_degrees": 159,
+        "rain_probability_percent": 55,
+        "pm25_ugm3": 1.3,
+        "fetched_at": "2026-05-13T14:06:11.956992+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 17
+    },
+    {
+      "area_id": "NTH-MAESARIANG-001",
+      "area_name": "Mae Sariang forest watch",
+      "province": "Mae Hong Son",
+      "district": "Mae Sariang",
+      "lat": 18.1598,
+      "lon": 97.9347,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.0,
+        "humidity_percent": 99,
+        "wind_speed_kph": 7.7,
+        "wind_direction": "S",
+        "wind_direction_degrees": 180,
+        "rain_probability_percent": 85,
+        "pm25_ugm3": 3.3,
+        "fetched_at": "2026-05-13T14:06:17.213567+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 18
     },
     {
       "area_id": "NTH-NAN-FOREST-001",
-      "area_name": "Nan forest zone",
+      "area_name": "Mueang Nan forest zone",
       "province": "Nan",
       "district": "Mueang Nan",
       "lat": 18.7831,
@@ -271,14 +1089,14 @@
       ],
       "environmental_context": {
         "source": "open-meteo",
-        "temperature_c": 25.6,
-        "humidity_percent": 93,
-        "wind_speed_kph": 0.5,
+        "temperature_c": 25.4,
+        "humidity_percent": 94,
+        "wind_speed_kph": 0.8,
         "wind_direction": "SW",
-        "wind_direction_degrees": 225,
-        "rain_probability_percent": 49,
-        "pm25_ugm3": 13.6,
-        "fetched_at": "2026-05-13T13:18:42.750475+00:00",
+        "wind_direction_degrees": 243,
+        "rain_probability_percent": 30,
+        "pm25_ugm3": 15.8,
+        "fetched_at": "2026-05-13T14:06:18.913373+00:00",
         "status": "ok"
       },
       "environmental_risk_summary": {
@@ -287,7 +1105,1170 @@
         "weather_supports_escalation": false,
         "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
       },
-      "rank": 5
+      "rank": 19
+    },
+    {
+      "area_id": "NTH-PUA-001",
+      "area_name": "Pua forest-agriculture interface",
+      "province": "Nan",
+      "district": "Pua",
+      "lat": 19.1751,
+      "lon": 100.9168,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.9,
+        "humidity_percent": 93,
+        "wind_speed_kph": 4.4,
+        "wind_direction": "S",
+        "wind_direction_degrees": 161,
+        "rain_probability_percent": 47,
+        "pm25_ugm3": 12.5,
+        "fetched_at": "2026-05-13T14:06:20.531050+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 20
+    },
+    {
+      "area_id": "NTH-BO-KLUEA-001",
+      "area_name": "Bo Kluea mountain forest watch",
+      "province": "Nan",
+      "district": "Bo Kluea",
+      "lat": 19.1504,
+      "lon": 101.1551,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 22.6,
+        "humidity_percent": 99,
+        "wind_speed_kph": 0.3,
+        "wind_direction": "NE",
+        "wind_direction_degrees": 45,
+        "rain_probability_percent": 37,
+        "pm25_ugm3": 8.4,
+        "fetched_at": "2026-05-13T14:06:22.192928+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 21
+    },
+    {
+      "area_id": "NTH-MAECHARIM-001",
+      "area_name": "Mae Charim forest watch",
+      "province": "Nan",
+      "district": "Mae Charim",
+      "lat": 18.7068,
+      "lon": 101.0067,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.0,
+        "humidity_percent": 92,
+        "wind_speed_kph": 3.4,
+        "wind_direction": "SE",
+        "wind_direction_degrees": 155,
+        "rain_probability_percent": 41,
+        "pm25_ugm3": 8.5,
+        "fetched_at": "2026-05-13T14:06:27.125638+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 22
+    },
+    {
+      "area_id": "NTH-SANTISUK-001",
+      "area_name": "Santisuk forest watch",
+      "province": "Nan",
+      "district": "Santisuk",
+      "lat": 18.9131,
+      "lon": 100.9416,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.5,
+        "humidity_percent": 95,
+        "wind_speed_kph": 2.9,
+        "wind_direction": "E",
+        "wind_direction_degrees": 97,
+        "rain_probability_percent": 56,
+        "pm25_ugm3": 15.8,
+        "fetched_at": "2026-05-13T14:06:28.788091+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 23
+    },
+    {
+      "area_id": "NTH-NGAO-001",
+      "area_name": "Ngao forest corridor",
+      "province": "Lampang",
+      "district": "Ngao",
+      "lat": 18.7573,
+      "lon": 99.9789,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.9,
+        "humidity_percent": 94,
+        "wind_speed_kph": 4.5,
+        "wind_direction": "SE",
+        "wind_direction_degrees": 140,
+        "rain_probability_percent": 46,
+        "pm25_ugm3": 9.9,
+        "fetched_at": "2026-05-13T14:06:30.425198+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 24
+    },
+    {
+      "area_id": "NTH-CHAEHOM-001",
+      "area_name": "Chae Hom mountain forest watch",
+      "province": "Lampang",
+      "district": "Chae Hom",
+      "lat": 18.7209,
+      "lon": 99.5597,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.3,
+        "humidity_percent": 96,
+        "wind_speed_kph": 4.2,
+        "wind_direction": "S",
+        "wind_direction_degrees": 198,
+        "rain_probability_percent": 79,
+        "pm25_ugm3": 7.0,
+        "fetched_at": "2026-05-13T14:06:32.267310+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 25
+    },
+    {
+      "area_id": "NTH-MAE-MO-001",
+      "area_name": "Mae Mo forest and haze watch",
+      "province": "Lampang",
+      "district": "Mae Mo",
+      "lat": 18.2868,
+      "lon": 99.6504,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.0,
+        "humidity_percent": 99,
+        "wind_speed_kph": 4.0,
+        "wind_direction": "S",
+        "wind_direction_degrees": 198,
+        "rain_probability_percent": 81,
+        "pm25_ugm3": 6.3,
+        "fetched_at": "2026-05-13T14:06:33.937908+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 26
+    },
+    {
+      "area_id": "NTH-WANGNUEA-001",
+      "area_name": "Wang Nuea forest watch",
+      "province": "Lampang",
+      "district": "Wang Nuea",
+      "lat": 19.1465,
+      "lon": 99.6194,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 23.6,
+        "humidity_percent": 99,
+        "wind_speed_kph": 8.9,
+        "wind_direction": "S",
+        "wind_direction_degrees": 161,
+        "rain_probability_percent": 51,
+        "pm25_ugm3": 8.4,
+        "fetched_at": "2026-05-13T14:06:35.495464+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 27
+    },
+    {
+      "area_id": "NTH-MAETHA-LAMPHUN-001",
+      "area_name": "Mae Tha forest interface",
+      "province": "Lamphun",
+      "district": "Mae Tha",
+      "lat": 18.4646,
+      "lon": 99.1373,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.5,
+        "humidity_percent": 98,
+        "wind_speed_kph": 0.5,
+        "wind_direction": "N",
+        "wind_direction_degrees": 360,
+        "rain_probability_percent": 60,
+        "pm25_ugm3": 4.4,
+        "fetched_at": "2026-05-13T14:06:37.035674+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 28
+    },
+    {
+      "area_id": "NTH-LI-001",
+      "area_name": "Li dry forest watch",
+      "province": "Lamphun",
+      "district": "Li",
+      "lat": 17.8012,
+      "lon": 98.9501,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.0,
+        "humidity_percent": 99,
+        "wind_speed_kph": 0.7,
+        "wind_direction": "W",
+        "wind_direction_degrees": 284,
+        "rain_probability_percent": 88,
+        "pm25_ugm3": 2.0,
+        "fetched_at": "2026-05-13T14:06:38.663351+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 29
+    },
+    {
+      "area_id": "NTH-BANHONG-001",
+      "area_name": "Ban Hong forest watch",
+      "province": "Lamphun",
+      "district": "Ban Hong",
+      "lat": 18.3302,
+      "lon": 98.8199,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.1,
+        "humidity_percent": 95,
+        "wind_speed_kph": 9.0,
+        "wind_direction": "S",
+        "wind_direction_degrees": 185,
+        "rain_probability_percent": 63,
+        "pm25_ugm3": 3.1,
+        "fetched_at": "2026-05-13T14:06:40.347599+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 30
+    },
+    {
+      "area_id": "NTH-CHIANGKHAM-001",
+      "area_name": "Chiang Kham upland forest watch",
+      "province": "Phayao",
+      "district": "Chiang Kham",
+      "lat": 19.5234,
+      "lon": 100.3035,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius",
+        "wind spread watch"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        },
+        {
+          "pattern_code": "WIND_SPREAD_WATCH",
+          "pattern_name": "Wind spread watch",
+          "severity_hint": "MEDIUM",
+          "explanation": "Wind speed is high enough to support smoke or fire spread.",
+          "recommended_operational_focus": "Review wind direction and nearby exposure before field coordination."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.0,
+        "humidity_percent": 87,
+        "wind_speed_kph": 13.6,
+        "wind_direction": "SE",
+        "wind_direction_degrees": 156,
+        "rain_probability_percent": 17,
+        "pm25_ugm3": 12.3,
+        "fetched_at": "2026-05-13T14:06:45.238402+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "MODERATE",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates moderate fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 31
+    },
+    {
+      "area_id": "NTH-PONG-001",
+      "area_name": "Pong mountain forest watch",
+      "province": "Phayao",
+      "district": "Pong",
+      "lat": 19.1511,
+      "lon": 100.2759,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.6,
+        "humidity_percent": 95,
+        "wind_speed_kph": 7.4,
+        "wind_direction": "S",
+        "wind_direction_degrees": 184,
+        "rain_probability_percent": 20,
+        "pm25_ugm3": 15.4,
+        "fetched_at": "2026-05-13T14:06:47.149822+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 32
+    },
+    {
+      "area_id": "NTH-DOKKHAMTAI-001",
+      "area_name": "Dok Khamtai forest watch",
+      "province": "Phayao",
+      "district": "Dok Khamtai",
+      "lat": 19.1624,
+      "lon": 99.9934,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.4,
+        "humidity_percent": 89,
+        "wind_speed_kph": 7.9,
+        "wind_direction": "S",
+        "wind_direction_degrees": 167,
+        "rain_probability_percent": 17,
+        "pm25_ugm3": 12.4,
+        "fetched_at": "2026-05-13T14:06:48.758487+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 33
+    },
+    {
+      "area_id": "NTH-SONG-001",
+      "area_name": "Song forest corridor",
+      "province": "Phrae",
+      "district": "Song",
+      "lat": 18.4722,
+      "lon": 100.1827,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.0,
+        "humidity_percent": 96,
+        "wind_speed_kph": 5.5,
+        "wind_direction": "S",
+        "wind_direction_degrees": 163,
+        "rain_probability_percent": 66,
+        "pm25_ugm3": 9.1,
+        "fetched_at": "2026-05-13T14:06:50.590913+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 34
+    },
+    {
+      "area_id": "NTH-LONG-001",
+      "area_name": "Long dry forest watch",
+      "province": "Phrae",
+      "district": "Long",
+      "lat": 18.0747,
+      "lon": 99.8315,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 26.2,
+        "humidity_percent": 98,
+        "wind_speed_kph": 2.8,
+        "wind_direction": "S",
+        "wind_direction_degrees": 195,
+        "rain_probability_percent": 86,
+        "pm25_ugm3": 8.6,
+        "fetched_at": "2026-05-13T14:06:52.371036+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 35
+    },
+    {
+      "area_id": "NTH-DENCHAI-001",
+      "area_name": "Den Chai forest interface",
+      "province": "Phrae",
+      "district": "Den Chai",
+      "lat": 17.9831,
+      "lon": 100.0529,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 26.2,
+        "humidity_percent": 97,
+        "wind_speed_kph": 5.7,
+        "wind_direction": "S",
+        "wind_direction_degrees": 167,
+        "rain_probability_percent": 84,
+        "pm25_ugm3": 8.6,
+        "fetched_at": "2026-05-13T14:06:53.905021+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 36
+    },
+    {
+      "area_id": "NTH-MAE-RAMAT-001",
+      "area_name": "Mae Ramat border forest watch",
+      "province": "Tak",
+      "district": "Mae Ramat",
+      "lat": 16.9841,
+      "lon": 98.5167,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.6,
+        "humidity_percent": 93,
+        "wind_speed_kph": 6.3,
+        "wind_direction": "SW",
+        "wind_direction_degrees": 215,
+        "rain_probability_percent": 93,
+        "pm25_ugm3": 5.9,
+        "fetched_at": "2026-05-13T14:06:55.753715+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 37
+    },
+    {
+      "area_id": "NTH-THASONGYANG-001",
+      "area_name": "Tha Song Yang border forest watch",
+      "province": "Tak",
+      "district": "Tha Song Yang",
+      "lat": 17.2277,
+      "lon": 98.2258,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 25.4,
+        "humidity_percent": 96,
+        "wind_speed_kph": 1.5,
+        "wind_direction": "W",
+        "wind_direction_degrees": 256,
+        "rain_probability_percent": 89,
+        "pm25_ugm3": 3.7,
+        "fetched_at": "2026-05-13T14:06:57.358795+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 38
+    },
+    {
+      "area_id": "NTH-UMPHANG-001",
+      "area_name": "Umphang western forest complex watch",
+      "province": "Tak",
+      "district": "Umphang",
+      "lat": 16.0163,
+      "lon": 98.8627,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.0,
+        "humidity_percent": 97,
+        "wind_speed_kph": 4.3,
+        "wind_direction": "S",
+        "wind_direction_degrees": 158,
+        "rain_probability_percent": 98,
+        "pm25_ugm3": 2.8,
+        "fetched_at": "2026-05-13T14:06:59.305585+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 39
+    },
+    {
+      "area_id": "NTH-PHOPPHRA-001",
+      "area_name": "Phop Phra forest-agriculture interface",
+      "province": "Tak",
+      "district": "Phop Phra",
+      "lat": 16.3828,
+      "lon": 98.6908,
+      "hotspot_count": 0,
+      "dates_available": [
+        "2022-03-28"
+      ],
+      "source_satellites_checked": [
+        "terra",
+        "aqua",
+        "suomi-npp"
+      ],
+      "landuse_types": [],
+      "nearest_hotspot_distance_km": null,
+      "priority_score": 0.15,
+      "severity": "LOW",
+      "recommended_action": "CONTINUE_ROUTINE_MONITORING",
+      "operator_summary": "No hotspot was detected in the monitored radius for this wildfire haze area. Continue routine monitoring.",
+      "risk_drivers": [
+        "GISTDA hotspot API context",
+        "GISTDA checked, no hotspot detected in monitored radius"
+      ],
+      "matched_patterns": [
+        {
+          "pattern_code": "NO_HOTSPOT_ROUTINE_MONITORING",
+          "pattern_name": "No hotspot detected in monitored radius",
+          "severity_hint": "LOW",
+          "explanation": "GISTDA checked this monitored area and no hotspot was detected within the configured radius.",
+          "recommended_operational_focus": "Continue routine monitoring."
+        }
+      ],
+      "environmental_context": {
+        "source": "open-meteo",
+        "temperature_c": 24.2,
+        "humidity_percent": 98,
+        "wind_speed_kph": 3.1,
+        "wind_direction": "N",
+        "wind_direction_degrees": 353,
+        "rain_probability_percent": 99,
+        "pm25_ugm3": 4.0,
+        "fetched_at": "2026-05-13T14:07:00.905330+00:00",
+        "status": "ok"
+      },
+      "environmental_risk_summary": {
+        "fire_spread_risk": "LOW",
+        "haze_health_risk": "LOW",
+        "weather_supports_escalation": false,
+        "summary": "Live Open-Meteo indicates low fire spread risk and low haze health risk. Conditions support continued monitoring unless hotspot evidence changes."
+      },
+      "rank": 40
     }
   ]
 }
