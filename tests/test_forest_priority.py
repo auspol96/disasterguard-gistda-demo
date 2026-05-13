@@ -74,6 +74,9 @@ def test_ranked_area_includes_environmental_context_and_patterns():
     assert "HAZE_HEALTH_RISK" in codes
     assert "HOTSPOT_PLUS_DRY_WEATHER" in codes
     assert ranked["priority_score"] > 0.64
+    assert ranked["environmental_risk_summary"]["fire_spread_risk"] == "HIGH"
+    assert ranked["environmental_risk_summary"]["haze_health_risk"] == "MODERATE"
+    assert ranked["environmental_risk_summary"]["weather_supports_escalation"] is True
 
 
 def test_refresh_ranking_loads_environmental_context_from_direct_mapping(monkeypatch, tmp_path):
@@ -204,3 +207,4 @@ def test_refresh_ranking_uses_live_environmental_context_when_available(monkeypa
 
     assert ranking["areas"][0]["environmental_context"]["source"] == "open-meteo"
     assert ranking["areas"][0]["environmental_context"]["temperature_c"] == 34
+    assert ranking["areas"][0]["environmental_risk_summary"]["fire_spread_risk"] == "HIGH"

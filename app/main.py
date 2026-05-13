@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import SERVICE_NAME
+from app.environmental_context import build_environmental_risk_summary
 from app.forest_priority import load_monitored_areas, refresh_forest_priority_ranking
 from app.models import HealthResponse, IncidentScoreRequest, IncidentScoreResponse
 from app.scoring import score_incident
@@ -167,6 +168,10 @@ def forest_priority_ranking() -> JSONResponse:
         for area in payload.get("areas", []):
             area.setdefault("matched_patterns", [])
             area.setdefault("environmental_context", {})
+            area.setdefault(
+                "environmental_risk_summary",
+                build_environmental_risk_summary(area.get("environmental_context", {})),
+            )
         return JSONResponse(content=payload)
     except Exception:
         return JSONResponse(

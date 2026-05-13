@@ -1,5 +1,9 @@
 from app import environmental_context
-from app.environmental_context import get_environmental_context_for_area, load_environmental_context_samples
+from app.environmental_context import (
+    build_environmental_risk_summary,
+    get_environmental_context_for_area,
+    load_environmental_context_samples,
+)
 
 
 def test_environmental_context_loading(tmp_path):
@@ -85,3 +89,73 @@ def test_environmental_context_falls_back_to_sample_when_live_fails(monkeypatch,
 
     assert area_context["source"] == "sample"
     assert area_context["temperature_c"] == 30
+
+
+def test_environmental_risk_summary_high_fire_spread_case():
+    summary = build_environmental_risk_summary(
+        {
+            "source": "open-meteo",
+            "temperature_c": 33,
+            "humidity_percent": 32,
+            "wind_speed_kph": 12,
+            "rain_probability_percent": 30,
+            "pm25_ugm3": 12,
+        }
+    )
+
+    assert summary["fire_spread_risk"] == "HIGH"
+    assert summary["haze_health_risk"] == "LOW"
+    assert summary["weather_supports_escalation"] is True
+    assert "Live Open-Meteo" in summary["summary"]
+
+
+def test_environmental_risk_summary_moderate_fire_spread_case():
+    summary = build_environmental_risk_summary(
+        {
+            "source": "sample",
+            "temperature_c": 31,
+            "humidity_percent": 50,
+            "wind_speed_kph": 6,
+            "rain_probability_percent": 15,
+            "pm25_ugm3": 10,
+        }
+    )
+
+    assert summary["fire_spread_risk"] == "MODERATE"
+    assert summary["haze_health_risk"] == "LOW"
+    assert summary["weather_supports_escalation"] is False
+    assert "Sample fallback" in summary["summary"]
+
+
+def test_environmental_risk_summary_low_fire_spread_case():
+    summary = build_environmental_risk_summary(
+        {
+            "temperature_c": 26,
+            "humidity_percent": 65,
+            "wind_speed_kph": 4,
+            "rain_probability_percent": 45,
+            "pm25_ugm3": 8,
+        }
+    )
+
+    assert summary["fire_spread_risk"] == "LOW"
+    assert summary["haze_health_risk"] == "LOW"
+    assert summary["weather_supports_escalation"] is False
+    assert "Unavailable environmental source" in summary["summary"]
+
+
+def test_environmental_risk_summary_high_pm25_haze_case():
+    summary = build_environmental_risk_summary(
+        {
+            "source": "open-meteo",
+            "temperature_c": 28,
+            "humidity_percent": 55,
+            "wind_speed_kph": 4,
+            "rain_probability_percent": 45,
+            "pm25_ugm3": 50,
+        }
+    )
+
+    assert summary["fire_spread_risk"] == "LOW"
+    assert summary["haze_health_risk"] == "HIGH"
+    assert summary["weather_supports_escalation"] is True

@@ -47,7 +47,9 @@ def test_static_assets_available():
     assert ".ranking-table" in css_response.text
     assert ".pattern-detail-panel" in css_response.text
     assert ".environment-grid" in css_response.text
+    assert ".environment-risk-grid" in css_response.text
     assert "Live Open-Meteo" in js_response.text
+    assert "renderEnvironmentalRiskSummary" in js_response.text
 
 
 def test_health_endpoint():
@@ -128,6 +130,12 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                             "recommended_operational_focus": "Check whether local verification is required.",
                         }
                     ],
+                    "environmental_risk_summary": {
+                        "fire_spread_risk": "HIGH",
+                        "haze_health_risk": "MODERATE",
+                        "weather_supports_escalation": True,
+                        "summary": "Live Open-Meteo indicates high fire spread risk.",
+                    },
                 }
             ],
         },
@@ -141,6 +149,7 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     assert payload["areas"][0]["rank"] == 1
     assert payload["areas"][0]["priority_score"] == 0.64
     assert payload["areas"][0]["environmental_context"]["temperature_c"] == 34
+    assert payload["areas"][0]["environmental_risk_summary"]["fire_spread_risk"] == "HIGH"
     assert payload["areas"][0]["matched_patterns"][0]["pattern_code"] == "HOTSPOT_NEAR_MONITORED_AREA"
 
 

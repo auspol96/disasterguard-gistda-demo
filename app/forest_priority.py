@@ -3,7 +3,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from app.connectors.gistda_hotspot_api import fetch_hotspot_near_point
-from app.environmental_context import get_environmental_context_for_area
+from app.environmental_context import (
+    build_environmental_risk_summary,
+    get_environmental_context_for_area,
+)
 from app.models import IncidentScoreRequest
 from app.scoring import score_incident
 from scripts.fetch_gistda_hotspot_context import (
@@ -91,6 +94,7 @@ def build_ranked_area_result(
         "risk_drivers": scored.risk_drivers,
         "matched_patterns": [pattern.model_dump() for pattern in scored.matched_patterns],
         "environmental_context": environmental_context,
+        "environmental_risk_summary": build_environmental_risk_summary(environmental_context),
     }
 
 

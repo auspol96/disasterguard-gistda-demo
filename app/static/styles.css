@@ -353,7 +353,8 @@ h2 {
 }
 
 .pattern-detail-grid,
-.environment-grid {
+.environment-grid,
+.environment-risk-grid {
   display: grid;
   grid-template-columns: minmax(180px, 0.8fr) minmax(280px, 1.4fr) minmax(260px, 1fr);
   gap: 14px;
@@ -363,8 +364,13 @@ h2 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
+.environment-risk-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(320px, 1.6fr);
+}
+
 .pattern-detail-grid article,
-.environment-grid article {
+.environment-grid article,
+.environment-risk-grid article {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: rgba(17, 28, 37, 0.72);
@@ -372,7 +378,8 @@ h2 {
 }
 
 .pattern-detail-grid span,
-.environment-grid span {
+.environment-grid span,
+.environment-risk-grid span {
   display: block;
   margin-bottom: 8px;
   color: var(--muted);
@@ -382,7 +389,8 @@ h2 {
 }
 
 .pattern-detail-grid strong,
-.environment-grid strong {
+.environment-grid strong,
+.environment-risk-grid strong {
   display: block;
   line-height: 1.45;
   overflow-wrap: anywhere;
@@ -462,7 +470,8 @@ h2 {
   .lead-grid,
   .metrics-grid,
   .pattern-detail-grid,
-  .environment-grid {
+  .environment-grid,
+  .environment-risk-grid {
     grid-template-columns: 1fr;
   }
 

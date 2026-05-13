@@ -44,6 +44,10 @@ const elements = {
   envWind: document.getElementById("envWind"),
   envRain: document.getElementById("envRain"),
   envPm25: document.getElementById("envPm25"),
+  envFireRisk: document.getElementById("envFireRisk"),
+  envHazeRisk: document.getElementById("envHazeRisk"),
+  envEscalation: document.getElementById("envEscalation"),
+  envRiskSummary: document.getElementById("envRiskSummary"),
 };
 
 let map;
@@ -361,6 +365,7 @@ function renderPatternDetail(area) {
     elements.patternExplanation.textContent = "Refresh the ranking to load pattern guidance.";
     elements.patternFocus.textContent = "--";
     renderEnvironmentalContext({});
+    renderEnvironmentalRiskSummary({});
     return;
   }
 
@@ -371,6 +376,7 @@ function renderPatternDetail(area) {
   elements.patternExplanation.textContent = primaryPattern?.explanation || "No incident pattern matched this area.";
   elements.patternFocus.textContent = primaryPattern?.recommended_operational_focus || "--";
   renderEnvironmentalContext(area.environmental_context || {});
+  renderEnvironmentalRiskSummary(area.environmental_risk_summary || {});
 }
 
 function renderEnvironmentalContext(context) {
@@ -384,6 +390,17 @@ function renderEnvironmentalContext(context) {
   elements.envWind.textContent = context.wind_speed_kph === undefined ? "--" : `${context.wind_speed_kph} kph ${context.wind_direction || ""}`.trim();
   elements.envRain.textContent = context.rain_probability_percent === undefined ? "--" : `${context.rain_probability_percent}%`;
   elements.envPm25.textContent = context.pm25_ugm3 === undefined ? "--" : `${context.pm25_ugm3} ug/m3`;
+}
+
+function renderEnvironmentalRiskSummary(summary) {
+  elements.envFireRisk.textContent = summary.fire_spread_risk || "--";
+  elements.envHazeRisk.textContent = summary.haze_health_risk || "--";
+  elements.envEscalation.textContent = summary.weather_supports_escalation === undefined
+    ? "--"
+    : summary.weather_supports_escalation
+      ? "Yes"
+      : "No";
+  elements.envRiskSummary.textContent = summary.summary || "--";
 }
 
 async function fetchRanking() {
