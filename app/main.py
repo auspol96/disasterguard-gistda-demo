@@ -9,13 +9,18 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.briefing import build_daily_briefing
 from app.config import SERVICE_NAME
 from app.forest_priority import (
+    apply_change_status_to_areas,
     build_action_queue,
+    build_change_summary,
     build_explainable_ranking_th,
     build_province_summary,
     determine_response_priority,
     load_monitored_areas,
+    previous_ranking_path_for,
+    read_ranking_payload,
     refresh_forest_priority_ranking,
 )
 from app.models import HealthResponse, IncidentScoreRequest, IncidentScoreResponse
@@ -159,6 +164,39 @@ def forest_priority_areas() -> JSONResponse:
         )
 
 
+def load_current_forest_priority_ranking() -> dict | None:
+    if not FOREST_PRIORITY_RANKING_PATH.exists():
+        return None
+
+    with FOREST_PRIORITY_RANKING_PATH.open("r", encoding="utf-8") as file:
+        payload = json.load(file)
+    previous_payload = read_ranking_payload(previous_ranking_path_for(FOREST_PRIORITY_RANKING_PATH))
+    for area in payload.get("areas", []):
+        area.setdefault("matched_patterns", [])
+        area.setdefault("environmental_context", {})
+        area["recurrence_context"] = normalize_gistda_recurrence_response(
+            area.get("recurrence_context", {})
+        )
+        if not is_confirmed_gistda_recurrence(area["recurrence_context"]):
+            area["risk_drivers"] = [
+                driver
+                for driver in area.get("risk_drivers", [])
+                if driver != "พื้นที่มีประวัติความเสี่ยงซ้ำซากจาก GISTDA"
+            ]
+            area["matched_patterns"] = [
+                pattern
+                for pattern in area.get("matched_patterns", [])
+                if pattern.get("pattern_code") != "RECURRENT_RISK_AREA"
+            ]
+        area["response_priority"] = determine_response_priority(area)
+        area["explainable_ranking_th"] = build_explainable_ranking_th(area)
+    apply_change_status_to_areas(payload, previous_payload)
+    payload["province_summary"] = build_province_summary(payload.get("areas", []))
+    payload["action_queue"] = build_action_queue(payload.get("areas", []))
+    payload["change_summary"] = build_change_summary(payload, previous_payload)
+    return payload
+
+
 @app.get("/api/forest-priority/ranking")
 def forest_priority_ranking() -> JSONResponse:
     if not FOREST_PRIORITY_RANKING_PATH.exists():
@@ -172,29 +210,7 @@ def forest_priority_ranking() -> JSONResponse:
         )
 
     try:
-        with FOREST_PRIORITY_RANKING_PATH.open("r", encoding="utf-8") as file:
-            payload = json.load(file)
-        for area in payload.get("areas", []):
-            area.setdefault("matched_patterns", [])
-            area.setdefault("environmental_context", {})
-            area["recurrence_context"] = normalize_gistda_recurrence_response(
-                area.get("recurrence_context", {})
-            )
-            if not is_confirmed_gistda_recurrence(area["recurrence_context"]):
-                area["risk_drivers"] = [
-                    driver
-                    for driver in area.get("risk_drivers", [])
-                    if driver != "พื้นที่มีประวัติความเสี่ยงซ้ำซากจาก GISTDA"
-                ]
-                area["matched_patterns"] = [
-                    pattern
-                    for pattern in area.get("matched_patterns", [])
-                    if pattern.get("pattern_code") != "RECURRENT_RISK_AREA"
-                ]
-            area["response_priority"] = determine_response_priority(area)
-            area["explainable_ranking_th"] = build_explainable_ranking_th(area)
-        payload["province_summary"] = build_province_summary(payload.get("areas", []))
-        payload["action_queue"] = build_action_queue(payload.get("areas", []))
+        payload = load_current_forest_priority_ranking()
         return JSONResponse(content=payload)
     except Exception:
         return JSONResponse(
@@ -203,6 +219,30 @@ def forest_priority_ranking() -> JSONResponse:
                 "status": "error",
                 "message": "Unable to load forest priority ranking.",
                 "areas": [],
+            },
+        )
+
+
+@app.get("/api/briefing/daily")
+def daily_briefing() -> JSONResponse:
+    if not FOREST_PRIORITY_RANKING_PATH.exists():
+        return JSONResponse(
+            status_code=404,
+            content={
+                "status": "not_loaded",
+                "message": "Forest priority ranking not generated yet. Call POST /api/forest-priority/refresh-ranking first.",
+            },
+        )
+
+    try:
+        ranking = load_current_forest_priority_ranking()
+        return JSONResponse(content=build_daily_briefing(ranking))
+    except Exception:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": "Unable to generate daily briefing.",
             },
         )
 

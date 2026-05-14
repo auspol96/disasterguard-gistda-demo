@@ -13,11 +13,27 @@ const elements = {
   summaryHighAreas: document.getElementById("summaryHighAreas"),
   summaryMediumAreas: document.getElementById("summaryMediumAreas"),
   summaryTotalHotspots: document.getElementById("summaryTotalHotspots"),
+  briefingRefreshButton: document.getElementById("briefingRefreshButton"),
+  briefingMessage: document.getElementById("briefingMessage"),
+  briefingExecutiveSummary: document.getElementById("briefingExecutiveSummary"),
+  briefingTotalAreas: document.getElementById("briefingTotalAreas"),
+  briefingHotspotAreas: document.getElementById("briefingHotspotAreas"),
+  briefingTotalHotspots: document.getElementById("briefingTotalHotspots"),
+  briefingUrgentQueue: document.getElementById("briefingUrgentQueue"),
+  briefingFieldQueue: document.getElementById("briefingFieldQueue"),
+  briefingTopAreas: document.getElementById("briefingTopAreas"),
+  briefingNextActions: document.getElementById("briefingNextActions"),
   provinceSummaryBody: document.getElementById("provinceSummaryBody"),
   urgentCoordinationQueue: document.getElementById("urgentCoordinationQueue"),
   fieldVerificationQueue: document.getElementById("fieldVerificationQueue"),
   closeMonitoringQueue: document.getElementById("closeMonitoringQueue"),
   routineMonitoringQueue: document.getElementById("routineMonitoringQueue"),
+  changeSummaryMessage: document.getElementById("changeSummaryMessage"),
+  newHotspotChanges: document.getElementById("newHotspotChanges"),
+  increasedHotspotChanges: document.getElementById("increasedHotspotChanges"),
+  severityIncreasedChanges: document.getElementById("severityIncreasedChanges"),
+  rankImprovedChanges: document.getElementById("rankImprovedChanges"),
+  unchangedHighPriorityChanges: document.getElementById("unchangedHighPriorityChanges"),
   selectedSeverityBadge: document.getElementById("selectedSeverityBadge"),
   selectedAreaTitle: document.getElementById("selectedAreaTitle"),
   selectedRank: document.getElementById("selectedRank"),
@@ -33,6 +49,7 @@ const elements = {
   selectedAction: document.getElementById("selectedAction"),
   selectedOperatorSummary: document.getElementById("selectedOperatorSummary"),
   selectedExplainableRanking: document.getElementById("selectedExplainableRanking"),
+  selectedChangeStatus: document.getElementById("selectedChangeStatus"),
   selectedRecurrenceStatus: document.getElementById("selectedRecurrenceStatus"),
   selectedRecurrenceSource: document.getElementById("selectedRecurrenceSource"),
   selectedRecurrenceCounts: document.getElementById("selectedRecurrenceCounts"),
@@ -343,6 +360,7 @@ function renderSelectedArea(area) {
     elements.selectedAction.textContent = "--";
     elements.selectedOperatorSummary.textContent = "--";
     elements.selectedExplainableRanking.textContent = "--";
+    elements.selectedChangeStatus.textContent = "--";
     elements.selectedRecurrenceStatus.textContent = "--";
     elements.selectedRecurrenceSource.textContent = "--";
     elements.selectedRecurrenceCounts.hidden = true;
@@ -373,6 +391,7 @@ function renderSelectedArea(area) {
   elements.selectedAction.textContent = formatAction(area.recommended_action);
   elements.selectedOperatorSummary.textContent = area.operator_summary || "--";
   elements.selectedExplainableRanking.textContent = area.explainable_ranking_th || "--";
+  elements.selectedChangeStatus.textContent = area.change_status_th || "ยังไม่มีข้อมูลรอบก่อนหน้า";
 
   const recurrence = area.recurrence_context || {};
   const recurrenceOk = recurrence.status === "ok";
@@ -434,6 +453,71 @@ function renderSituationSummary(areas) {
   elements.summaryTotalHotspots.textContent = areas.reduce((total, area) => total + Number(area.hotspot_count || 0), 0);
 }
 
+function renderBriefingList(container, items, formatter) {
+  container.innerHTML = "";
+  if (!items.length) {
+    const empty = document.createElement("li");
+    empty.textContent = "ยังไม่มีรายการ";
+    container.appendChild(empty);
+    return;
+  }
+
+  items.forEach((item) => {
+    const row = document.createElement("li");
+    row.textContent = formatter(item);
+    container.appendChild(row);
+  });
+}
+
+function renderDailyBriefing(briefing) {
+  const keyNumbers = briefing.key_numbers || {};
+  elements.briefingMessage.textContent = briefing.title_th || "รายงานสถานการณ์ประจำวัน";
+  elements.briefingExecutiveSummary.textContent = briefing.executive_summary_th || "--";
+  elements.briefingTotalAreas.textContent = keyNumbers.total_areas ?? "--";
+  elements.briefingHotspotAreas.textContent = keyNumbers.hotspot_area_count ?? "--";
+  elements.briefingTotalHotspots.textContent = keyNumbers.total_hotspots ?? "--";
+  elements.briefingUrgentQueue.textContent = keyNumbers.urgent_queue_count ?? "--";
+  elements.briefingFieldQueue.textContent = keyNumbers.field_verification_count ?? "--";
+  renderBriefingList(
+    elements.briefingTopAreas,
+    briefing.top_priority_areas || [],
+    (area) => `#${area.rank} ${area.area_name} / ${area.province} / จุดความร้อน ${area.hotspot_count} / คะแนน ${formatScore(area.priority_score)}`
+  );
+  renderBriefingList(
+    elements.briefingNextActions,
+    briefing.recommended_next_actions || [],
+    (action) => action
+  );
+}
+
+async function fetchDailyBriefing() {
+  const response = await fetch("/api/briefing/daily", { cache: "no-store" });
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.message || `Daily briefing returned ${response.status}`);
+  return payload;
+}
+
+async function loadDailyBriefing() {
+  try {
+    const briefing = await fetchDailyBriefing();
+    renderDailyBriefing(briefing);
+  } catch (error) {
+    elements.briefingMessage.textContent = `โหลดรายงานไม่สำเร็จ: ${error.message}`;
+    elements.briefingExecutiveSummary.textContent = "--";
+  }
+}
+
+async function refreshDailyBriefing() {
+  elements.briefingRefreshButton.disabled = true;
+  elements.briefingRefreshButton.textContent = "กำลังรีเฟรช...";
+  try {
+    await loadDailyBriefing();
+  } finally {
+    elements.briefingRefreshButton.disabled = false;
+    elements.briefingRefreshButton.textContent = "รีเฟรชรายงานสถานการณ์";
+  }
+}
+
 function renderProvinceSummary(provinceSummary) {
   elements.provinceSummaryBody.innerHTML = "";
   if (!provinceSummary.length) {
@@ -470,7 +554,7 @@ function renderActionQueueList(container, items) {
       <strong>#${escapeHtml(item.rank)} ${escapeHtml(item.area_name)}</strong>
       <span>${escapeHtml(item.province)} / ${escapeHtml(item.district)}</span>
       <span>จุดความร้อน ${escapeHtml(item.hotspot_count)} | ระดับ ${escapeHtml(severityLabel(item.severity))}</span>
-      <p>${escapeHtml(item.reason_th)}</p>
+      <p>${escapeHtml(item.short_reason_th || item.reason_th)}</p>
     `;
     card.addEventListener("click", () => {
       const area = allRankedAreas.find((rankedArea) => rankedArea.area_id === item.area_id);
@@ -485,6 +569,43 @@ function renderActionQueue(actionQueue) {
   renderActionQueueList(elements.fieldVerificationQueue, actionQueue?.field_verification || []);
   renderActionQueueList(elements.closeMonitoringQueue, actionQueue?.close_monitoring || []);
   renderActionQueueList(elements.routineMonitoringQueue, actionQueue?.routine_monitoring || []);
+}
+
+function renderChangeSummaryList(container, items) {
+  container.innerHTML = "";
+  if (!items.length) {
+    container.innerHTML = "<p>ยังไม่มีรายการ</p>";
+    return;
+  }
+
+  items.slice(0, 8).forEach((item) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "change-summary-item";
+    card.innerHTML = `
+      <strong>#${escapeHtml(item.previous_rank)} → #${escapeHtml(item.current_rank)} ${escapeHtml(item.area_name)}</strong>
+      <span>${escapeHtml(item.province)} / ${escapeHtml(item.district)}</span>
+      <span>จุดความร้อน ${escapeHtml(item.previous_hotspot_count)} → ${escapeHtml(item.current_hotspot_count)}</span>
+      <span>ระดับ ${escapeHtml(severityLabel(item.previous_severity))} → ${escapeHtml(severityLabel(item.current_severity))}</span>
+      <p>${escapeHtml(item.change_reason_th)}</p>
+    `;
+    card.addEventListener("click", () => {
+      const area = allRankedAreas.find((rankedArea) => rankedArea.area_id === item.area_id);
+      if (area) selectRankedArea(area, true);
+    });
+    container.appendChild(card);
+  });
+}
+
+function renderChangeSummary(changeSummary) {
+  if (elements.changeSummaryMessage) {
+    elements.changeSummaryMessage.textContent = changeSummary?.message || "ยังไม่มีข้อมูลรอบก่อนหน้าเพื่อเปรียบเทียบ";
+  }
+  renderChangeSummaryList(elements.newHotspotChanges, changeSummary?.new_hotspot_areas || []);
+  renderChangeSummaryList(elements.increasedHotspotChanges, changeSummary?.increased_hotspot_areas || []);
+  renderChangeSummaryList(elements.severityIncreasedChanges, changeSummary?.severity_increased_areas || []);
+  renderChangeSummaryList(elements.rankImprovedChanges, changeSummary?.rank_improved_areas || []);
+  renderChangeSummaryList(elements.unchangedHighPriorityChanges, changeSummary?.unchanged_high_priority_areas || []);
 }
 
 function renderRankingTable(areas) {
@@ -589,6 +710,7 @@ function renderRanking(ranking) {
   renderSituationSummary(allRankedAreas);
   renderProvinceSummary(ranking.province_summary || []);
   renderActionQueue(ranking.action_queue || {});
+  renderChangeSummary(ranking.change_summary || {});
   renderInsights(allRankedAreas);
   applyFilters();
 }
@@ -615,6 +737,7 @@ async function refreshRanking() {
 
     const ranking = await fetchRanking();
     renderRanking(ranking);
+    await loadDailyBriefing();
     updateMapTimestamp("รีเฟรชล่าสุด");
     showRankingMessage(`รีเฟรชข้อมูลสำเร็จ ${new Date().toLocaleString()}`, "success");
   } catch (error) {
@@ -629,6 +752,7 @@ async function loadRanking() {
   try {
     const ranking = await fetchRanking();
     renderRanking(ranking);
+    await loadDailyBriefing();
     updateMapTimestamp();
     showRankingMessage("โหลดข้อมูลลำดับความเสี่ยงล่าสุดแล้ว", "success");
   } catch (error) {
@@ -637,6 +761,7 @@ async function loadRanking() {
 }
 
 elements.rankingRefreshButton.addEventListener("click", refreshRanking);
+elements.briefingRefreshButton.addEventListener("click", refreshDailyBriefing);
 elements.provinceFilter.addEventListener("change", applyFilters);
 elements.severityFilter.addEventListener("change", applyFilters);
 elements.hotspotOnlyFilter.addEventListener("change", applyFilters);

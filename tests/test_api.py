@@ -17,8 +17,17 @@ def test_dashboard_root_serves_html():
     assert "พื้นที่เสี่ยงสูง" in response.text
     assert "พื้นที่เสี่ยงปานกลาง" in response.text
     assert "จุดความร้อนรวม" in response.text
+    assert "รายงานสถานการณ์ประจำวัน" in response.text
+    assert "รีเฟรชรายงานสถานการณ์" in response.text
     assert "สรุประดับจังหวัด" in response.text
     assert "คิวปฏิบัติการวันนี้" in response.text
+    assert "การเปลี่ยนแปลงล่าสุด" in response.text
+    assert "พื้นที่พบจุดความร้อนใหม่" in response.text
+    assert "พื้นที่จุดความร้อนเพิ่มขึ้น" in response.text
+    assert "พื้นที่ระดับความเสี่ยงเพิ่มขึ้น" in response.text
+    assert "พื้นที่อันดับความเสี่ยงสูงขึ้น" in response.text
+    assert "พื้นที่เสี่ยงสูงที่ยังคงต้องติดตาม" in response.text
+    assert "ยังไม่มีข้อมูลรอบก่อนหน้าเพื่อเปรียบเทียบ" in response.text
     assert "เร่งประสานงาน" in response.text
     assert "ตรวจสอบภาคสนาม" in response.text
     assert "เฝ้าระวังใกล้ชิด" in response.text
@@ -71,8 +80,13 @@ def test_static_assets_available():
     assert "refreshRanking" in js_response.text
     assert "renderRanking" in js_response.text
     assert "renderSituationSummary" in js_response.text
+    assert "fetch(\"/api/briefing/daily\"" in js_response.text
+    assert "renderDailyBriefing" in js_response.text
+    assert "refreshDailyBriefing" in js_response.text
     assert "renderProvinceSummary" in js_response.text
     assert "renderActionQueue" in js_response.text
+    assert "renderChangeSummary" in js_response.text
+    assert "selectedChangeStatus" in js_response.text
     assert "urgent_coordination" in js_response.text
     assert "renderSelectedArea" in js_response.text
     assert "responsePriorityLabel" in js_response.text
@@ -115,10 +129,14 @@ def test_static_assets_available():
     assert ".hotspot-popup" in css_response.text
     assert ".refresh-message" in css_response.text
     assert ".source-badge-row" in css_response.text
+    assert ".daily-briefing-panel" in css_response.text
+    assert ".briefing-key-grid" in css_response.text
     assert ".ranking-table" in css_response.text
     assert ".province-summary-table" in css_response.text
     assert ".action-queue-grid" in css_response.text
     assert ".action-queue-item" in css_response.text
+    assert ".change-summary-grid" in css_response.text
+    assert ".change-summary-item" in css_response.text
     assert ".map-legend" in css_response.text
     assert ".map-demo-note" in css_response.text
     assert ".legend-critical" in css_response.text
@@ -180,6 +198,110 @@ def test_forest_priority_ranking_missing(monkeypatch, tmp_path):
     assert "refresh-ranking" in response.json()["message"]
 
 
+def test_daily_briefing_missing_ranking(monkeypatch, tmp_path):
+    missing_path = tmp_path / "forest_priority_ranking.json"
+    monkeypatch.setattr(main_module, "FOREST_PRIORITY_RANKING_PATH", missing_path)
+
+    response = client.get("/api/briefing/daily")
+
+    assert response.status_code == 404
+    assert response.json()["status"] == "not_loaded"
+
+
+def test_daily_briefing_endpoint(monkeypatch, tmp_path):
+    ranking_path = tmp_path / "forest_priority_ranking.json"
+    previous_path = tmp_path / "forest_priority_ranking_previous.json"
+    ranking_path.write_text(
+        """
+        {
+          "status": "ok",
+          "generated_at": "2026-05-14T00:00:00+00:00",
+          "areas": [
+            {
+              "rank": 1,
+              "area_id": "AREA-001",
+              "area_name": "Samoeng forest watch",
+              "province": "Chiang Mai",
+              "district": "Samoeng",
+              "lat": 18.8,
+              "lon": 98.7,
+              "hotspot_count": 3,
+              "landuse_types": ["ป่าอนุรักษ์"],
+              "nearest_hotspot_distance_km": 2.5,
+              "priority_score": 0.72,
+              "severity": "HIGH",
+              "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+              "risk_drivers": ["GISTDA hotspot API context"],
+              "matched_patterns": [],
+              "recurrence_context": {"source": "gistda_recurring_api", "status": "not_found", "records": []}
+            },
+            {
+              "rank": 2,
+              "area_id": "AREA-002",
+              "area_name": "Khun Yuam forest watch",
+              "province": "Mae Hong Son",
+              "district": "Khun Yuam",
+              "lat": 18.9,
+              "lon": 97.9,
+              "hotspot_count": 1,
+              "landuse_types": [],
+              "nearest_hotspot_distance_km": 8.0,
+              "priority_score": 0.52,
+              "severity": "MEDIUM",
+              "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+              "risk_drivers": ["GISTDA hotspot API context"],
+              "matched_patterns": [],
+              "recurrence_context": {"source": "gistda_recurring_api", "status": "not_found", "records": []}
+            }
+          ]
+        }
+        """,
+        encoding="utf-8",
+    )
+    previous_path.write_text(
+        """
+        {
+          "status": "ok",
+          "areas": [
+            {
+              "rank": 2,
+              "area_id": "AREA-001",
+              "area_name": "Samoeng forest watch",
+              "province": "Chiang Mai",
+              "district": "Samoeng",
+              "hotspot_count": 1,
+              "severity": "MEDIUM"
+            }
+          ]
+        }
+        """,
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(main_module, "FOREST_PRIORITY_RANKING_PATH", ranking_path)
+
+    response = client.get("/api/briefing/daily")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["title_th"] == "รายงานสถานการณ์ประจำวัน ForestGuard North Thailand"
+    assert "ภาพรวมล่าสุดพบพื้นที่เฝ้าระวัง 2 พื้นที่" in payload["executive_summary_th"]
+    assert payload["key_numbers"]["total_areas"] == 2
+    assert payload["key_numbers"]["hotspot_area_count"] == 2
+    assert payload["key_numbers"]["total_hotspots"] == 4
+    assert payload["key_numbers"]["high_count"] == 1
+    assert payload["key_numbers"]["medium_count"] == 1
+    assert payload["key_numbers"]["provinces_monitored"] == 2
+    assert payload["key_numbers"]["urgent_queue_count"] == 1
+    assert payload["key_numbers"]["field_verification_count"] == 1
+    assert payload["top_priority_areas"][0]["area_name"] == "Samoeng forest watch"
+    assert payload["province_attention_summary"][0]["province"] == "Chiang Mai"
+    assert payload["action_queue_summary"]["urgent_coordination"]["count"] == 1
+    assert "จุดความร้อนเพิ่มขึ้น" in payload["change_summary_th"]
+    assert payload["data_source_status"]["mock_or_sample_disaster_data_used"] is False
+    assert payload["data_source_status"]["last_refreshed_at"] == "2026-05-14T00:00:00+00:00"
+    assert payload["recommended_next_actions"]
+
+
 def test_forest_priority_ranking_not_found_recurrence_hides_confirmed_counts(monkeypatch, tmp_path):
     ranking_path = tmp_path / "forest_priority_ranking.json"
     ranking_path.write_text(
@@ -226,6 +348,8 @@ def test_forest_priority_ranking_not_found_recurrence_hides_confirmed_counts(mon
     assert "พื้นที่มีประวัติความเสี่ยงซ้ำซากจาก GISTDA" not in area["risk_drivers"]
     assert area["matched_patterns"] == []
     assert response.json()["action_queue"]["routine_monitoring"][0]["area_id"] == "AREA-001"
+    assert response.json()["areas"][0]["change_status_th"] == "ยังไม่มีข้อมูลรอบก่อนหน้า"
+    assert response.json()["change_summary"]["status"] == "no_previous"
 
 
 def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
@@ -246,6 +370,7 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                 {
                     "province": "Chiang Mai",
                     "total_areas": 1,
+                    "critical_count": 0,
                     "high_count": 0,
                     "medium_count": 1,
                     "low_count": 0,
@@ -267,8 +392,9 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                         "hotspot_count": 1,
                         "severity": "MEDIUM",
                         "priority_score": 0.64,
-                        "reason_th": "พบจุดความร้อน 1 จุด ควรตรวจสอบภาคสนาม",
-                        "explainable_ranking_th": "พื้นที่นี้อยู่ลำดับที่ 1 เนื่องจากพบจุดความร้อน 1 จุด",
+                        "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+                        "short_reason_th": "พบจุดความร้อน 1 จุด ควรตรวจสอบภาคสนาม",
+                        "explainable_ranking_th": "พื้นที่นี้อยู่ในลำดับที่ 1 เนื่องจากพบจุดความร้อน 1 จุด",
                     }
                 ],
                 "close_monitoring": [],
@@ -292,7 +418,7 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                     "severity": "MEDIUM",
                     "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
                     "response_priority": "FIELD_VERIFICATION",
-                    "explainable_ranking_th": "พื้นที่นี้อยู่ลำดับที่ 1 เนื่องจากพบจุดความร้อน 1 จุด",
+                    "explainable_ranking_th": "พื้นที่นี้อยู่ในลำดับที่ 1 เนื่องจากพบจุดความร้อน 1 จุด",
                     "operator_summary": "Review the area.",
                     "risk_drivers": ["GISTDA hotspot API context"],
                     "recurrence_context": {

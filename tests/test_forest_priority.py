@@ -3,9 +3,11 @@ from pathlib import Path
 from app.forest_priority import (
     action_queue_group_for_area,
     build_action_queue,
+    build_change_summary,
     build_province_summary,
     build_ranked_area_result,
     determine_response_priority,
+    previous_ranking_path_for,
     refresh_forest_priority_ranking,
 )
 from app.recurrence_context import (
@@ -255,7 +257,7 @@ def test_province_summary_aggregation_and_explainable_fields():
             "area_id": "A",
             "area_name": "Area A",
             "province": "Chiang Mai",
-            "severity": "HIGH",
+            "severity": "CRITICAL",
             "hotspot_count": 3,
             "priority_score": 0.8,
         },
@@ -283,12 +285,13 @@ def test_province_summary_aggregation_and_explainable_fields():
     chiang_mai = next(item for item in summary if item["province"] == "Chiang Mai")
 
     assert chiang_mai["total_areas"] == 2
-    assert chiang_mai["high_count"] == 1
+    assert chiang_mai["critical_count"] == 1
+    assert chiang_mai["high_count"] == 0
     assert chiang_mai["medium_count"] == 1
     assert chiang_mai["total_hotspots"] == 4
     assert chiang_mai["highest_rank_area"]["area_name"] == "Area A"
     assert chiang_mai["highest_priority_score"] == 0.8
-    assert chiang_mai["province_priority_level"] == "HIGH"
+    assert chiang_mai["province_priority_level"] == "CRITICAL"
 
 
 def test_action_queue_grouping_and_reason_fields():
@@ -345,9 +348,54 @@ def test_action_queue_grouping_and_reason_fields():
     assert action_queue_group_for_area(ranked_areas[2]) == "close_monitoring"
     assert action_queue_group_for_area(ranked_areas[3]) == "routine_monitoring"
     assert queue["urgent_coordination"][0]["area_id"] == "HIGH"
-    assert queue["field_verification"][0]["reason_th"] == "พบจุดความร้อน 1 จุด ควรตรวจสอบภาคสนาม"
+    assert queue["field_verification"][0]["short_reason_th"] == "พบจุดความร้อน 1 จุด ควรตรวจสอบภาคสนาม"
+    assert "recommended_action" in queue["field_verification"][0]
     assert queue["close_monitoring"][0]["area_id"] == "LOW-HOT"
     assert queue["routine_monitoring"][0]["area_id"] == "LOW-CLEAR"
+
+
+def test_change_summary_detects_hotspot_and_severity_increases():
+    previous = {
+        "areas": [
+            {
+                "rank": 4,
+                "area_id": "AREA-001",
+                "area_name": "Chiang Dao watch",
+                "province": "Chiang Mai",
+                "district": "Chiang Dao",
+                "hotspot_count": 2,
+                "severity": "MEDIUM",
+            }
+        ]
+    }
+    current = {
+        "areas": [
+            {
+                "rank": 1,
+                "area_id": "AREA-001",
+                "area_name": "Chiang Dao watch",
+                "province": "Chiang Mai",
+                "district": "Chiang Dao",
+                "hotspot_count": 6,
+                "severity": "HIGH",
+            }
+        ]
+    }
+
+    summary = build_change_summary(current, previous)
+
+    assert summary["status"] == "ok"
+    assert summary["increased_hotspot_areas"][0]["change_reason_th"] == "จำนวนจุดความร้อนเพิ่มจาก 2 เป็น 6"
+    assert summary["severity_increased_areas"][0]["change_reason_th"] == "ระดับความเสี่ยงเพิ่มจาก MEDIUM เป็น HIGH"
+    assert summary["rank_improved_areas"][0]["change_reason_th"] == "อันดับความเสี่ยงสูงขึ้นจาก 4 เป็น 1"
+
+
+def test_change_summary_no_previous_file_case():
+    summary = build_change_summary({"areas": []}, None)
+
+    assert summary["status"] == "no_previous"
+    assert summary["message"] == "ยังไม่มีข้อมูลรอบก่อนหน้าเพื่อเปรียบเทียบ"
+    assert summary["new_hotspot_areas"] == []
 
 
 def test_refresh_ranking_does_not_load_sample_environmental_context(monkeypatch, tmp_path):
@@ -422,6 +470,78 @@ def test_refresh_ranking_does_not_load_sample_environmental_context(monkeypatch,
     assert "explainable_ranking_th" in ranking["areas"][0]
     assert "response_priority" in ranking["areas"][0]
     assert "recurrence_context" in ranking["areas"][0]
+    assert ranking["areas"][0]["change_status_th"] == "ยังไม่มีข้อมูลรอบก่อนหน้า"
+    assert ranking["change_summary"]["status"] == "no_previous"
+
+
+def test_refresh_ranking_saves_previous_file_and_generates_change_summary(monkeypatch, tmp_path):
+    monitored_path = tmp_path / "monitored_forest_areas.json"
+    monitored_path.write_text(
+        """
+        {
+          "areas": [
+            {
+              "area_id": "AREA-001",
+              "area_name": "Chiang Dao watch",
+              "province": "Chiang Mai",
+              "district": "Chiang Dao",
+              "lat": 19.57651,
+              "lon": 99.01361,
+              "radius": 1000.5
+            }
+          ]
+        }
+        """,
+        encoding="utf-8",
+    )
+    ranking_path = tmp_path / "forest_priority_ranking.json"
+    ranking_path.write_text(
+        """
+        {
+          "status": "ok",
+          "areas": [
+            {
+              "rank": 4,
+              "area_id": "AREA-001",
+              "area_name": "Chiang Dao watch",
+              "province": "Chiang Mai",
+              "district": "Chiang Dao",
+              "hotspot_count": 0,
+              "severity": "LOW"
+            }
+          ]
+        }
+        """,
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "app.forest_priority.fetch_hotspot_near_point",
+        lambda lon, lat, radius: {
+            "status": "ok",
+            "summary": {
+                "status": "ok",
+                "source_satellites_checked": ["suomi-npp"],
+                "hotspot_count": 1,
+                "dates_available": ["2022-03-28"],
+                "nearest_hotspot_distance_km": 5.0,
+                "provinces_detected": ["Chiang Mai"],
+                "landuse_types": ["ป่าอนุรักษ์"],
+                "raw_limited_sample": [{"frequency": 1}],
+            },
+        },
+    )
+
+    ranking = refresh_forest_priority_ranking(monitored_path, ranking_path)
+    previous_path = previous_ranking_path_for(ranking_path)
+
+    assert previous_path.exists()
+    assert '"rank": 4' in previous_path.read_text(encoding="utf-8")
+    assert ranking["change_summary"]["new_hotspot_areas"][0]["area_id"] == "AREA-001"
+    assert ranking["areas"][0]["change_status_th"] in {
+        "อันดับดีขึ้นจาก 4 เป็น 1",
+        "จำนวนจุดความร้อนเพิ่มจาก 0 เป็น 1",
+        "ระดับความเสี่ยงเพิ่มจาก LOW เป็น MEDIUM",
+    }
 
 
 def test_refresh_ranking_does_not_use_open_meteo_environmental_context(monkeypatch, tmp_path):

@@ -37,6 +37,35 @@
       <article class="situation-card"><span>จุดความร้อนรวม</span><strong id="summaryTotalHotspots">--</strong></article>
     </section>
 
+    <section class="panel daily-briefing-panel" aria-labelledby="dailyBriefingHeading">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">สรุปเพื่อการตัดสินใจ</p>
+          <h2 id="dailyBriefingHeading">รายงานสถานการณ์ประจำวัน</h2>
+        </div>
+        <button id="briefingRefreshButton" class="refresh-button compact-refresh-button" type="button">รีเฟรชรายงานสถานการณ์</button>
+      </div>
+      <p id="briefingMessage" class="briefing-message">กำลังโหลดรายงานสถานการณ์</p>
+      <p id="briefingExecutiveSummary" class="briefing-executive-summary">--</p>
+      <div class="briefing-key-grid">
+        <article><span>พื้นที่เฝ้าระวัง</span><strong id="briefingTotalAreas">--</strong></article>
+        <article><span>พื้นที่พบจุดความร้อน</span><strong id="briefingHotspotAreas">--</strong></article>
+        <article><span>จุดความร้อนรวม</span><strong id="briefingTotalHotspots">--</strong></article>
+        <article><span>คิวเร่งประสานงาน</span><strong id="briefingUrgentQueue">--</strong></article>
+        <article><span>คิวตรวจสอบภาคสนาม</span><strong id="briefingFieldQueue">--</strong></article>
+      </div>
+      <div class="briefing-detail-grid">
+        <article>
+          <h3>พื้นที่สำคัญสูงสุด</h3>
+          <ol id="briefingTopAreas" class="briefing-list"></ol>
+        </article>
+        <article>
+          <h3>ข้อเสนอแนะถัดไป</h3>
+          <ul id="briefingNextActions" class="briefing-list"></ul>
+        </article>
+      </div>
+    </section>
+
     <section class="panel province-summary-panel" aria-labelledby="provinceSummaryHeading">
       <div class="panel-heading">
         <div>
@@ -86,6 +115,38 @@
         <article>
           <h3>เฝ้าระวังตามปกติ</h3>
           <div id="routineMonitoringQueue" class="action-queue-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel change-summary-panel" aria-labelledby="changeSummaryHeading">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">เปรียบเทียบรอบล่าสุด</p>
+          <h2 id="changeSummaryHeading">การเปลี่ยนแปลงล่าสุด</h2>
+        </div>
+      </div>
+      <p id="changeSummaryMessage" class="change-summary-message">ยังไม่มีข้อมูลรอบก่อนหน้าเพื่อเปรียบเทียบ</p>
+      <div class="change-summary-grid">
+        <article>
+          <h3>พื้นที่พบจุดความร้อนใหม่</h3>
+          <div id="newHotspotChanges" class="change-summary-list"></div>
+        </article>
+        <article>
+          <h3>พื้นที่จุดความร้อนเพิ่มขึ้น</h3>
+          <div id="increasedHotspotChanges" class="change-summary-list"></div>
+        </article>
+        <article>
+          <h3>พื้นที่ระดับความเสี่ยงเพิ่มขึ้น</h3>
+          <div id="severityIncreasedChanges" class="change-summary-list"></div>
+        </article>
+        <article>
+          <h3>พื้นที่อันดับความเสี่ยงสูงขึ้น</h3>
+          <div id="rankImprovedChanges" class="change-summary-list"></div>
+        </article>
+        <article>
+          <h3>พื้นที่เสี่ยงสูงที่ยังคงต้องติดตาม</h3>
+          <div id="unchangedHighPriorityChanges" class="change-summary-list"></div>
         </article>
       </div>
     </section>
@@ -167,6 +228,10 @@
         <div class="selected-section">
           <span>เหตุผลที่อยู่ในลำดับนี้</span>
           <p id="selectedExplainableRanking">--</p>
+        </div>
+        <div class="selected-section">
+          <span>การเปลี่ยนแปลงล่าสุด</span>
+          <p id="selectedChangeStatus">--</p>
         </div>
         <div class="selected-section">
           <span>ประวัติความเสี่ยงซ้ำซากจาก GISTDA</span>
