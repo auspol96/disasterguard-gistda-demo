@@ -1,101 +1,59 @@
-const fallbackScorePayload = {
-  area_id: "NTH-CHIANGMAI-GISTDA-001",
-  incident_type: "wildfire_haze",
-  hazard_score: 0.51,
-  exposure_score: 0.75,
-  urgency_score: 0.73,
-  confidence: 0.62,
-  risk_drivers: [
-    "GISTDA hotspot API context",
-    "1 hotspot record(s) returned",
-    "landuse: ป่าอนุรักษ์",
-    "nearest hotspot distance 5.83 km",
-  ],
-};
-
 const elements = {
-  refreshButton: document.getElementById("refreshButton"),
-  refreshMessage: document.getElementById("refreshMessage"),
   connectorBadge: document.getElementById("connectorBadge"),
-  connectorStatus: document.getElementById("connectorStatus"),
-  mapCoordinate: document.getElementById("mapCoordinate"),
-  lastUpdated: document.getElementById("lastUpdated"),
-  hotspotCount: document.getElementById("hotspotCount"),
-  locality: document.getElementById("locality"),
-  landuse: document.getElementById("landuse"),
-  nearestDistance: document.getElementById("nearestDistance"),
-  satellitesChecked: document.getElementById("satellitesChecked"),
-  datesAvailable: document.getElementById("datesAvailable"),
-  severityBadge: document.getElementById("severityBadge"),
-  priorityScore: document.getElementById("priorityScore"),
-  recommendedAction: document.getElementById("recommendedAction"),
-  operatorSummary: document.getElementById("operatorSummary"),
-  riskDrivers: document.getElementById("riskDrivers"),
   rankingRefreshButton: document.getElementById("rankingRefreshButton"),
   rankingMessage: document.getElementById("rankingMessage"),
+  dataSourceStatus: document.getElementById("dataSourceStatus"),
+  mapCoordinate: document.getElementById("mapCoordinate"),
+  lastUpdated: document.getElementById("lastUpdated"),
   provinceFilter: document.getElementById("provinceFilter"),
+  severityFilter: document.getElementById("severityFilter"),
+  hotspotOnlyFilter: document.getElementById("hotspotOnlyFilter"),
+  summaryTotalAreas: document.getElementById("summaryTotalAreas"),
+  summaryHotspotAreas: document.getElementById("summaryHotspotAreas"),
+  summaryHighAreas: document.getElementById("summaryHighAreas"),
+  summaryMediumAreas: document.getElementById("summaryMediumAreas"),
+  summaryTotalHotspots: document.getElementById("summaryTotalHotspots"),
+  provinceSummaryBody: document.getElementById("provinceSummaryBody"),
+  urgentCoordinationQueue: document.getElementById("urgentCoordinationQueue"),
+  fieldVerificationQueue: document.getElementById("fieldVerificationQueue"),
+  closeMonitoringQueue: document.getElementById("closeMonitoringQueue"),
+  routineMonitoringQueue: document.getElementById("routineMonitoringQueue"),
+  selectedSeverityBadge: document.getElementById("selectedSeverityBadge"),
+  selectedAreaTitle: document.getElementById("selectedAreaTitle"),
+  selectedRank: document.getElementById("selectedRank"),
+  selectedAreaName: document.getElementById("selectedAreaName"),
+  selectedProvince: document.getElementById("selectedProvince"),
+  selectedDistrict: document.getElementById("selectedDistrict"),
+  selectedScore: document.getElementById("selectedScore"),
+  selectedSeverity: document.getElementById("selectedSeverity"),
+  selectedResponsePriority: document.getElementById("selectedResponsePriority"),
+  selectedHotspots: document.getElementById("selectedHotspots"),
+  selectedLanduse: document.getElementById("selectedLanduse"),
+  selectedDistance: document.getElementById("selectedDistance"),
+  selectedAction: document.getElementById("selectedAction"),
+  selectedOperatorSummary: document.getElementById("selectedOperatorSummary"),
+  selectedExplainableRanking: document.getElementById("selectedExplainableRanking"),
+  selectedRecurrenceStatus: document.getElementById("selectedRecurrenceStatus"),
+  selectedRecurrenceSource: document.getElementById("selectedRecurrenceSource"),
+  selectedRecurrenceCounts: document.getElementById("selectedRecurrenceCounts"),
+  selectedHotspotRecurrence: document.getElementById("selectedHotspotRecurrence"),
+  selectedFloodRecurrence: document.getElementById("selectedFloodRecurrence"),
+  selectedDroughtRecurrence: document.getElementById("selectedDroughtRecurrence"),
+  selectedRecurrenceScore: document.getElementById("selectedRecurrenceScore"),
+  selectedRecurrenceSummary: document.getElementById("selectedRecurrenceSummary"),
+  selectedRiskDrivers: document.getElementById("selectedRiskDrivers"),
+  selectedPatterns: document.getElementById("selectedPatterns"),
   rankingTableBody: document.getElementById("rankingTableBody"),
-  patternAreaName: document.getElementById("patternAreaName"),
-  patternCodes: document.getElementById("patternCodes"),
-  patternExplanation: document.getElementById("patternExplanation"),
-  patternFocus: document.getElementById("patternFocus"),
-  envSource: document.getElementById("envSource"),
-  envTemperature: document.getElementById("envTemperature"),
-  envHumidity: document.getElementById("envHumidity"),
-  envWind: document.getElementById("envWind"),
-  envRain: document.getElementById("envRain"),
-  envPm25: document.getElementById("envPm25"),
-  envFireRisk: document.getElementById("envFireRisk"),
-  envHazeRisk: document.getElementById("envHazeRisk"),
-  envEscalation: document.getElementById("envEscalation"),
-  envRiskSummary: document.getElementById("envRiskSummary"),
+  topAreasList: document.getElementById("topAreasList"),
+  patternCounts: document.getElementById("patternCounts"),
+  recurrenceOverview: document.getElementById("recurrenceOverview"),
 };
 
 let map;
 let forestAreaLayer;
 const forestAreaMarkers = new Map();
-let selectedAreaId = null;
 let allRankedAreas = [];
-
-function formatJoined(values) {
-  return Array.isArray(values) && values.length ? values.join(", ") : "--";
-}
-
-function formatDistance(distance) {
-  return distance === null || distance === undefined ? "--" : `${Number(distance).toFixed(5)} km`;
-}
-
-function formatAction(value) {
-  return value ? value.replaceAll("_", " ") : "--";
-}
-
-function clampScore(value) {
-  return Math.max(0, Math.min(1, Number(value.toFixed(2))));
-}
-
-function severityClass(value) {
-  return value ? value.toLowerCase() : "unknown";
-}
-
-function setConnectorStatus(status) {
-  const resolvedStatus = status || "unknown";
-  elements.connectorStatus.textContent = resolvedStatus.replaceAll("_", " ");
-  elements.connectorStatus.dataset.status = resolvedStatus;
-  elements.connectorBadge.hidden = resolvedStatus !== "ok";
-}
-
-function sampleRecordFromContext(context) {
-  return context?.summary?.raw_limited_sample?.[0] || {};
-}
-
-function positionFromContext(context) {
-  const sample = sampleRecordFromContext(context);
-  const latitude = Number(sample.lat ?? context?.request?.lat);
-  const longitude = Number(sample.lon ?? context?.request?.lon);
-  return Number.isFinite(latitude) && Number.isFinite(longitude)
-    ? { latitude, longitude }
-    : null;
-}
+let selectedAreaId = null;
 
 function formatPopupValue(value) {
   return value === null || value === undefined || value === "" ? "--" : value;
@@ -110,7 +68,83 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function ensureBaseMap(position, zoom = 9) {
+function formatJoined(values) {
+  return Array.isArray(values) && values.length ? values.join(", ") : "--";
+}
+
+function formatDistance(distance) {
+  return distance === null || distance === undefined ? "--" : `${Number(distance).toFixed(2)} กม.`;
+}
+
+function formatScore(score) {
+  return score === null || score === undefined ? "--" : Number(score).toFixed(2);
+}
+
+function formatAction(value) {
+  return value ? value.replaceAll("_", " ") : "--";
+}
+
+function responsePriorityLabel(value) {
+  if (value === "ROUTINE_MONITORING") return "ติดตามตามรอบปกติ";
+  if (value === "WATCHLIST") return "เฝ้าระวังใกล้ชิด";
+  if (value === "FIELD_VERIFICATION") return "ตรวจสอบภาคสนาม";
+  if (value === "URGENT_COORDINATION") return "ประสานงานเร่งด่วน";
+  return value || "--";
+}
+
+function severityClass(value) {
+  return value ? String(value).toLowerCase() : "unknown";
+}
+
+function severityLabel(value) {
+  const normalized = severityClass(value);
+  if (normalized === "low" || normalized === "monitor") return "ต่ำ";
+  if (normalized === "medium" || normalized === "watch") return "ปานกลาง";
+  if (normalized === "high") return "สูง";
+  if (normalized === "critical") return "วิกฤต";
+  return value || "--";
+}
+
+function severityColor(severity) {
+  const normalized = severityClass(severity);
+  if (normalized === "low" || normalized === "monitor") return "#2fbf71";
+  if (normalized === "medium" || normalized === "watch") return "#f2b45f";
+  if (normalized === "high") return "#ef4444";
+  if (normalized === "critical") return "#7f1d1d";
+  return "#7cc7ff";
+}
+
+function markerTextColor(severity) {
+  const normalized = severityClass(severity);
+  return normalized === "medium" || normalized === "watch" ? "#081117" : "#ffffff";
+}
+
+function markerRadius(area) {
+  const score = Number(area.priority_score);
+  const baseRadius = Number.isFinite(score) ? 15 + Math.max(0, Math.min(1, score)) * 11 : 16;
+  return Number(area.rank) === 1 ? baseRadius + 4 : baseRadius;
+}
+
+function rankedAreaPosition(area) {
+  const latitude = Number(area.lat);
+  const longitude = Number(area.lon);
+  return Number.isFinite(latitude) && Number.isFinite(longitude)
+    ? { latitude, longitude }
+    : null;
+}
+
+function showRankingMessage(message, status = "neutral") {
+  elements.rankingMessage.textContent = message;
+  elements.rankingMessage.dataset.status = status;
+}
+
+function updateMapTimestamp(prefix = "อัปเดตล่าสุด") {
+  if (elements.lastUpdated) {
+    elements.lastUpdated.textContent = `${prefix}: ${new Date().toLocaleString()}`;
+  }
+}
+
+function ensureBaseMap(position, zoom = 7) {
   if (!position || typeof L === "undefined") return null;
 
   if (!map) {
@@ -123,52 +157,9 @@ function ensureBaseMap(position, zoom = 9) {
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 18,
     }).addTo(map);
-  } else {
-    map.setView([position.latitude, position.longitude], zoom);
   }
 
   return map;
-}
-
-function ensureMap(position, sample, summary) {
-  if (!position || typeof L === "undefined") return;
-
-  if (!map) {
-    ensureBaseMap(position, 11);
-  } else if (!forestAreaMarkers.size) {
-    map.setView([position.latitude, position.longitude], 11);
-  }
-  if (!map) return;
-
-  elements.mapCoordinate.textContent = `${position.latitude.toFixed(5)}, ${position.longitude.toFixed(5)}`;
-}
-
-function severityColor(severity) {
-  const normalized = severityClass(severity);
-  if (normalized === "low" || normalized === "monitor") return "#2fbf71";
-  if (normalized === "medium" || normalized === "watch") return "#f2b45f";
-  if (normalized === "high") return "#ef4444";
-  if (normalized === "critical") return "#7f1d1d";
-  return "#7cc7ff";
-}
-
-function markerRadius(area) {
-  const score = Number(area.priority_score);
-  const baseRadius = Number.isFinite(score) ? 15 + Math.max(0, Math.min(1, score)) * 11 : 16;
-  return Number(area.rank) === 1 ? baseRadius + 4 : baseRadius;
-}
-
-function markerTextColor(severity) {
-  const normalized = severityClass(severity);
-  return normalized === "medium" || normalized === "watch" ? "#081117" : "#ffffff";
-}
-
-function rankedAreaPosition(area) {
-  const latitude = Number(area.lat);
-  const longitude = Number(area.lon);
-  return Number.isFinite(latitude) && Number.isFinite(longitude)
-    ? { latitude, longitude }
-    : null;
 }
 
 function buildForestAreaPopup(area) {
@@ -178,8 +169,8 @@ function buildForestAreaPopup(area) {
     ["จังหวัด", area.province],
     ["อำเภอ", area.district],
     ["จำนวนจุดความร้อน", area.hotspot_count],
-    ["คะแนนความเสี่ยง", area.priority_score === undefined ? null : Number(area.priority_score).toFixed(2)],
-    ["ระดับความรุนแรง", area.severity],
+    ["คะแนนความเสี่ยง", formatScore(area.priority_score)],
+    ["ระดับความรุนแรง", severityLabel(area.severity)],
     ["ข้อเสนอแนะ", formatAction(area.recommended_action)],
   ];
 
@@ -236,15 +227,6 @@ function openForestAreaMarker(area) {
   marker.openPopup();
 }
 
-function selectRankedArea(area, focusMarker = false) {
-  selectedAreaId = area?.area_id || null;
-  renderPatternDetail(area);
-  updateSelectedMarkerStyles();
-  if (focusMarker) {
-    openForestAreaMarker(area);
-  }
-}
-
 function renderForestPriorityMarkers(areas) {
   if (typeof L === "undefined") return;
 
@@ -259,7 +241,7 @@ function renderForestPriorityMarkers(areas) {
     const position = rankedAreaPosition(area);
     if (!position) return;
 
-    ensureBaseMap(position, 8);
+    ensureBaseMap(position, 7);
     const marker = L.marker([position.latitude, position.longitude], {
       area,
       icon: buildRankMarkerIcon(area, area.area_id === selectedAreaId),
@@ -277,290 +259,338 @@ function renderForestPriorityMarkers(areas) {
   }
 
   if (map && bounds.length) {
-    map.fitBounds(bounds, { padding: [42, 42], maxZoom: 10 });
-    elements.mapCoordinate.textContent = `แสดงพื้นที่จัดอันดับ ${bounds.length} จุด`;
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+    elements.mapCoordinate.textContent = `แสดง ${bounds.length} พื้นที่`;
+  } else if (elements.mapCoordinate) {
+    elements.mapCoordinate.textContent = "ไม่พบพื้นที่ตามตัวกรอง";
   }
 }
 
-function renderContext(context) {
-  const summary = context.summary || {};
-  const sample = sampleRecordFromContext(context);
-  const localityParts = [sample.province, sample.district, sample.subdistrict, sample.village].filter(Boolean);
-
-  setConnectorStatus(context.status || summary.status);
-  elements.hotspotCount.textContent = summary.hotspot_count ?? "--";
-  elements.locality.textContent = localityParts.length ? localityParts.join(" / ") : "--";
-  elements.landuse.textContent = formatJoined(summary.landuse_types);
-  elements.nearestDistance.textContent = formatDistance(summary.nearest_hotspot_distance_km);
-  elements.satellitesChecked.textContent = formatJoined(summary.source_satellites_checked);
-  elements.datesAvailable.textContent = formatJoined(summary.dates_available);
-  ensureMap(positionFromContext(context), sample, summary);
-}
-
-function buildScorePayloadFromContext(context) {
-  const summary = context.summary || {};
-  const hotspotCount = Number(summary.hotspot_count || 0);
-  const rawNearestDistance = summary.nearest_hotspot_distance_km;
-  const hasNearestDistance = rawNearestDistance !== null && rawNearestDistance !== undefined;
-  const nearestDistance = hasNearestDistance ? Number(rawNearestDistance) : null;
-  const landuseTypes = summary.landuse_types || [];
-  const rawSample = summary.raw_limited_sample || [];
-  const maxFrequency = Math.max(0, ...rawSample.map((item) => Number(item.frequency || 0)));
-
-  if ((context.status || summary.status) !== "ok") {
-    return fallbackScorePayload;
+function renderChips(container, values) {
+  container.innerHTML = "";
+  if (!values.length) {
+    const empty = document.createElement("span");
+    empty.className = "info-chip";
+    empty.textContent = "--";
+    container.appendChild(empty);
+    return;
   }
 
-  const confirmedClearRadius = hotspotCount === 0 && !landuseTypes.length && !hasNearestDistance;
-  if (confirmedClearRadius) {
-    return {
-      area_id: "NTH-CHIANGMAI-GISTDA-001",
-      incident_type: "wildfire_haze",
-      hazard_score: 0.10,
-      exposure_score: 0.20,
-      urgency_score: 0.10,
-      confidence: 0.25,
-      risk_drivers: [
-        "GISTDA hotspot API context",
-        "GISTDA checked, no hotspot detected in monitored radius",
-      ],
-      hotspot_count: hotspotCount,
-      landuse_types: landuseTypes,
-      nearest_hotspot_distance_km: null,
-    };
-  }
-
-  const hotspotSignal = clampScore(Math.min(hotspotCount, 10) / 10);
-  const frequencySignal = clampScore(Math.min(maxFrequency, 5) / 5);
-  const distanceSignal = hasNearestDistance && Number.isFinite(nearestDistance)
-    ? clampScore(1 - Math.min(nearestDistance, 25) / 25)
-    : 0;
-  const landuseSignal = landuseTypes.length ? 0.2 : 0;
-
-  const riskDrivers = ["GISTDA hotspot API context"];
-  if (hotspotCount) riskDrivers.push(`${hotspotCount} hotspot record(s) returned`);
-  if (landuseTypes.length) riskDrivers.push(`landuse: ${landuseTypes.slice(0, 3).join(", ")}`);
-  if (hasNearestDistance && Number.isFinite(nearestDistance)) riskDrivers.push(`nearest hotspot distance ${nearestDistance.toFixed(2)} km`);
-
-  return {
-    area_id: "NTH-CHIANGMAI-GISTDA-001",
-    incident_type: "wildfire_haze",
-    hazard_score: clampScore(0.45 + hotspotSignal * 0.3 + frequencySignal * 0.15),
-    exposure_score: clampScore(0.55 + landuseSignal),
-    urgency_score: clampScore(0.45 + distanceSignal * 0.35 + hotspotSignal * 0.1),
-    confidence: clampScore(0.55 + Math.min(hotspotCount, 3) * 0.07),
-    risk_drivers: riskDrivers,
-    hotspot_count: hotspotCount,
-    landuse_types: landuseTypes,
-    nearest_hotspot_distance_km: hasNearestDistance ? nearestDistance : null,
-  };
-}
-
-function renderScore(score) {
-  elements.severityBadge.textContent = score.severity || "--";
-  elements.severityBadge.dataset.severity = severityClass(score.severity);
-  elements.priorityScore.textContent = Number(score.priority_score).toFixed(2);
-  elements.recommendedAction.textContent = formatAction(score.recommended_action);
-  elements.operatorSummary.textContent = score.operator_summary || "--";
-  elements.riskDrivers.innerHTML = "";
-
-  (score.risk_drivers || []).forEach((driver) => {
+  values.forEach((value) => {
     const chip = document.createElement("span");
-    chip.className = "risk-chip";
-    chip.textContent = driver;
-    elements.riskDrivers.appendChild(chip);
+    chip.className = "info-chip";
+    chip.textContent = value;
+    container.appendChild(chip);
   });
 }
 
-async function fetchHotspotContext() {
-  const response = await fetch("/api/gistda/hotspot-context", { cache: "no-store" });
-  if (!response.ok) throw new Error(`Hotspot context returned ${response.status}`);
-  return response.json();
-}
-
-async function refreshLiveHotspotContext() {
-  const response = await fetch("/api/gistda/refresh-hotspot-context", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-  const payload = await response.json();
-  if (!response.ok) throw new Error(payload.message || `Refresh returned ${response.status}`);
-  return payload;
-}
-
-async function fetchPriorityScore(payload) {
-  const response = await fetch("/api/incident/score", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error(`Priority score returned ${response.status}`);
-  return response.json();
-}
-
-function formatRefreshTimestamp() {
-  return new Date().toLocaleString();
-}
-
-function showRefreshMessage(message, status = "neutral") {
-  elements.refreshMessage.textContent = message;
-  elements.refreshMessage.dataset.status = status;
-}
-
-function showRankingMessage(message, status = "neutral") {
-  elements.rankingMessage.textContent = message;
-  elements.rankingMessage.dataset.status = status;
-}
-
-function renderRefreshTimestamp(timestamp = formatRefreshTimestamp()) {
-  elements.lastUpdated.textContent = `Refreshed ${timestamp}`;
-}
-
-async function refreshDashboard() {
-  elements.refreshButton.disabled = true;
-  elements.refreshButton.textContent = "Refreshing...";
-  showRefreshMessage("Refreshing live GISTDA hotspot context...", "working");
-
-  try {
-    await refreshLiveHotspotContext();
-    const context = await fetchHotspotContext();
-    const score = await fetchPriorityScore(buildScorePayloadFromContext(context));
-    renderContext(context);
-    renderScore(score);
-    const refreshedAt = formatRefreshTimestamp();
-    renderRefreshTimestamp(refreshedAt);
-    showRefreshMessage(`Live GISTDA data refreshed successfully at ${refreshedAt}.`, "success");
-  } catch (error) {
-    setConnectorStatus("error");
-    elements.operatorSummary.textContent = error.message;
-    showRefreshMessage(`Live refresh failed: ${error.message}`, "error");
-  } finally {
-    elements.refreshButton.disabled = false;
-    elements.refreshButton.textContent = "Refresh Live GISTDA Data";
+function renderPatternCards(container, patterns) {
+  container.innerHTML = "";
+  if (!patterns.length) {
+    const empty = document.createElement("article");
+    empty.className = "pattern-card";
+    empty.textContent = "--";
+    container.appendChild(empty);
+    return;
   }
+
+  patterns.forEach((pattern) => {
+    const card = document.createElement("article");
+    card.className = "pattern-card";
+    card.innerHTML = `
+      <strong>${escapeHtml(pattern.pattern_name || pattern.pattern_code)}</strong>
+      <span>${escapeHtml(pattern.pattern_code)}</span>
+      <p>${escapeHtml(pattern.explanation || "--")}</p>
+    `;
+    container.appendChild(card);
+  });
 }
 
-async function loadDashboard() {
-  try {
-    const context = await fetchHotspotContext();
-    const score = await fetchPriorityScore(buildScorePayloadFromContext(context));
-    renderContext(context);
-    renderScore(score);
-    renderRefreshTimestamp();
-  } catch (error) {
-    setConnectorStatus("error");
-    elements.operatorSummary.textContent = error.message;
+function recurrenceStatusLabel(status) {
+  if (status === "ok") return "พบข้อมูลจาก GISTDA";
+  if (status === "not_found") return "ไม่พบข้อมูล";
+  if (status === "not_configured") return "ยังไม่ได้ตั้งค่า";
+  if (status === "error") return "ดึงข้อมูลไม่สำเร็จ";
+  return status || "--";
+}
+
+function recurrenceSourceLabel(source) {
+  if (source === "gistda_recurring_v2_api") return "แหล่งข้อมูล: GISTDA Recurring Disaster API v2";
+  if (source === "gistda_recurring_api") return "แหล่งข้อมูล: GISTDA Recurring Disaster API";
+  return source || "--";
+}
+
+function renderSelectedArea(area) {
+  if (!area) {
+    selectedAreaId = null;
+    elements.selectedAreaTitle.textContent = "ยังไม่มีพื้นที่ที่เลือก";
+    elements.selectedSeverityBadge.textContent = "--";
+    elements.selectedSeverityBadge.dataset.severity = "unknown";
+    [
+      "selectedRank",
+      "selectedAreaName",
+      "selectedProvince",
+      "selectedDistrict",
+      "selectedScore",
+      "selectedSeverity",
+      "selectedResponsePriority",
+      "selectedHotspots",
+      "selectedLanduse",
+      "selectedDistance",
+    ].forEach((id) => {
+      elements[id].textContent = "--";
+    });
+    elements.selectedAction.textContent = "--";
+    elements.selectedOperatorSummary.textContent = "--";
+    elements.selectedExplainableRanking.textContent = "--";
+    elements.selectedRecurrenceStatus.textContent = "--";
+    elements.selectedRecurrenceSource.textContent = "--";
+    elements.selectedRecurrenceCounts.hidden = true;
+    elements.selectedHotspotRecurrence.textContent = "--";
+    elements.selectedFloodRecurrence.textContent = "--";
+    elements.selectedDroughtRecurrence.textContent = "--";
+    elements.selectedRecurrenceScore.textContent = "--";
+    elements.selectedRecurrenceSummary.textContent = "--";
+    renderChips(elements.selectedRiskDrivers, []);
+    renderPatternCards(elements.selectedPatterns, []);
+    return;
+  }
+
+  selectedAreaId = area.area_id;
+  elements.selectedAreaTitle.textContent = `${area.rank}. ${area.area_name}`;
+  elements.selectedSeverityBadge.textContent = severityLabel(area.severity);
+  elements.selectedSeverityBadge.dataset.severity = severityClass(area.severity);
+  elements.selectedRank.textContent = area.rank ?? "--";
+  elements.selectedAreaName.textContent = area.area_name || "--";
+  elements.selectedProvince.textContent = area.province || "--";
+  elements.selectedDistrict.textContent = area.district || "--";
+  elements.selectedScore.textContent = formatScore(area.priority_score);
+  elements.selectedSeverity.textContent = severityLabel(area.severity);
+  elements.selectedResponsePriority.textContent = responsePriorityLabel(area.response_priority);
+  elements.selectedHotspots.textContent = area.hotspot_count ?? "--";
+  elements.selectedLanduse.textContent = formatJoined(area.landuse_types);
+  elements.selectedDistance.textContent = formatDistance(area.nearest_hotspot_distance_km);
+  elements.selectedAction.textContent = formatAction(area.recommended_action);
+  elements.selectedOperatorSummary.textContent = area.operator_summary || "--";
+  elements.selectedExplainableRanking.textContent = area.explainable_ranking_th || "--";
+
+  const recurrence = area.recurrence_context || {};
+  const recurrenceOk = recurrence.status === "ok";
+  elements.selectedRecurrenceStatus.textContent = recurrenceStatusLabel(recurrence.status);
+  elements.selectedRecurrenceSource.textContent = recurrenceSourceLabel(recurrence.source);
+  elements.selectedRecurrenceCounts.hidden = !recurrenceOk;
+  elements.selectedHotspotRecurrence.textContent = recurrenceOk ? recurrence.hotspot_recurrence_count ?? "--" : "--";
+  elements.selectedFloodRecurrence.textContent = recurrenceOk ? recurrence.flood_recurrence_count ?? "--" : "--";
+  elements.selectedDroughtRecurrence.textContent = recurrenceOk ? recurrence.drought_recurrence_count ?? "--" : "--";
+  elements.selectedRecurrenceScore.textContent = recurrenceOk ? formatScore(recurrence.recurrence_score) : "--";
+  elements.selectedRecurrenceSummary.textContent = recurrence.recurrence_summary_th || "--";
+
+  renderChips(elements.selectedRiskDrivers, area.risk_drivers || []);
+  renderPatternCards(elements.selectedPatterns, area.matched_patterns || []);
+}
+
+function selectRankedArea(area, focusMarker = false) {
+  renderSelectedArea(area);
+  updateSelectedMarkerStyles();
+  if (focusMarker) {
+    openForestAreaMarker(area);
   }
 }
 
 function populateProvinceFilter(areas) {
-  if (!elements.provinceFilter) return;
-
   const selectedProvince = elements.provinceFilter.value;
   const provinces = [...new Set(areas.map((area) => area.province).filter(Boolean))].sort();
-  elements.provinceFilter.innerHTML = '<option value="">All provinces</option>';
+  elements.provinceFilter.innerHTML = '<option value="">ทุกจังหวัด</option>';
   provinces.forEach((province) => {
     const option = document.createElement("option");
     option.value = province;
     option.textContent = province;
     elements.provinceFilter.appendChild(option);
   });
-
   if (provinces.includes(selectedProvince)) {
     elements.provinceFilter.value = selectedProvince;
   }
 }
 
 function filteredRankedAreas() {
-  const selectedProvince = elements.provinceFilter?.value || "";
-  return selectedProvince
-    ? allRankedAreas.filter((area) => area.province === selectedProvince)
-    : allRankedAreas;
+  const selectedProvince = elements.provinceFilter.value;
+  const selectedSeverity = elements.severityFilter.value;
+  const hotspotOnly = elements.hotspotOnlyFilter.checked;
+
+  return allRankedAreas.filter((area) => {
+    if (selectedProvince && area.province !== selectedProvince) return false;
+    if (selectedSeverity && area.severity !== selectedSeverity) return false;
+    if (hotspotOnly && Number(area.hotspot_count || 0) <= 0) return false;
+    return true;
+  });
 }
 
-function renderRankingAreas(areas) {
-  elements.rankingTableBody.innerHTML = "";
+function renderSituationSummary(areas) {
+  const highSeverities = new Set(["HIGH", "CRITICAL"]);
+  elements.summaryTotalAreas.textContent = areas.length;
+  elements.summaryHotspotAreas.textContent = areas.filter((area) => Number(area.hotspot_count || 0) > 0).length;
+  elements.summaryHighAreas.textContent = areas.filter((area) => highSeverities.has(area.severity)).length;
+  elements.summaryMediumAreas.textContent = areas.filter((area) => area.severity === "MEDIUM").length;
+  elements.summaryTotalHotspots.textContent = areas.reduce((total, area) => total + Number(area.hotspot_count || 0), 0);
+}
 
-  if (!areas.length) {
-    elements.rankingTableBody.innerHTML = '<tr><td colspan="10">No ranked areas available.</td></tr>';
-    renderForestPriorityMarkers([]);
-    renderPatternDetail(null);
+function renderProvinceSummary(provinceSummary) {
+  elements.provinceSummaryBody.innerHTML = "";
+  if (!provinceSummary.length) {
+    elements.provinceSummaryBody.innerHTML = '<tr><td colspan="6">ยังไม่มีข้อมูลรายจังหวัด</td></tr>';
     return;
   }
 
-  renderForestPriorityMarkers(areas);
+  provinceSummary.forEach((item) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${escapeHtml(item.province)}</td>
+      <td>${escapeHtml(item.total_areas)}</td>
+      <td>${escapeHtml(item.total_hotspots)}</td>
+      <td>${escapeHtml(item.high_count)}</td>
+      <td>${escapeHtml(item.medium_count)}</td>
+      <td>${escapeHtml(item.highest_rank_area?.area_name || "--")}</td>
+    `;
+    elements.provinceSummaryBody.appendChild(row);
+  });
+}
+
+function renderActionQueueList(container, items) {
+  container.innerHTML = "";
+  if (!items.length) {
+    container.innerHTML = "<p>ยังไม่มีรายการ</p>";
+    return;
+  }
+
+  items.slice(0, 8).forEach((item) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "action-queue-item";
+    card.innerHTML = `
+      <strong>#${escapeHtml(item.rank)} ${escapeHtml(item.area_name)}</strong>
+      <span>${escapeHtml(item.province)} / ${escapeHtml(item.district)}</span>
+      <span>จุดความร้อน ${escapeHtml(item.hotspot_count)} | ระดับ ${escapeHtml(severityLabel(item.severity))}</span>
+      <p>${escapeHtml(item.reason_th)}</p>
+    `;
+    card.addEventListener("click", () => {
+      const area = allRankedAreas.find((rankedArea) => rankedArea.area_id === item.area_id);
+      if (area) selectRankedArea(area, true);
+    });
+    container.appendChild(card);
+  });
+}
+
+function renderActionQueue(actionQueue) {
+  renderActionQueueList(elements.urgentCoordinationQueue, actionQueue?.urgent_coordination || []);
+  renderActionQueueList(elements.fieldVerificationQueue, actionQueue?.field_verification || []);
+  renderActionQueueList(elements.closeMonitoringQueue, actionQueue?.close_monitoring || []);
+  renderActionQueueList(elements.routineMonitoringQueue, actionQueue?.routine_monitoring || []);
+}
+
+function renderRankingTable(areas) {
+  elements.rankingTableBody.innerHTML = "";
+  if (!areas.length) {
+    elements.rankingTableBody.innerHTML = '<tr><td colspan="10">ไม่พบพื้นที่ตามตัวกรอง</td></tr>';
+    return;
+  }
 
   areas.forEach((area) => {
-    const patternCodes = (area.matched_patterns || []).map((pattern) => pattern.pattern_code);
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${escapeHtml(area.rank)}</td>
+      <td>${escapeHtml(area.area_name)}</td>
       <td>${escapeHtml(area.province)}</td>
       <td>${escapeHtml(area.district)}</td>
       <td>${escapeHtml(area.hotspot_count)}</td>
-      <td>${escapeHtml(formatJoined(area.landuse_types))}</td>
-      <td>${escapeHtml(formatDistance(area.nearest_hotspot_distance_km))}</td>
-      <td>${escapeHtml(Number(area.priority_score).toFixed(2))}</td>
-      <td><span class="table-severity" data-severity="${severityClass(area.severity)}">${escapeHtml(area.severity)}</span></td>
+      <td>${escapeHtml(formatScore(area.recurrence_context?.recurrence_score))}</td>
+      <td>${escapeHtml(formatScore(area.priority_score))}</td>
+      <td><span class="table-severity" data-severity="${severityClass(area.severity)}">${escapeHtml(severityLabel(area.severity))}</span></td>
+      <td>${escapeHtml(responsePriorityLabel(area.response_priority))}</td>
       <td>${escapeHtml(formatAction(area.recommended_action))}</td>
-      <td>${escapeHtml(patternCodes.join(", ") || "--")}</td>
     `;
     row.addEventListener("click", () => selectRankedArea(area, true));
     elements.rankingTableBody.appendChild(row);
   });
+}
 
-  selectRankedArea(areas[0]);
+function renderTopAreasInsight(areas) {
+  elements.topAreasList.innerHTML = "";
+  areas.slice(0, 5).forEach((area) => {
+    const item = document.createElement("li");
+    item.textContent = `${area.area_name} / ${area.province} / คะแนน ${formatScore(area.priority_score)}`;
+    elements.topAreasList.appendChild(item);
+  });
+}
+
+function renderPatternCountsInsight(areas) {
+  const counts = new Map();
+  areas.forEach((area) => {
+    (area.matched_patterns || []).forEach((pattern) => {
+      counts.set(pattern.pattern_code, (counts.get(pattern.pattern_code) || 0) + 1);
+    });
+  });
+
+  elements.patternCounts.innerHTML = "";
+  if (!counts.size) {
+    elements.patternCounts.innerHTML = "<p>ยังไม่พบรูปแบบเหตุการณ์</p>";
+    return;
+  }
+
+  [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([patternCode, count]) => {
+      const row = document.createElement("p");
+      row.textContent = `${patternCode}: ${count} พื้นที่`;
+      elements.patternCounts.appendChild(row);
+    });
+}
+
+function renderRecurrenceOverview(areas) {
+  const okCount = areas.filter((area) => area.recurrence_context?.status === "ok").length;
+  const notFoundCount = areas.filter((area) => area.recurrence_context?.status === "not_found").length;
+  const unavailableCount = areas.filter((area) => {
+    const status = area.recurrence_context?.status;
+    return status === "not_configured" || status === "error";
+  }).length;
+
+  elements.recurrenceOverview.innerHTML = `
+    <p>พื้นที่ที่พบข้อมูลประวัติซ้ำซากจาก GISTDA: ${okCount}</p>
+    <p>พื้นที่ที่ GISTDA ยังไม่พบประวัติซ้ำซาก: ${notFoundCount}</p>
+    <p>พื้นที่ที่ยังดึงข้อมูลประวัติซ้ำซากไม่ได้: ${unavailableCount}</p>
+  `;
+}
+
+function renderInsights(areas) {
+  renderTopAreasInsight(areas);
+  renderPatternCountsInsight(areas);
+  renderRecurrenceOverview(areas);
+}
+
+function applyFilters() {
+  const filteredAreas = filteredRankedAreas();
+  const selectedAreaStillVisible = filteredAreas.some((area) => area.area_id === selectedAreaId);
+  const areaToSelect = selectedAreaStillVisible
+    ? filteredAreas.find((area) => area.area_id === selectedAreaId)
+    : filteredAreas[0];
+
+  renderForestPriorityMarkers(filteredAreas);
+  renderRankingTable(filteredAreas);
+  selectRankedArea(areaToSelect || null);
 }
 
 function renderRanking(ranking) {
   allRankedAreas = ranking.areas || [];
-  populateProvinceFilter(allRankedAreas);
-  renderRankingAreas(filteredRankedAreas());
-}
-
-function renderPatternDetail(area) {
-  if (!area) {
-    elements.patternAreaName.textContent = "No ranked area selected";
-    elements.patternCodes.textContent = "--";
-    elements.patternExplanation.textContent = "Refresh the ranking to load pattern guidance.";
-    elements.patternFocus.textContent = "--";
-    renderEnvironmentalContext({});
-    renderEnvironmentalRiskSummary({});
-    return;
+  allRankedAreas.sort((a, b) => Number(a.rank || 0) - Number(b.rank || 0));
+  elements.connectorBadge.hidden = ranking.status !== "ok";
+  if (elements.dataSourceStatus) {
+    elements.dataSourceStatus.textContent = `สถานะข้อมูล: ${ranking.status || "--"}`;
   }
-
-  const patterns = area.matched_patterns || [];
-  const primaryPattern = patterns[0];
-  elements.patternAreaName.textContent = `${area.area_name} · ${area.province}`;
-  elements.patternCodes.textContent = patterns.map((pattern) => pattern.pattern_code).join(", ") || "--";
-  elements.patternExplanation.textContent = primaryPattern?.explanation || "No incident pattern matched this area.";
-  elements.patternFocus.textContent = primaryPattern?.recommended_operational_focus || "--";
-  renderEnvironmentalContext(area.environmental_context || {});
-  renderEnvironmentalRiskSummary(area.environmental_risk_summary || {});
-}
-
-function renderEnvironmentalContext(context) {
-  elements.envSource.textContent = context.source === "open-meteo"
-    ? "Live Open-Meteo"
-    : context.source === "sample"
-      ? "Sample fallback"
-      : "--";
-  elements.envTemperature.textContent = context.temperature_c === undefined ? "--" : `${context.temperature_c} C`;
-  elements.envHumidity.textContent = context.humidity_percent === undefined ? "--" : `${context.humidity_percent}%`;
-  elements.envWind.textContent = context.wind_speed_kph === undefined ? "--" : `${context.wind_speed_kph} kph ${context.wind_direction || ""}`.trim();
-  elements.envRain.textContent = context.rain_probability_percent === undefined ? "--" : `${context.rain_probability_percent}%`;
-  elements.envPm25.textContent = context.pm25_ugm3 === undefined ? "--" : `${context.pm25_ugm3} ug/m3`;
-}
-
-function renderEnvironmentalRiskSummary(summary) {
-  elements.envFireRisk.textContent = summary.fire_spread_risk || "--";
-  elements.envHazeRisk.textContent = summary.haze_health_risk || "--";
-  elements.envEscalation.textContent = summary.weather_supports_escalation === undefined
-    ? "--"
-    : summary.weather_supports_escalation
-      ? "Yes"
-      : "No";
-  elements.envRiskSummary.textContent = summary.summary || "--";
+  populateProvinceFilter(allRankedAreas);
+  renderSituationSummary(allRankedAreas);
+  renderProvinceSummary(ranking.province_summary || []);
+  renderActionQueue(ranking.action_queue || {});
+  renderInsights(allRankedAreas);
+  applyFilters();
 }
 
 async function fetchRanking() {
@@ -572,8 +602,8 @@ async function fetchRanking() {
 
 async function refreshRanking() {
   elements.rankingRefreshButton.disabled = true;
-  elements.rankingRefreshButton.textContent = "Refreshing...";
-  showRankingMessage("Refreshing multi-area forest priority ranking...", "working");
+  elements.rankingRefreshButton.textContent = "กำลังรีเฟรช...";
+  showRankingMessage("กำลังรีเฟรชข้อมูลลำดับความเสี่ยงพื้นที่ป่า", "working");
 
   try {
     const refreshResponse = await fetch("/api/forest-priority/refresh-ranking", {
@@ -585,12 +615,13 @@ async function refreshRanking() {
 
     const ranking = await fetchRanking();
     renderRanking(ranking);
-    showRankingMessage(`Multi-area ranking refreshed successfully at ${formatRefreshTimestamp()}.`, "success");
+    updateMapTimestamp("รีเฟรชล่าสุด");
+    showRankingMessage(`รีเฟรชข้อมูลสำเร็จ ${new Date().toLocaleString()}`, "success");
   } catch (error) {
-    showRankingMessage(`Ranking refresh failed: ${error.message}`, "error");
+    showRankingMessage(`รีเฟรชข้อมูลไม่สำเร็จ: ${error.message}`, "error");
   } finally {
     elements.rankingRefreshButton.disabled = false;
-    elements.rankingRefreshButton.textContent = "Refresh Multi-area Ranking";
+    elements.rankingRefreshButton.textContent = "รีเฟรชลำดับความเสี่ยง";
   }
 }
 
@@ -598,14 +629,15 @@ async function loadRanking() {
   try {
     const ranking = await fetchRanking();
     renderRanking(ranking);
-    showRankingMessage("Loaded the latest saved multi-area ranking.", "success");
+    updateMapTimestamp();
+    showRankingMessage("โหลดข้อมูลลำดับความเสี่ยงล่าสุดแล้ว", "success");
   } catch (error) {
     showRankingMessage(error.message, "neutral");
   }
 }
 
-elements.refreshButton.addEventListener("click", refreshDashboard);
 elements.rankingRefreshButton.addEventListener("click", refreshRanking);
-elements.provinceFilter?.addEventListener("change", () => renderRankingAreas(filteredRankedAreas()));
-loadDashboard();
+elements.provinceFilter.addEventListener("change", applyFilters);
+elements.severityFilter.addEventListener("change", applyFilters);
+elements.hotspotOnlyFilter.addEventListener("change", applyFilters);
 loadRanking();

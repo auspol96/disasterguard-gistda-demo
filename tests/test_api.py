@@ -8,22 +8,57 @@ client = TestClient(app)
 def test_dashboard_root_serves_html():
     response = client.get("/")
     assert response.status_code == 200
-    assert "ForestGuard North Thailand" in response.text
-    assert "Forest Priority Intelligence for Wildfire, Haze, and Community Protection" in response.text
+    assert "ศูนย์ติดตามและจัดลำดับความเสี่ยงไฟป่าและหมอกควันภาคเหนือ" in response.text
+    assert "บูรณาการข้อมูลจุดความร้อนและประวัติความเสี่ยงซ้ำซากจาก GISTDA" in response.text
     assert "Real Connector v1" in response.text
-    assert "Refresh Live GISTDA Data" in response.text
+    assert "รีเฟรชลำดับความเสี่ยง" in response.text
+    assert "พื้นที่เฝ้าระวังทั้งหมด" in response.text
+    assert "พื้นที่พบจุดความร้อน" in response.text
+    assert "พื้นที่เสี่ยงสูง" in response.text
+    assert "พื้นที่เสี่ยงปานกลาง" in response.text
+    assert "จุดความร้อนรวม" in response.text
+    assert "สรุประดับจังหวัด" in response.text
+    assert "คิวปฏิบัติการวันนี้" in response.text
+    assert "เร่งประสานงาน" in response.text
+    assert "ตรวจสอบภาคสนาม" in response.text
+    assert "เฝ้าระวังใกล้ชิด" in response.text
+    assert "เฝ้าระวังตามปกติ" in response.text
     assert "แผนที่ลำดับความเสี่ยงพื้นที่ป่าภาคเหนือ" in response.text
+    assert "ระดับความเสี่ยง" in response.text
+    assert "แสดงเฉพาะพื้นที่ที่พบจุดความร้อน" in response.text
+    assert "รายละเอียดพื้นที่ที่เลือก" in response.text
+    assert "ระดับการตอบสนองที่แนะนำ" in response.text
+    assert "เหตุผลที่อยู่ในลำดับนี้" in response.text
+    assert "ประวัติความเสี่ยงซ้ำซากจาก GISTDA" in response.text
+    assert "สถานะข้อมูล" in response.text
+    assert "แหล่งข้อมูล" in response.text
+    assert "แหล่งข้อมูล: GISTDA Hotspot API" in response.text
+    assert "แหล่งข้อมูล: GISTDA Recurring Disaster API" in response.text
+    assert "สถานะข้อมูล: รอข้อมูล" in response.text
+    assert "ข้อมูลสภาพแวดล้อม" not in response.text
+    assert "สรุปความเสี่ยงจากสภาพแวดล้อม" not in response.text
+    assert "วิธีประเมินความเสี่ยง" in response.text
+    assert "ระบบประเมินคะแนนจากจำนวนจุดความร้อน" in response.text
+    assert "ปัจจัยที่ส่งผลต่อคะแนน" in response.text
+    assert "รูปแบบเหตุการณ์ที่ตรวจพบ" in response.text
+    assert "<th>PM2.5</th>" not in response.text
+    assert "<th>ลม</th>" not in response.text
+    assert "ประวัติซ้ำซาก" in response.text
+    assert "ระดับการตอบสนอง" in response.text
     assert "สีเขียว = ต่ำ" in response.text
     assert "สีส้ม = ปานกลาง" in response.text
     assert "สีแดง = สูง" in response.text
     assert "สีแดงเข้ม = วิกฤต" in response.text
     assert "ตัวเลขในวงกลม = ลำดับความเสี่ยง" in response.text
     assert "ตำแหน่งพื้นที่เฝ้าระวังเป็นพิกัดตัวอย่างสำหรับต้นแบบ" in response.text
+    assert "lastUpdated" in response.text
+    assert "ยังไม่ได้รีเฟรชข้อมูล" in response.text
     assert "provinceFilter" in response.text
-    assert "Current Hotspot Evidence" in response.text
-    assert "Recommended action" in response.text
-    assert "Top Forest Priority Areas" in response.text
-    assert "Refresh Multi-area Ranking" in response.text
+    assert "severityFilter" in response.text
+    assert "hotspotOnlyFilter" in response.text
+    assert "ตารางลำดับความเสี่ยงพื้นที่ป่า" in response.text
+    assert "พื้นที่ที่ควรเร่งตรวจสอบ" in response.text
+    assert "ภาพรวมประวัติซ้ำซาก" in response.text
 
 
 def test_static_assets_available():
@@ -31,18 +66,27 @@ def test_static_assets_available():
     css_response = client.get("/static/styles.css")
     assert js_response.status_code == 200
     assert css_response.status_code == 200
-    assert "fetch(\"/api/gistda/hotspot-context\"" in js_response.text
-    assert "fetch(\"/api/gistda/refresh-hotspot-context\"" in js_response.text
-    assert "fetch(\"/api/incident/score\"" in js_response.text
-    assert "refreshDashboard" in js_response.text
-    assert "loadDashboard" in js_response.text
-    assert "buildScorePayloadFromContext" in js_response.text
-    assert "Refreshing..." in js_response.text
-    assert "Live GISTDA data refreshed successfully" in js_response.text
     assert "fetch(\"/api/forest-priority/ranking\"" in js_response.text
     assert "fetch(\"/api/forest-priority/refresh-ranking\"" in js_response.text
     assert "refreshRanking" in js_response.text
     assert "renderRanking" in js_response.text
+    assert "renderSituationSummary" in js_response.text
+    assert "renderProvinceSummary" in js_response.text
+    assert "renderActionQueue" in js_response.text
+    assert "urgent_coordination" in js_response.text
+    assert "renderSelectedArea" in js_response.text
+    assert "responsePriorityLabel" in js_response.text
+    assert "updateMapTimestamp" in js_response.text
+    assert "renderPatternCards" in js_response.text
+    assert "selectedRiskDrivers" in js_response.text
+    assert "selectedRecurrenceStatus" in js_response.text
+    assert "dataSourceStatus" in js_response.text
+    assert "recurrenceStatusLabel" in js_response.text
+    assert "GISTDA Recurring Disaster API" in js_response.text
+    assert "selectedFetchedAt" not in js_response.text
+    assert "renderInsights" in js_response.text
+    assert "severityFilter" in js_response.text
+    assert "hotspotOnlyFilter" in js_response.text
     assert "renderForestPriorityMarkers" in js_response.text
     assert "L.divIcon" in js_response.text
     assert "forest-rank-marker" in js_response.text
@@ -54,26 +98,33 @@ def test_static_assets_available():
     assert "filteredRankedAreas" in js_response.text
     assert "ลำดับ" in js_response.text
     assert "ข้อเสนอแนะ" in js_response.text
-    assert "connectorBadge.hidden = resolvedStatus !== \"ok\"" in js_response.text
     assert "color-scheme" in css_response.text
     assert ".map" in css_response.text
-    assert ".metrics-grid" in css_response.text
-    assert ".risk-drivers" in css_response.text
+    assert ".situation-grid" in css_response.text
+    assert ".regional-layout" in css_response.text
+    assert ".map-filters" in css_response.text
+    assert ".selected-panel" in css_response.text
+    assert "max-height: 760px" in css_response.text
+    assert "overflow-y: auto" in css_response.text
+    assert "align-items: start" in css_response.text
+    assert ".selected-detail-grid" in css_response.text
+    assert ".environment-detail-grid" in css_response.text
+    assert ".pattern-card-list" in css_response.text
+    assert ".explanation-panel" in css_response.text
+    assert ".insight-grid" in css_response.text
     assert ".hotspot-popup" in css_response.text
     assert ".refresh-message" in css_response.text
+    assert ".source-badge-row" in css_response.text
     assert ".ranking-table" in css_response.text
-    assert ".pattern-detail-panel" in css_response.text
-    assert ".environment-grid" in css_response.text
-    assert ".environment-risk-grid" in css_response.text
+    assert ".province-summary-table" in css_response.text
+    assert ".action-queue-grid" in css_response.text
+    assert ".action-queue-item" in css_response.text
     assert ".map-legend" in css_response.text
     assert ".map-demo-note" in css_response.text
-    assert ".ranking-controls" in css_response.text
     assert ".legend-critical" in css_response.text
     assert ".forest-rank-marker" in css_response.text
     assert ".forest-rank-marker.is-top-rank" in css_response.text
     assert ".forest-rank-marker.is-selected" in css_response.text
-    assert "Live Open-Meteo" in js_response.text
-    assert "renderEnvironmentalRiskSummary" in js_response.text
     assert "L.circleMarker" not in js_response.text
 
 
@@ -129,6 +180,54 @@ def test_forest_priority_ranking_missing(monkeypatch, tmp_path):
     assert "refresh-ranking" in response.json()["message"]
 
 
+def test_forest_priority_ranking_not_found_recurrence_hides_confirmed_counts(monkeypatch, tmp_path):
+    ranking_path = tmp_path / "forest_priority_ranking.json"
+    ranking_path.write_text(
+        """
+        {
+          "status": "ok",
+          "areas": [
+            {
+              "rank": 1,
+              "area_id": "AREA-001",
+              "area_name": "Test forest zone",
+              "province": "Chiang Mai",
+              "district": "Chiang Dao",
+              "lat": 19.57651,
+              "lon": 99.01361,
+              "hotspot_count": 0,
+              "landuse_types": [],
+              "nearest_hotspot_distance_km": null,
+              "priority_score": 0.2,
+              "severity": "LOW",
+              "risk_drivers": ["พื้นที่มีประวัติความเสี่ยงซ้ำซากจาก GISTDA"],
+              "matched_patterns": [{"pattern_code": "RECURRENT_RISK_AREA"}],
+              "recurrence_context": {
+                "source": "gistda_recurring_api",
+                "status": "not_found",
+                "records": []
+              }
+            }
+          ]
+        }
+        """,
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(main_module, "FOREST_PRIORITY_RANKING_PATH", ranking_path)
+
+    response = client.get("/api/forest-priority/ranking")
+
+    assert response.status_code == 200
+    area = response.json()["areas"][0]
+    assert area["recurrence_context"]["status"] == "not_found"
+    assert area["recurrence_context"]["recurrence_score"] is None
+    assert "hotspot_recurrence_count" not in area["recurrence_context"]
+    assert "ยังไม่พบข้อมูลประวัติความเสี่ยงซ้ำซากจาก GISTDA" in area["recurrence_context"]["recurrence_summary_th"]
+    assert "พื้นที่มีประวัติความเสี่ยงซ้ำซากจาก GISTDA" not in area["risk_drivers"]
+    assert area["matched_patterns"] == []
+    assert response.json()["action_queue"]["routine_monitoring"][0]["area_id"] == "AREA-001"
+
+
 def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     monkeypatch.setenv("GISTDA_API_KEY", "configured-for-test")
     monitored_path = tmp_path / "monitored_forest_areas.json"
@@ -139,10 +238,42 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     monkeypatch.setattr(
         main_module,
         "refresh_forest_priority_ranking",
-        lambda config_path, output_path, environmental_context_path=None: {
+        lambda config_path, output_path, environmental_context_path=None, recurrence_context_path=None: {
             "status": "ok",
             "message": "Forest priority ranking refreshed.",
             "generated_at": "2026-05-12T00:00:00+00:00",
+            "province_summary": [
+                {
+                    "province": "Chiang Mai",
+                    "total_areas": 1,
+                    "high_count": 0,
+                    "medium_count": 1,
+                    "low_count": 0,
+                    "total_hotspots": 1,
+                    "highest_rank_area": {"rank": 1, "area_name": "Test forest zone"},
+                    "highest_priority_score": 0.64,
+                    "province_priority_level": "MEDIUM",
+                }
+            ],
+            "action_queue": {
+                "urgent_coordination": [],
+                "field_verification": [
+                    {
+                        "rank": 1,
+                        "area_id": "AREA-001",
+                        "area_name": "Test forest zone",
+                        "province": "Chiang Mai",
+                        "district": "Chiang Dao",
+                        "hotspot_count": 1,
+                        "severity": "MEDIUM",
+                        "priority_score": 0.64,
+                        "reason_th": "พบจุดความร้อน 1 จุด ควรตรวจสอบภาคสนาม",
+                        "explainable_ranking_th": "พื้นที่นี้อยู่ลำดับที่ 1 เนื่องจากพบจุดความร้อน 1 จุด",
+                    }
+                ],
+                "close_monitoring": [],
+                "routine_monitoring": [],
+            },
             "areas": [
                 {
                     "rank": 1,
@@ -160,16 +291,20 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                     "priority_score": 0.64,
                     "severity": "MEDIUM",
                     "recommended_action": "REVIEW_WITHIN_NEXT_OPERATIONAL_CYCLE",
+                    "response_priority": "FIELD_VERIFICATION",
+                    "explainable_ranking_th": "พื้นที่นี้อยู่ลำดับที่ 1 เนื่องจากพบจุดความร้อน 1 จุด",
                     "operator_summary": "Review the area.",
                     "risk_drivers": ["GISTDA hotspot API context"],
-                    "environmental_context": {
-                        "temperature_c": 34,
-                        "humidity_percent": 35,
-                        "wind_speed_kph": 12,
-                        "wind_direction": "SW",
-                        "rain_probability_percent": 10,
-                        "pm25_ugm3": 42.5,
+                    "recurrence_context": {
+                        "source": "gistda_recurring_api",
+                        "status": "ok",
+                        "hotspot_recurrence_count": 2,
+                        "flood_recurrence_count": 0,
+                        "drought_recurrence_count": 1,
+                        "recurrence_score": 0.12,
+                        "recurrence_summary_th": "มีประวัติซ้ำซากระดับต่ำ",
                     },
+                    "environmental_context": {},
                     "matched_patterns": [
                         {
                             "pattern_code": "HOTSPOT_NEAR_MONITORED_AREA",
@@ -179,12 +314,6 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
                             "recommended_operational_focus": "Check whether local verification is required.",
                         }
                     ],
-                    "environmental_risk_summary": {
-                        "fire_spread_risk": "HIGH",
-                        "haze_health_risk": "MODERATE",
-                        "weather_supports_escalation": True,
-                        "summary": "Live Open-Meteo indicates high fire spread risk.",
-                    },
                 }
             ],
         },
@@ -197,8 +326,12 @@ def test_forest_priority_refresh_ranking(monkeypatch, tmp_path):
     assert payload["status"] == "ok"
     assert payload["areas"][0]["rank"] == 1
     assert payload["areas"][0]["priority_score"] == 0.64
-    assert payload["areas"][0]["environmental_context"]["temperature_c"] == 34
-    assert payload["areas"][0]["environmental_risk_summary"]["fire_spread_risk"] == "HIGH"
+    assert payload["areas"][0]["recurrence_context"]["recurrence_score"] == 0.12
+    assert payload["areas"][0]["response_priority"] == "FIELD_VERIFICATION"
+    assert "ลำดับที่ 1" in payload["areas"][0]["explainable_ranking_th"]
+    assert payload["province_summary"][0]["province"] == "Chiang Mai"
+    assert payload["province_summary"][0]["highest_priority_score"] == 0.64
+    assert payload["action_queue"]["field_verification"][0]["area_id"] == "AREA-001"
     assert payload["areas"][0]["matched_patterns"][0]["pattern_code"] == "HOTSPOT_NEAR_MONITORED_AREA"
 
 

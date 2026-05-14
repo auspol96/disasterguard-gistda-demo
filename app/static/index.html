@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,28 +12,117 @@
   <main class="shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">Forest Protection Decision Layer</p>
-        <h1>ForestGuard North Thailand</h1>
-        <p class="subtitle">Forest Priority Intelligence for Wildfire, Haze, and Community Protection</p>
+        <p class="eyebrow">ForestGuard North Thailand</p>
+        <h1>ศูนย์ติดตามและจัดลำดับความเสี่ยงไฟป่าและหมอกควันภาคเหนือ</h1>
+        <p class="subtitle">บูรณาการข้อมูลจุดความร้อนและประวัติความเสี่ยงซ้ำซากจาก GISTDA พร้อมกฎประเมินความเสี่ยง เพื่อจัดลำดับพื้นที่ที่ควรเฝ้าระวังและดำเนินการก่อน</p>
       </div>
       <div class="topbar-actions">
         <span id="connectorBadge" class="connector-badge" hidden>Real Connector v1</span>
-        <button id="refreshButton" class="refresh-button" type="button">Refresh Live GISTDA Data</button>
+        <button id="rankingRefreshButton" class="refresh-button" type="button">รีเฟรชลำดับความเสี่ยง</button>
       </div>
     </header>
-    <p id="refreshMessage" class="refresh-message" role="status">Cached connector context loaded on page open.</p>
 
-    <section class="lead-grid" aria-label="Live hotspot overview">
+    <p id="rankingMessage" class="refresh-message" role="status">กำลังโหลดข้อมูลลำดับความเสี่ยงล่าสุด</p>
+    <section class="source-badge-row" aria-label="แหล่งข้อมูลทางการ">
+      <span>แหล่งข้อมูล: GISTDA Hotspot API</span>
+      <span>แหล่งข้อมูล: GISTDA Recurring Disaster API</span>
+      <span id="dataSourceStatus">สถานะข้อมูล: รอข้อมูล</span>
+    </section>
+
+    <section class="situation-grid" aria-label="ภาพรวมสถานการณ์">
+      <article class="situation-card"><span>พื้นที่เฝ้าระวังทั้งหมด</span><strong id="summaryTotalAreas">--</strong></article>
+      <article class="situation-card"><span>พื้นที่พบจุดความร้อน</span><strong id="summaryHotspotAreas">--</strong></article>
+      <article class="situation-card"><span>พื้นที่เสี่ยงสูง</span><strong id="summaryHighAreas">--</strong></article>
+      <article class="situation-card"><span>พื้นที่เสี่ยงปานกลาง</span><strong id="summaryMediumAreas">--</strong></article>
+      <article class="situation-card"><span>จุดความร้อนรวม</span><strong id="summaryTotalHotspots">--</strong></article>
+    </section>
+
+    <section class="panel province-summary-panel" aria-labelledby="provinceSummaryHeading">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">ภาพรวมระดับจังหวัด</p>
+          <h2 id="provinceSummaryHeading">สรุประดับจังหวัด</h2>
+        </div>
+      </div>
+      <div class="ranking-table-wrap">
+        <table class="province-summary-table">
+          <thead>
+            <tr>
+              <th>จังหวัด</th>
+              <th>พื้นที่เฝ้าระวัง</th>
+              <th>จุดความร้อนรวม</th>
+              <th>พื้นที่เสี่ยงสูง</th>
+              <th>พื้นที่เสี่ยงปานกลาง</th>
+              <th>พื้นที่อันดับสูงสุด</th>
+            </tr>
+          </thead>
+          <tbody id="provinceSummaryBody">
+            <tr><td colspan="6">ยังไม่มีข้อมูลรายจังหวัด</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel action-queue-panel" aria-labelledby="actionQueueHeading">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">ลำดับงานปฏิบัติการ</p>
+          <h2 id="actionQueueHeading">คิวปฏิบัติการวันนี้</h2>
+        </div>
+      </div>
+      <div class="action-queue-grid">
+        <article>
+          <h3>เร่งประสานงาน</h3>
+          <div id="urgentCoordinationQueue" class="action-queue-list"></div>
+        </article>
+        <article>
+          <h3>ตรวจสอบภาคสนาม</h3>
+          <div id="fieldVerificationQueue" class="action-queue-list"></div>
+        </article>
+        <article>
+          <h3>เฝ้าระวังใกล้ชิด</h3>
+          <div id="closeMonitoringQueue" class="action-queue-list"></div>
+        </article>
+        <article>
+          <h3>เฝ้าระวังตามปกติ</h3>
+          <div id="routineMonitoringQueue" class="action-queue-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="regional-layout" aria-label="แผนที่และรายละเอียดพื้นที่">
       <section class="panel map-panel">
-        <div class="panel-heading">
+        <div class="panel-heading map-heading">
           <div>
-            <p class="eyebrow">Map-First Review</p>
+            <p class="eyebrow">แผนที่ภาพรวมภูมิภาค</p>
             <h2>แผนที่ลำดับความเสี่ยงพื้นที่ป่าภาคเหนือ</h2>
           </div>
-          <span id="connectorStatus" class="status-pill">Loading</span>
+          <span id="mapCoordinate" class="status-pill">รอข้อมูลลำดับพื้นที่</span>
+        </div>
+        <div class="map-filters" aria-label="ตัวกรองแผนที่">
+          <label>
+            จังหวัด
+            <select id="provinceFilter">
+              <option value="">ทุกจังหวัด</option>
+            </select>
+          </label>
+          <label>
+            ระดับความเสี่ยง
+            <select id="severityFilter">
+              <option value="">ทุกระดับ</option>
+              <option value="LOW">ต่ำ</option>
+              <option value="MEDIUM">ปานกลาง</option>
+              <option value="HIGH">สูง</option>
+              <option value="CRITICAL">วิกฤต</option>
+            </select>
+          </label>
+          <label class="checkbox-filter">
+            <input id="hotspotOnlyFilter" type="checkbox" />
+            แสดงเฉพาะพื้นที่ที่พบจุดความร้อน
+          </label>
         </div>
         <div id="hotspotMap" class="map" aria-label="Leaflet map showing ranked Northern Thailand forest priority areas"></div>
-        <div class="map-legend" aria-label="Forest priority map severity legend">
+        <div class="map-legend" aria-label="คำอธิบายสีระดับความเสี่ยง">
           <span><i class="legend-dot legend-low"></i>สีเขียว = ต่ำ</span>
           <span><i class="legend-dot legend-medium"></i>สีส้ม = ปานกลาง</span>
           <span><i class="legend-dot legend-high"></i>สีแดง = สูง</span>
@@ -42,116 +131,120 @@
         </div>
         <p class="map-demo-note">หมายเหตุ: ตำแหน่งพื้นที่เฝ้าระวังเป็นพิกัดตัวอย่างสำหรับต้นแบบ และควรตรวจสอบกับข้อมูล GIS ทางการก่อนใช้งานจริง</p>
         <div class="map-foot">
-          <span id="mapCoordinate">Awaiting hotspot coordinates</span>
-          <span id="lastUpdated">Refresh pending</span>
+          <span id="lastUpdated">ยังไม่ได้รีเฟรชข้อมูล</span>
         </div>
       </section>
 
-      <section class="panel priority-panel">
+      <aside class="panel selected-panel" aria-labelledby="selectedHeading">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">Priority Triage</p>
-            <h2>Forest Fire and Haze Review</h2>
+            <p class="eyebrow">พื้นที่ที่เลือก</p>
+            <h2 id="selectedHeading">รายละเอียดพื้นที่ที่เลือก</h2>
           </div>
-          <span id="severityBadge" class="severity-badge">--</span>
+          <span id="selectedSeverityBadge" class="severity-badge">--</span>
         </div>
-        <div class="priority-score">
-          <span>Priority score</span>
-          <strong id="priorityScore">--</strong>
+        <h3 id="selectedAreaTitle" class="selected-title">ยังไม่มีพื้นที่ที่เลือก</h3>
+        <div class="selected-detail-grid">
+          <article><span>ลำดับ</span><strong id="selectedRank">--</strong></article>
+          <article><span>ชื่อพื้นที่</span><strong id="selectedAreaName">--</strong></article>
+          <article><span>จังหวัด</span><strong id="selectedProvince">--</strong></article>
+          <article><span>อำเภอ</span><strong id="selectedDistrict">--</strong></article>
+          <article><span>คะแนนความเสี่ยง</span><strong id="selectedScore">--</strong></article>
+          <article><span>ระดับความเสี่ยง</span><strong id="selectedSeverity">--</strong></article>
+          <article><span>ระดับการตอบสนองที่แนะนำ</span><strong id="selectedResponsePriority">--</strong></article>
+          <article><span>จำนวนจุดความร้อน</span><strong id="selectedHotspots">--</strong></article>
+          <article><span>ประเภทพื้นที่</span><strong id="selectedLanduse">--</strong></article>
+          <article><span>ระยะจุดความร้อนใกล้สุด</span><strong id="selectedDistance">--</strong></article>
         </div>
-        <div class="priority-copy">
-          <span>Recommended action</span>
-          <strong id="recommendedAction">Loading</strong>
+        <div class="selected-section">
+          <span>ข้อเสนอแนะในการดำเนินการ</span>
+          <p id="selectedAction">--</p>
         </div>
-        <div class="priority-copy summary-copy">
-          <span>Operator summary</span>
-          <p id="operatorSummary">Scoring the confirmed GISTDA context payload.</p>
+        <div class="selected-section">
+          <span>สรุปจากระบบ</span>
+          <p id="selectedOperatorSummary">--</p>
         </div>
-        <div>
-          <span class="block-label">Risk drivers</span>
-          <div id="riskDrivers" class="risk-drivers"></div>
+        <div class="selected-section">
+          <span>เหตุผลที่อยู่ในลำดับนี้</span>
+          <p id="selectedExplainableRanking">--</p>
         </div>
-      </section>
+        <div class="selected-section">
+          <span>ประวัติความเสี่ยงซ้ำซากจาก GISTDA</span>
+          <div class="selected-detail-grid compact-detail-grid">
+            <article><span>สถานะข้อมูล</span><strong id="selectedRecurrenceStatus">--</strong></article>
+            <article><span>แหล่งข้อมูล</span><strong id="selectedRecurrenceSource">--</strong></article>
+          </div>
+          <div id="selectedRecurrenceCounts" class="environment-detail-grid" hidden>
+            <article><span>จุดความร้อนซ้ำซาก</span><strong id="selectedHotspotRecurrence">--</strong></article>
+            <article><span>น้ำท่วมซ้ำซาก</span><strong id="selectedFloodRecurrence">--</strong></article>
+            <article><span>แล้งซ้ำซาก</span><strong id="selectedDroughtRecurrence">--</strong></article>
+            <article><span>คะแนนซ้ำซาก</span><strong id="selectedRecurrenceScore">--</strong></article>
+          </div>
+          <p id="selectedRecurrenceSummary">--</p>
+        </div>
+        <div class="selected-section">
+          <span>ปัจจัยที่ส่งผลต่อคะแนน</span>
+          <div id="selectedRiskDrivers" class="chip-list"></div>
+        </div>
+        <div class="selected-section">
+          <span>รูปแบบเหตุการณ์ที่ตรวจพบ</span>
+          <div id="selectedPatterns" class="pattern-card-list"></div>
+        </div>
+      </aside>
     </section>
 
-    <section class="panel metrics-panel" aria-labelledby="contextHeading">
-      <div class="panel-heading">
-        <div>
-          <p class="eyebrow">Forest Protection Evidence</p>
-          <h2 id="contextHeading">Current Hotspot Evidence</h2>
-        </div>
-      </div>
-      <div class="metrics-grid">
-        <article class="metric-card"><span>Hotspot count</span><strong id="hotspotCount">--</strong></article>
-        <article class="metric-card locality-card"><span>Province / district / subdistrict / village</span><strong id="locality">--</strong></article>
-        <article class="metric-card"><span>Landuse</span><strong id="landuse">--</strong></article>
-        <article class="metric-card"><span>Nearest hotspot distance</span><strong id="nearestDistance">--</strong></article>
-        <article class="metric-card"><span>Satellites checked</span><strong id="satellitesChecked">--</strong></article>
-        <article class="metric-card"><span>Date available</span><strong id="datesAvailable">--</strong></article>
-      </div>
+    <section class="panel explanation-panel" aria-labelledby="riskMethodHeading">
+      <p class="eyebrow">ความโปร่งใสของคะแนน</p>
+      <h2 id="riskMethodHeading">วิธีประเมินความเสี่ยง</h2>
+      <p>ระบบประเมินคะแนนจากจำนวนจุดความร้อน ระยะห่างของจุดความร้อน ประเภทพื้นที่ ประวัติความเสี่ยงซ้ำซากจาก GISTDA และรูปแบบเหตุการณ์ที่ตรวจพบ เช่น กลุ่มจุดความร้อนหลายจุด หรือจุดความร้อนใกล้พื้นที่เฝ้าระวัง คะแนนที่สูงขึ้นหมายถึงพื้นที่ควรถูกตรวจสอบก่อน</p>
     </section>
 
     <section class="panel ranking-panel" aria-labelledby="rankingHeading">
-      <div class="panel-heading ranking-heading">
+      <div class="panel-heading">
         <div>
-          <p class="eyebrow">Northern Thailand Ranking</p>
-          <h2 id="rankingHeading">Top Forest Priority Areas</h2>
+          <p class="eyebrow">ลำดับพื้นที่เฝ้าระวัง</p>
+          <h2 id="rankingHeading">ตารางลำดับความเสี่ยงพื้นที่ป่า</h2>
         </div>
-        <button id="rankingRefreshButton" class="refresh-button ranking-button" type="button">Refresh Multi-area Ranking</button>
-      </div>
-      <p id="rankingMessage" class="refresh-message ranking-message" role="status">Load or refresh the multi-area ranking to compare monitored forest zones.</p>
-      <div class="ranking-controls" aria-label="Forest priority ranking controls">
-        <label for="provinceFilter">Province</label>
-        <select id="provinceFilter">
-          <option value="">All provinces</option>
-        </select>
       </div>
       <div class="ranking-table-wrap">
         <table class="ranking-table">
           <thead>
             <tr>
-              <th>Rank</th>
-              <th>Province</th>
-              <th>District</th>
-              <th>Hotspots</th>
-              <th>Landuse</th>
-              <th>Distance</th>
-              <th>Score</th>
-              <th>Severity</th>
-              <th>Action</th>
-              <th>Patterns</th>
+              <th>ลำดับ</th>
+              <th>พื้นที่</th>
+              <th>จังหวัด</th>
+              <th>อำเภอ</th>
+              <th>จุดความร้อนรวม</th>
+              <th>ประวัติซ้ำซาก</th>
+              <th>คะแนน</th>
+              <th>ระดับ</th>
+              <th>ระดับการตอบสนอง</th>
+              <th>ข้อเสนอแนะ</th>
             </tr>
           </thead>
           <tbody id="rankingTableBody">
-            <tr><td colspan="10">No ranking loaded.</td></tr>
+            <tr><td colspan="10">ยังไม่มีข้อมูลลำดับความเสี่ยง</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="pattern-detail-panel">
-        <div>
-          <p class="eyebrow">Selected / Top-Ranked Area Pattern</p>
-          <h3 id="patternAreaName">No ranked area selected</h3>
-        </div>
-        <div class="pattern-detail-grid">
-          <article><span>Pattern codes</span><strong id="patternCodes">--</strong></article>
-          <article><span>Explanation</span><strong id="patternExplanation">Refresh the ranking to load pattern guidance.</strong></article>
-          <article><span>Operational focus</span><strong id="patternFocus">--</strong></article>
-        </div>
-        <div class="environment-grid" aria-label="Environmental context for selected ranked area">
-          <article><span>Source</span><strong id="envSource">--</strong></article>
-          <article><span>Temperature</span><strong id="envTemperature">--</strong></article>
-          <article><span>Humidity</span><strong id="envHumidity">--</strong></article>
-          <article><span>Wind</span><strong id="envWind">--</strong></article>
-          <article><span>Rain probability</span><strong id="envRain">--</strong></article>
-          <article><span>PM2.5</span><strong id="envPm25">--</strong></article>
-        </div>
-        <div class="environment-risk-grid" aria-label="Environmental risk summary for selected ranked area">
-          <article><span>Fire spread risk</span><strong id="envFireRisk">--</strong></article>
-          <article><span>Haze health risk</span><strong id="envHazeRisk">--</strong></article>
-          <article><span>Weather supports escalation</span><strong id="envEscalation">--</strong></article>
-          <article class="environment-summary-card"><span>Operational summary</span><strong id="envRiskSummary">--</strong></article>
-        </div>
-      </div>
+    </section>
+
+    <section class="insight-grid" aria-label="ข้อสังเกตจากระบบ">
+      <article class="panel insight-panel">
+        <p class="eyebrow">ลำดับเร่งด่วน</p>
+        <h2>พื้นที่ที่ควรเร่งตรวจสอบ</h2>
+        <ol id="topAreasList" class="insight-list"></ol>
+      </article>
+      <article class="panel insight-panel">
+        <p class="eyebrow">รูปแบบเหตุการณ์</p>
+        <h2>รูปแบบเหตุการณ์ที่ตรวจพบ</h2>
+        <div id="patternCounts" class="insight-list"></div>
+      </article>
+      <article class="panel insight-panel">
+        <p class="eyebrow">ข้อมูล GISTDA</p>
+        <h2>ภาพรวมประวัติซ้ำซาก</h2>
+        <div id="recurrenceOverview" class="insight-list"></div>
+      </article>
     </section>
   </main>
 

@@ -10,9 +10,19 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import SERVICE_NAME
-from app.environmental_context import build_environmental_risk_summary
-from app.forest_priority import load_monitored_areas, refresh_forest_priority_ranking
+from app.forest_priority import (
+    build_action_queue,
+    build_explainable_ranking_th,
+    build_province_summary,
+    determine_response_priority,
+    load_monitored_areas,
+    refresh_forest_priority_ranking,
+)
 from app.models import HealthResponse, IncidentScoreRequest, IncidentScoreResponse
+from app.recurrence_context import (
+    is_confirmed_gistda_recurrence,
+    normalize_gistda_recurrence_response,
+)
 from app.scoring import score_incident
 from scripts.fetch_gistda_hotspot_context import refresh_hotspot_context
 
@@ -22,7 +32,6 @@ STATIC_DIR = BASE_DIR / "static"
 LIVE_CONTEXT_DIR = ROOT_DIR / "live_context"
 MONITORED_FOREST_AREAS_PATH = ROOT_DIR / "config" / "monitored_forest_areas.json"
 FOREST_PRIORITY_RANKING_PATH = LIVE_CONTEXT_DIR / "forest_priority_ranking.json"
-ENVIRONMENTAL_CONTEXT_SAMPLES_PATH = ROOT_DIR / "config" / "environmental_context_samples.json"
 
 app = FastAPI(
     title="DisasterGuard GISTDA Demo",
@@ -168,10 +177,24 @@ def forest_priority_ranking() -> JSONResponse:
         for area in payload.get("areas", []):
             area.setdefault("matched_patterns", [])
             area.setdefault("environmental_context", {})
-            area.setdefault(
-                "environmental_risk_summary",
-                build_environmental_risk_summary(area.get("environmental_context", {})),
+            area["recurrence_context"] = normalize_gistda_recurrence_response(
+                area.get("recurrence_context", {})
             )
+            if not is_confirmed_gistda_recurrence(area["recurrence_context"]):
+                area["risk_drivers"] = [
+                    driver
+                    for driver in area.get("risk_drivers", [])
+                    if driver != "พื้นที่มีประวัติความเสี่ยงซ้ำซากจาก GISTDA"
+                ]
+                area["matched_patterns"] = [
+                    pattern
+                    for pattern in area.get("matched_patterns", [])
+                    if pattern.get("pattern_code") != "RECURRENT_RISK_AREA"
+                ]
+            area["response_priority"] = determine_response_priority(area)
+            area["explainable_ranking_th"] = build_explainable_ranking_th(area)
+        payload["province_summary"] = build_province_summary(payload.get("areas", []))
+        payload["action_queue"] = build_action_queue(payload.get("areas", []))
         return JSONResponse(content=payload)
     except Exception:
         return JSONResponse(
@@ -200,7 +223,6 @@ def forest_priority_refresh_ranking() -> JSONResponse:
         payload = refresh_forest_priority_ranking(
             MONITORED_FOREST_AREAS_PATH,
             FOREST_PRIORITY_RANKING_PATH,
-            ENVIRONMENTAL_CONTEXT_SAMPLES_PATH,
         )
     except Exception:
         return JSONResponse(
